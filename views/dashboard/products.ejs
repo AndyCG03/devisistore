@@ -1,0 +1,131 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="flex min-h-screen">
+  <% locals.activePage = 'products'; %>
+  <%- include('../partials/sidebar') %>
+
+  <main class="flex-1 p-6 md:p-10">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Mis Productos</h1>
+        <p class="text-gray-500 mt-1"><%= total %> producto(s) en total</p>
+      </div>
+      <a href="/dashboard/products/new"
+         class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow">
+        + Nuevo producto
+      </a>
+    </div>
+
+    <%- include('../partials/flash') %>
+
+    <!-- Filtros -->
+    <form method="GET" class="flex flex-wrap gap-3 mb-8 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+      <input type="text" name="search" value="<%= search %>"
+             placeholder="Buscar productos..."
+             class="flex-1 min-w-[180px] px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none" />
+
+      <select name="category"
+              class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none bg-white">
+        <option value="all" <%= category === 'all' ? 'selected' : '' %>>Todas las categorías</option>
+        <% categories.forEach(c => { %>
+          <option value="<%= c %>" <%= category === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+
+      <button type="submit" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-700 transition">
+        Filtrar
+      </button>
+      <a href="/dashboard/products" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-200 transition">
+        Limpiar
+      </a>
+    </form>
+
+    <!-- Tabla de productos -->
+    <% if (products.length === 0) { %>
+      <div class="text-center py-20 bg-white rounded-2xl border border-gray-100">
+        <div class="text-5xl mb-4">📦</div>
+        <p class="text-gray-500 font-medium">Aún no tienes productos.</p>
+        <a href="/dashboard/products/new"
+           class="inline-block mt-4 text-sm text-brand-600 font-semibold hover:underline">
+          Agregar el primero →
+        </a>
+      </div>
+    <% } else { %>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-100">
+            <tr>
+              <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Producto</th>
+              <th class="text-left px-5 py-3.5 font-semibold text-gray-600 hidden md:table-cell">Categoría</th>
+              <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Precio</th>
+              <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Estado</th>
+              <th class="text-right px-5 py-3.5 font-semibold text-gray-600">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <% products.forEach(p => { %>
+            <tr class="hover:bg-gray-50 transition">
+              <td class="px-5 py-4 flex items-center gap-3">
+                <% if (p.image) { %>
+                  <img src="<%= p.image %>" alt="<%= p.name %>"
+                       class="w-12 h-12 object-cover rounded-xl border border-gray-200 flex-shrink-0" />
+                <% } else { %>
+                  <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span class="text-xl">📷</span>
+                  </div>
+                <% } %>
+                <div>
+                  <p class="font-medium text-gray-900"><%= p.name %></p>
+                  <p class="text-gray-400 text-xs"><%= p.description ? p.description.slice(0,50)+'...' : '' %></p>
+                </div>
+              </td>
+              <td class="px-5 py-4 hidden md:table-cell">
+                <span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full text-xs"><%= p.category || '—' %></span>
+              </td>
+              <td class="px-5 py-4 font-semibold text-gray-900">$<%= parseFloat(p.price).toFixed(2) %></td>
+              <td class="px-5 py-4">
+                <span class="px-2.5 py-1 rounded-full text-xs font-medium
+                  <%= p.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
+                  <%= p.status === 'available' ? 'Disponible' : 'Agotado' %>
+                </span>
+              </td>
+              <td class="px-5 py-4 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <a href="/dashboard/products/<%= p.id %>/edit"
+                     class="text-xs bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg hover:bg-brand-100 transition font-medium">
+                    Editar
+                  </a>
+                  <form action="/dashboard/products/<%= p.id %>/delete" method="POST"
+                        onsubmit="return confirm('¿Eliminar este producto?')">
+                    <button class="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 transition font-medium">
+                      Eliminar
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <% if (pages > 1) { %>
+      <div class="flex justify-center items-center gap-2 mt-8">
+        <% for (let i = 1; i <= pages; i++) { %>
+          <a href="?page=<%= i %>&category=<%= category %>&search=<%= search %>"
+             class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-medium transition
+                    <%= i === currentPage ? 'bg-brand-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-brand-400' %>">
+            <%= i %>
+          </a>
+        <% } %>
+      </div>
+      <% } %>
+    <% } %>
+  </main>
+</div>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

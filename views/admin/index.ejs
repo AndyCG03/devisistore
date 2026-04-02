@@ -1,0 +1,81 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-900">Panel de Administración</h1>
+      <p class="text-gray-500 mt-1">Gestión global de la plataforma CatalogHub.</p>
+    </div>
+
+    <%- include('../partials/flash') %>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl">👥</div>
+          <div>
+            <p class="text-sm text-gray-500">Usuarios</p>
+            <p class="text-3xl font-bold text-gray-900"><%= stats.users %></p>
+          </div>
+        </div>
+        <a href="/admin/users" class="block mt-4 text-xs text-brand-600 hover:underline font-medium">Ver todos →</a>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl">🏪</div>
+          <div>
+            <p class="text-sm text-gray-500">Negocios</p>
+            <p class="text-3xl font-bold text-gray-900"><%= stats.businesses %></p>
+          </div>
+        </div>
+        <a href="/admin/businesses" class="block mt-4 text-xs text-brand-600 hover:underline font-medium">Ver todos →</a>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl">🔑</div>
+          <div>
+            <p class="text-sm text-gray-500">Claves disponibles</p>
+            <p class="text-3xl font-bold text-gray-900"><%= stats.keys %></p>
+          </div>
+        </div>
+        <a href="/admin/keys" class="block mt-4 text-xs text-brand-600 hover:underline font-medium">Gestionar →</a>
+      </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <h2 class="text-lg font-bold text-gray-900 mb-4">Acciones rápidas</h2>
+    <div class="grid sm:grid-cols-3 gap-4">
+      <a href="/admin/keys" class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:border-brand-300 hover:shadow-md transition card-hover flex items-center gap-3">
+        <span class="text-2xl">🔑</span>
+        <div>
+          <p class="font-semibold text-gray-900">Generar claves</p>
+          <p class="text-xs text-gray-500">Invitar nuevos usuarios</p>
+        </div>
+      </a>
+      <a href="/admin/users" class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:border-brand-300 hover:shadow-md transition card-hover flex items-center gap-3">
+        <span class="text-2xl">👥</span>
+        <div>
+          <p class="font-semibold text-gray-900">Gestionar usuarios</p>
+          <p class="text-xs text-gray-500">Activar o desactivar cuentas</p>
+        </div>
+      </a>
+      <a href="/admin/businesses" class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:border-brand-300 hover:shadow-md transition card-hover flex items-center gap-3">
+        <span class="text-2xl">🏪</span>
+        <div>
+          <p class="font-semibold text-gray-900">Ver negocios</p>
+          <p class="text-xs text-gray-500">Ver y moderar catálogos</p>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

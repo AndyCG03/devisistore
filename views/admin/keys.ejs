@@ -1,0 +1,73 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Claves de Acceso</h1>
+        <p class="text-gray-500 mt-1">Genera claves para invitar nuevos usuarios.</p>
+      </div>
+      <div class="flex gap-3">
+        <form action="/admin/keys/generate" method="POST">
+          <button class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow">
+            + Generar clave
+          </button>
+        </form>
+        <a href="/admin" class="text-sm text-brand-600 hover:underline self-center">← Volver</a>
+      </div>
+    </div>
+
+    <%- include('../partials/flash') %>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 border-b border-gray-100">
+          <tr>
+            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Clave</th>
+            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Estado</th>
+            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Usado por</th>
+            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Fecha</th>
+            <th class="text-right px-5 py-3.5 font-semibold text-gray-600">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+          <% if (keys.length === 0) { %>
+          <tr><td colspan="5" class="text-center py-10 text-gray-400">No hay claves generadas.</td></tr>
+          <% } %>
+          <% keys.forEach(k => { %>
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-5 py-4">
+              <span class="font-mono font-bold text-brand-700 bg-brand-50 px-3 py-1 rounded-lg text-sm"><%= k.key_value %></span>
+              <button onclick="navigator.clipboard.writeText('<%= k.key_value %>');this.textContent='✓'"
+                      class="ml-2 text-xs text-gray-400 hover:text-gray-600">📋</button>
+            </td>
+            <td class="px-5 py-4">
+              <span class="px-2.5 py-1 rounded-full text-xs font-medium
+                           <%= k.used ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-700' %>">
+                <%= k.used ? 'Utilizada' : 'Disponible' %>
+              </span>
+            </td>
+            <td class="px-5 py-4 text-gray-500 text-xs"><%= k.used_by_email || '—' %></td>
+            <td class="px-5 py-4 text-gray-400 text-xs"><%= new Date(k.created_at).toLocaleDateString('es') %></td>
+            <td class="px-5 py-4 text-right">
+              <% if (!k.used) { %>
+              <form action="/admin/keys/<%= k.id %>/delete" method="POST"
+                    onsubmit="return confirm('¿Eliminar esta clave?')">
+                <button class="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 transition font-medium">
+                  Eliminar
+                </button>
+              </form>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

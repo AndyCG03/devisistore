@@ -1,0 +1,41 @@
+# ── Dependencias ──────────────────────────────────────────────────────────────
+node_modules/
+
+# ── Variables de entorno (NUNCA subir al repo) ─────────────────────────────────
+.env
+.env.local
+.env.production
+.env.staging
+
+# ── Base de datos (se genera automáticamente al arrancar) ──────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Sesiones ───────────────────────────────────────────────────────────────────
+sessions.db
+
+# ── Imágenes subidas por usuarios ─────────────────────────────────────────────
+public/uploads/*
+!public/uploads/.gitkeep
+
+# ── Logs ───────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+
+# ── Sistema operativo ──────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Editores de código ─────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Otros ──────────────────────────────────────────────────────────────────────
+.cache/
+tmp/
+temp/
