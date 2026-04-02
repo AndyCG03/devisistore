@@ -2,7 +2,7 @@ const Database = require('./sqlite-adapter');
 const path     = require('path');
 const bcrypt   = require('bcryptjs');
 
-const DB_PATH = process.env.DB_PATH || './cataloghub.db';
+const DB_PATH = process.env.DB_PATH || './devisistore.db';
 
 // Crear / abrir la base de datos
 const db = new Database(path.resolve(DB_PATH));
