@@ -1,56 +1,56 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
-
-<div style="background:var(--bg);min-height:calc(100vh - 3.75rem);padding:2rem 1.5rem">
+<div style="background:var(--bg);min-height:calc(100vh - var(--nav-h));padding:2rem 1.5rem;flex:1">
   <div style="max-width:1100px;margin:0 auto">
-
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
+    <a href="/admin" class="back-link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Panel admin
+    </a>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem">
       <div>
-        <a href="/admin" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none;margin-bottom:.5rem" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Panel admin
-        </a>
         <h1 class="section-title">Usuarios</h1>
         <p class="section-sub"><%=users.length%> usuario(s) registrados</p>
       </div>
     </div>
-
     <%- include('../partials/flash') %>
-
     <div class="card" style="overflow:hidden">
-      <table class="ds-table">
-        <thead><tr>
-          <th>#</th><th>Email</th><th>Rol</th><th>Estado</th><th>Registro</th><th style="text-align:right">Acciones</th>
-        </tr></thead>
-        <tbody>
-          <% users.forEach(u=>{ %>
-          <tr>
-            <td style="color:var(--gray);font-family:monospace;font-size:.78rem">#<%=u.id%></td>
-            <td style="font-weight:600;color:var(--dark)"><%=u.email%></td>
-            <td><span class="<%=u.role==='admin'?'badge-purple':'badge-gray'%>"><%=u.role%></span></td>
-            <td><span class="<%=u.active?'badge-green':'badge-red'%>"><%=u.active?'Activo':'Inactivo'%></span></td>
-            <td style="color:var(--gray);font-size:.8rem"><%=new Date(u.created_at).toLocaleDateString('es')%></td>
-            <td style="text-align:right">
-              <% if(u.role!=='admin'){ %>
-              <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem">
-                <form action="/admin/users/<%=u.id%>/toggle" method="POST" style="margin:0">
-                  <button class="<%=u.active?'btn-warn':'btn-secondary'%> btn-sm" style="font-family:'Exo 2',sans-serif"><%=u.active?'Desactivar':'Activar'%></button>
-                </form>
-                <form action="/admin/users/<%=u.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar a <%=u.email%>?')" style="margin:0">
-                  <button class="btn-danger" style="font-family:'Exo 2',sans-serif">Eliminar</button>
-                </form>
-              </div>
-              <% } else { %>
-                <span style="font-size:.78rem;color:#D1D5DB">—</span>
-              <% } %>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <div style="overflow-x:auto">
+        <table class="ds-table">
+          <thead><tr>
+            <th>#</th><th>Email</th><th>Rol</th><th>Estado</th>
+            <th class="col-hide-sm">Registro</th>
+            <th style="text-align:right">Acciones</th>
+          </tr></thead>
+          <tbody>
+            <% users.forEach(u=>{ %>
+            <tr>
+              <td style="color:var(--gray);font-family:monospace;font-size:.78rem">#<%=u.id%></td>
+              <td style="font-weight:600;color:var(--dark)"><%=u.email%></td>
+              <td><span class="badge <%=u.role==='admin'?'badge-purple':'badge-gray'%>"><%=u.role%></span></td>
+              <td><span class="badge <%=u.active?'badge-green':'badge-red'%>"><%=u.active?'Activo':'Inactivo'%></span></td>
+              <td class="col-hide-sm" style="color:var(--gray);font-size:.8rem"><%=new Date(u.created_at).toLocaleDateString('es')%></td>
+              <td style="text-align:right">
+                <% if(u.role!=='admin'){ %>
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem;flex-wrap:wrap">
+                  <form action="/admin/users/<%=u.id%>/toggle" method="POST" style="margin:0">
+                    <button class="btn <%=u.active?'btn-warn':'btn-secondary'%> btn-sm"><%=u.active?'Desactivar':'Activar'%></button>
+                  </form>
+                  <form action="/admin/users/<%=u.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar a <%=u.email%>?')" style="margin:0">
+                    <button class="btn btn-danger">Eliminar</button>
+                  </form>
+                </div>
+                <% } else { %>
+                  <span style="font-size:.78rem;color:#D1D5DB">—</span>
+                <% } %>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
-
 <%- include('../partials/footer') %>
 </body>
 </html>

@@ -1,49 +1,49 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div style="display:flex;min-height:calc(100vh - 3.75rem)">
+<div class="page-wrap">
   <% locals.activePage = 'home'; %>
   <%- include('../partials/sidebar') %>
 
-  <main style="flex:1;padding:2rem 2.5rem;max-width:900px">
-
+  <main class="page-main">
     <div style="margin-bottom:2rem">
       <h1 class="section-title">Bienvenido, <span style="color:var(--blue)"><%= user.email.split('@')[0] %></span></h1>
-      <p class="section-sub">Aquí tienes un resumen de tu actividad en DevisiStore.</p>
+      <p class="section-sub">Resumen de tu actividad en DevisiStore.</p>
     </div>
 
     <%- include('../partials/flash') %>
 
     <!-- Stats -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;margin-bottom:2.5rem">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.25rem;margin-bottom:2.5rem">
 
       <div class="card" style="padding:1.5rem;border-left:3px solid var(--blue)">
-        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray);margin-bottom:.5rem">Mi negocio</p>
-        <p style="font-size:1.3rem;font-weight:800;color:var(--dark)"><%= business ? business.name : '—' %></p>
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.5rem">Mi negocio</p>
+        <p style="font-size:1.25rem;font-weight:800;color:var(--dark);line-height:1.3"><%= business ? business.name : 'Sin negocio' %></p>
         <% if(business){ %>
-          <a href="/shop/<%= business.slug %>" target="_blank" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--blue);font-weight:600;text-decoration:none;margin-top:.5rem">Ver catálogo →</a>
+          <a href="/shop/<%= business.slug %>" target="_blank" class="link" style="font-size:.8rem;display:inline-block;margin-top:.5rem">Ver catálogo</a>
         <% } else { %>
-          <a href="/dashboard/business" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--green);font-weight:600;text-decoration:none;margin-top:.5rem">Crear negocio →</a>
+          <a href="/dashboard/business" class="link" style="font-size:.8rem;color:var(--green);display:inline-block;margin-top:.5rem">Crear negocio</a>
         <% } %>
       </div>
 
       <div class="card" style="padding:1.5rem;border-left:3px solid var(--green)">
-        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray);margin-bottom:.5rem">Productos</p>
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.5rem">Productos</p>
         <p style="font-size:2rem;font-weight:800;color:var(--dark)"><%= productCount %></p>
-        <a href="/dashboard/products" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--green);font-weight:600;text-decoration:none;margin-top:.5rem">Gestionar →</a>
+        <a href="/dashboard/products" class="link" style="font-size:.8rem;color:var(--green);display:inline-block;margin-top:.5rem">Gestionar</a>
       </div>
 
       <div class="card" style="padding:1.5rem;border-left:3px solid #D1D5DB">
-        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray);margin-bottom:.5rem">Tu URL pública</p>
+        <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.5rem">URL de tu catálogo</p>
         <% if(business){ %>
           <p style="font-size:.78rem;font-family:monospace;color:var(--blue);word-break:break-all;margin-top:.25rem">/shop/<%= business.slug %></p>
-          <button onclick="navigator.clipboard.writeText(window.location.origin+'/shop/<%= business.slug %>');this.textContent='¡Copiado ✓'" style="display:inline-flex;align-items:center;font-size:.78rem;font-weight:600;color:var(--gray);background:#F3F4F6;border:1px solid var(--border);padding:.3rem .75rem;border-radius:7px;cursor:pointer;margin-top:.625rem;font-family:'Exo 2',sans-serif;transition:var(--tr)" onmouseover="this.style.background='var(--blue-light)';this.style.color='var(--blue)'" onmouseout="this.style.background='#F3F4F6';this.style.color='var(--gray)'">
+          <button onclick="navigator.clipboard.writeText(window.location.origin+'/shop/<%= business.slug %>');this.textContent='Copiado'" class="btn btn-ghost btn-sm" style="margin-top:.625rem">
             Copiar enlace
           </button>
         <% } else { %>
           <p style="font-size:.8rem;color:var(--gray);margin-top:.25rem">Crea tu negocio primero</p>
         <% } %>
       </div>
+
     </div>
 
     <!-- Quick actions -->
@@ -69,6 +69,7 @@
           <p style="font-size:.8rem;color:var(--gray);margin-top:.2rem">Sube foto, precio y descripción</p>
         </div>
       </a>
+
     </div>
   </main>
 </div>

@@ -1,84 +1,119 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<!-- HERO -->
-<section class="hero-gradient" style="padding:5rem 1.5rem 4rem">
-  <div style="max-width:900px;margin:0 auto;text-align:center">
-    <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.15);color:#fff;font-size:.8rem;font-weight:700;padding:.4rem 1rem;border-radius:99px;margin-bottom:1.75rem;border:1px solid rgba(255,255,255,.2);letter-spacing:.04em">
-      🚀 &nbsp;CATÁLOGO DIGITAL PROFESIONAL
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero-gradient" style="padding:5rem 1.5rem 4.5rem;overflow:hidden">
+  <div style="max-width:860px;margin:0 auto;text-align:center">
+
+    <span class="fade-in delay-1" style="display:inline-flex;align-items:center;gap:.625rem;background:rgba(255,255,255,.12);color:rgba(255,255,255,.95);font-size:.78rem;font-weight:700;padding:.45rem 1.125rem;border-radius:99px;margin-bottom:2rem;border:1px solid rgba(255,255,255,.2);letter-spacing:.06em;text-transform:uppercase">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Catálogo digital profesional
     </span>
-    <h1 style="font-size:clamp(2.2rem,5vw,3.75rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.25rem">
+
+    <h1 class="fade-in delay-2" style="font-size:clamp(2.2rem,5vw,3.75rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.375rem">
       Tu negocio, online<br/>
       <span style="color:#6EE7B7">en minutos</span>
     </h1>
-    <p style="font-size:1.125rem;color:rgba(255,255,255,.8);max-width:560px;margin:0 auto 2.5rem;line-height:1.7">
-      Crea tu catálogo digital, sube tus productos con fotos y comparte el enlace con tus clientes. Sin código. Sin diseñadores.
+
+    <p class="fade-in delay-3" style="font-size:clamp(.9rem,2vw,1.125rem);color:rgba(255,255,255,.78);max-width:540px;margin:0 auto 2.75rem;line-height:1.75">
+      Crea tu catálogo digital, sube productos con fotos y comparte el enlace con tus clientes. Sin código. Sin diseñadores.
     </p>
-    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
-      <a href="/auth/register" style="display:inline-flex;align-items:center;gap:.5rem;background:#2AA865;color:#fff;font-weight:700;font-size:1rem;padding:.85rem 2rem;border-radius:var(--r-btn);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(42,168,101,.35);transition:var(--tr);text-decoration:none" onmouseover="this.style.background='#34BF76'" onmouseout="this.style.background='#2AA865'">
-        Crear mi catálogo gratis →
+
+    <div class="fade-in delay-4" style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
+      <a href="/auth/register" class="btn btn-secondary btn-lg" style="box-shadow:0 4px 18px rgba(42,168,101,.35)">
+        Crear mi catálogo gratis
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#como-funciona" style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:1rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);border:1.5px solid rgba(255,255,255,.3);transition:var(--tr);text-decoration:none">
+      <a href="#como-funciona" class="btn btn-lg" style="background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.28)">
         Ver cómo funciona
       </a>
     </div>
 
     <!-- Stats strip -->
-    <div style="display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:center;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.15)">
-      <% [['Sin código','✓'],['Imágenes incluidas','✓'],['Botón WhatsApp','✓'],['URL pública','✓']].forEach(([t,i])=>{ %>
-      <div style="display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.9);font-size:.875rem;font-weight:600">
-        <span style="color:#6EE7B7;font-size:1rem"><%=i%></span> <%=t%>
+    <div class="fade-in delay-5" style="display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;justify-content:center;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.14)">
+      <% [
+        ['Sin código requerido','check'],
+        ['Imágenes incluidas','image'],
+        ['Botón WhatsApp','message'],
+        ['URL pública propia','globe'],
+      ].forEach(([t,ic])=>{ %>
+      <div style="display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.9);font-size:.8rem;font-weight:600">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        <%=t%>
       </div>
       <% }) %>
     </div>
   </div>
 </section>
 
-<!-- STEPS -->
-<section id="como-funciona" style="padding:5rem 1.5rem;background:var(--white)">
+<!-- ── HOW IT WORKS ───────────────────────────────────────────────── -->
+<section id="como-funciona" style="padding:5.5rem 1.5rem;background:var(--white)">
   <div style="max-width:1100px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:3.5rem">
-      <h2 style="font-size:2rem;font-weight:800;color:var(--dark)">¿Cómo funciona?</h2>
-      <p style="color:var(--gray);margin-top:.5rem;font-size:1rem">Tres pasos para tener tu catálogo online</p>
+
+    <div class="fade-in" style="text-align:center;margin-bottom:3.5rem">
+      <h2 style="font-size:clamp(1.5rem,3vw,2.25rem);font-weight:800;color:var(--dark)">Tres pasos para empezar</h2>
+      <p style="color:var(--gray);margin-top:.5rem;font-size:1rem">Sin complicaciones. Listo en minutos.</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.75rem">
-      <% const steps=[
-        {num:'01',icon:'🔑',title:'Obtén acceso',desc:'Solicita tu clave de acceso al administrador y crea tu cuenta en segundos.',color:'var(--blue-light)',border:'rgba(46,95,168,.2)'},
-        {num:'02',icon:'🏪',title:'Crea tu negocio',desc:'Agrega logo, descripción, horario, contacto y redes sociales de tu negocio.',color:'var(--green-light)',border:'rgba(42,168,101,.2)'},
-        {num:'03',icon:'📦',title:'Publica productos',desc:'Sube fotos, precios y categorías. Tu catálogo queda publicado de inmediato.',color:'var(--blue-light)',border:'rgba(46,95,168,.2)'},
-      ]; steps.forEach(s=>{ %>
-      <div style="background:var(--white);border-radius:var(--r-card);padding:2rem;border:1.5px solid <%=s.border%>;position:relative;overflow:hidden">
-        <div style="position:absolute;top:1rem;right:1.25rem;font-size:3rem;font-weight:900;color:<%=s.color%>;line-height:1;font-family:'Exo 2',sans-serif"><%=s.num%></div>
-        <div style="font-size:2.5rem;margin-bottom:1rem"><%=s.icon%></div>
-        <h3 style="font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.5rem"><%=s.title%></h3>
-        <p style="font-size:.875rem;color:var(--gray);line-height:1.7"><%=s.desc%></p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.75rem">
+
+      <div class="fade-in delay-1" style="padding:2rem;border-radius:var(--r-card);background:var(--blue-light);border:1.5px solid rgba(46,95,168,.15);position:relative;overflow:hidden">
+        <span style="position:absolute;top:.875rem;right:1.25rem;font-size:4rem;font-weight:900;color:rgba(46,95,168,.1);line-height:1;font-family:'Exo 2',sans-serif;user-select:none">01</span>
+        <div style="width:3rem;height:3rem;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+        </div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.5rem">Obtén acceso</h3>
+        <p style="font-size:.875rem;color:var(--gray);line-height:1.7">Solicita tu clave de acceso al administrador y crea tu cuenta en segundos.</p>
       </div>
-      <% }) %>
+
+      <div class="fade-in delay-2" style="padding:2rem;border-radius:var(--r-card);background:var(--green-light);border:1.5px solid rgba(42,168,101,.15);position:relative;overflow:hidden">
+        <span style="position:absolute;top:.875rem;right:1.25rem;font-size:4rem;font-weight:900;color:rgba(42,168,101,.1);line-height:1;font-family:'Exo 2',sans-serif;user-select:none">02</span>
+        <div style="width:3rem;height:3rem;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+        </div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.5rem">Configura tu negocio</h3>
+        <p style="font-size:.875rem;color:var(--gray);line-height:1.7">Agrega logo, descripción, horario, contacto y redes sociales de tu negocio.</p>
+      </div>
+
+      <div class="fade-in delay-3" style="padding:2rem;border-radius:var(--r-card);background:var(--blue-light);border:1.5px solid rgba(46,95,168,.15);position:relative;overflow:hidden">
+        <span style="position:absolute;top:.875rem;right:1.25rem;font-size:4rem;font-weight:900;color:rgba(46,95,168,.1);line-height:1;font-family:'Exo 2',sans-serif;user-select:none">03</span>
+        <div style="width:3rem;height:3rem;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        </div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.5rem">Publica tus productos</h3>
+        <p style="font-size:.875rem;color:var(--gray);line-height:1.7">Sube fotos, precios y categorías. Tu catálogo queda publicado de inmediato.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section style="padding:5rem 1.5rem;background:var(--bg)">
+<!-- ── FEATURES ───────────────────────────────────────────────────── -->
+<section style="padding:5.5rem 1.5rem;background:var(--bg)">
   <div style="max-width:1100px;margin:0 auto">
-    <div style="text-align:center;margin-bottom:3.5rem">
-      <h2 style="font-size:2rem;font-weight:800;color:var(--dark)">Todo lo que necesitas</h2>
+
+    <div class="fade-in" style="text-align:center;margin-bottom:3.5rem">
+      <h2 style="font-size:clamp(1.5rem,3vw,2.25rem);font-weight:800;color:var(--dark)">Todo lo que necesitas</h2>
       <p style="color:var(--gray);margin-top:.5rem">Funcionalidades pensadas para pequeños negocios</p>
     </div>
+
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem">
-      <% const features=[
-        {icon:'🌐',t:'URL pública única',d:'Cada negocio tiene su propio enlace para compartir.'},
-        {icon:'💬',t:'Botón WhatsApp',d:'Tus clientes te contactan con un solo clic desde cada producto.'},
-        {icon:'🔍',t:'Búsqueda y filtros',d:'Tus clientes encuentran lo que buscan al instante.'},
-        {icon:'🖼️',t:'Galería de imágenes',d:'Sube fotos de alta calidad para cada producto.'},
-        {icon:'📊',t:'Panel de control',d:'Gestiona todo desde un dashboard intuitivo y moderno.'},
-        {icon:'🔒',t:'Acceso controlado',d:'Solo usuarios invitados pueden registrarse en la plataforma.'},
-      ]; features.forEach(f=>{ %>
-      <div class="card" style="padding:1.5rem;display:flex;gap:1rem;align-items:flex-start">
-        <div style="width:2.5rem;height:2.5rem;background:var(--blue-light);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0"><%=f.icon%></div>
+
+      <% var feats=[
+        {d:'delay-1',bg:'var(--blue-light)',ic:'var(--blue)',svg:'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z',t:'URL pública única',desc:'Cada negocio tiene su propio enlace para compartir con clientes.'},
+        {d:'delay-2',bg:'var(--green-light)',ic:'var(--green)',svg:'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z',t:'Contacto por WhatsApp',desc:'Tus clientes te contactan con un clic desde cada producto.'},
+        {d:'delay-3',bg:'var(--blue-light)',ic:'var(--blue)',svg:'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',t:'Búsqueda y filtros',desc:'Los clientes encuentran lo que buscan de forma inmediata.'},
+        {d:'delay-4',bg:'var(--green-light)',ic:'var(--green)',svg:'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',t:'Imágenes de productos',desc:'Sube fotografías de alta calidad para cada artículo.'},
+        {d:'delay-5',bg:'var(--blue-light)',ic:'var(--blue)',svg:'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',t:'Panel de control',desc:'Gestiona todo desde un dashboard intuitivo y moderno.'},
+        {d:'delay-6',bg:'var(--green-light)',ic:'var(--green)',svg:'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',t:'Acceso controlado',desc:'Solo usuarios con clave de invitación pueden registrarse.'},
+      ]; feats.forEach(f=>{ %>
+      <div class="card card-hover fade-in <%=f.d%>" style="padding:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+        <div style="width:2.5rem;height:2.5rem;background:<%=f.bg%>;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="<%=f.ic%>" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="<%=f.svg%>"/></svg>
+        </div>
         <div>
-          <h4 style="font-size:.9rem;font-weight:700;color:var(--dark);margin-bottom:.25rem"><%=f.t%></h4>
-          <p style="font-size:.8rem;color:var(--gray);line-height:1.6"><%=f.d%></p>
+          <h4 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-bottom:.3rem"><%=f.t%></h4>
+          <p style="font-size:.8rem;color:var(--gray);line-height:1.65"><%=f.desc%></p>
         </div>
       </div>
       <% }) %>
@@ -86,18 +121,43 @@
   </div>
 </section>
 
-<!-- CTA -->
-<section style="padding:5rem 1.5rem;background:var(--white);text-align:center">
-  <div style="max-width:600px;margin:0 auto">
-    <div style="width:4rem;height:4rem;background:var(--green-light);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.5rem">🚀</div>
-    <h2 style="font-size:2rem;font-weight:800;color:var(--dark);margin-bottom:.75rem">¿Listo para empezar?</h2>
-    <p style="color:var(--gray);margin-bottom:2rem;line-height:1.7">Crea tu catálogo profesional hoy y empieza a vender de forma más inteligente.</p>
-    <a href="/auth/register" class="btn-secondary" style="font-size:1rem;padding:.9rem 2.25rem">
-      Crear mi catálogo gratis →
-    </a>
+<!-- ── CTA ────────────────────────────────────────────────────────── -->
+<section style="padding:5.5rem 1.5rem;background:var(--white);text-align:center">
+  <div style="max-width:580px;margin:0 auto">
+    <div class="fade-in" style="width:3.75rem;height:3.75rem;background:var(--green-light);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.75rem;border:1.5px solid rgba(42,168,101,.2)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    </div>
+    <h2 class="fade-in delay-1" style="font-size:clamp(1.5rem,3vw,2.25rem);font-weight:800;color:var(--dark);margin-bottom:.75rem">
+      Empieza hoy sin costo
+    </h2>
+    <p class="fade-in delay-2" style="color:var(--gray);margin-bottom:2.25rem;line-height:1.75;font-size:1rem">
+      Crea tu catálogo profesional y empieza a mostrar tus productos de forma más inteligente.
+    </p>
+    <div class="fade-in delay-3">
+      <a href="/auth/register" class="btn btn-secondary btn-lg" style="box-shadow:0 4px 18px rgba(42,168,101,.28)">
+        Crear mi catálogo gratis
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
   </div>
 </section>
 
 <%- include('../partials/footer') %>
+
+<!-- ── Intersection Observer fade-in trigger ─────────────────────── -->
+<script>
+(function(){
+  var els = document.querySelectorAll('.fade-in, .fade-in-up');
+  if(!els.length) return;
+  // Trigger elements already in viewport immediately on load
+  function reveal(entries, obs){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }
+  var io = new IntersectionObserver(reveal,{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
 </body>
 </html>

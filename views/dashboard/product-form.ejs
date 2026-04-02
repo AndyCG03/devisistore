@@ -1,73 +1,70 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div style="display:flex;min-height:calc(100vh - 3.75rem)">
+<div class="page-wrap">
   <% locals.activePage = 'products'; %>
   <%- include('../partials/sidebar') %>
 
-  <main style="flex:1;padding:2rem 2.5rem">
+  <main class="page-main">
     <div style="max-width:640px">
-
-      <div style="margin-bottom:2rem">
-        <a href="/dashboard/products" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none;margin-bottom:1rem" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-          Volver a productos
-        </a>
-        <h1 class="section-title"><%=title%></h1>
-        <p class="section-sub"><%=product?'Modifica los datos de tu producto.':'Añade un nuevo producto a tu catálogo.'%></p>
-      </div>
+      <a href="/dashboard/products" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Volver a productos
+      </a>
+      <h1 class="section-title" style="margin-bottom:.25rem"><%=title%></h1>
+      <p class="section-sub" style="margin-bottom:1.75rem"><%=product?'Modifica los datos del producto.':'Añade un producto a tu catálogo.'%></p>
 
       <%- include('../partials/flash') %>
 
       <form action="<%=action%>" method="POST" enctype="multipart/form-data" class="card" style="padding:2rem;display:flex;flex-direction:column;gap:1.375rem">
 
         <div>
-          <label class="label">Nombre del producto <span style="color:#DC2626">*</span></label>
-          <input type="text" name="name" required value="<%=product?product.name:''%>" placeholder="Ej: Café Americano" class="input" />
+          <label class="label" for="p-name">Nombre <span style="color:#DC2626">*</span></label>
+          <input id="p-name" type="text" name="name" required value="<%=product?product.name:''%>" placeholder="Ej: Café Americano" class="input" />
         </div>
 
         <div>
-          <label class="label">Descripción</label>
-          <textarea name="description" rows="3" placeholder="Describe brevemente el producto…" class="input"><%=product?product.description:''%></textarea>
+          <label class="label" for="p-desc">Descripción</label>
+          <textarea id="p-desc" name="description" rows="3" placeholder="Descripción breve del producto..." class="input"><%=product?product.description:''%></textarea>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
           <div>
-            <label class="label">Precio <span style="color:#DC2626">*</span></label>
-            <input type="number" name="price" step="0.01" min="0" required value="<%=product?product.price:''%>" placeholder="0.00" class="input" />
+            <label class="label" for="p-price">Precio <span style="color:#DC2626">*</span></label>
+            <input id="p-price" type="number" name="price" step="0.01" min="0" required value="<%=product?product.price:''%>" placeholder="0.00" class="input" />
           </div>
           <div>
-            <label class="label">Categoría</label>
-            <input type="text" name="category" value="<%=product?product.category:''%>" list="cat-list" placeholder="Ej: Bebidas…" class="input" />
+            <label class="label" for="p-cat">Categoría</label>
+            <input id="p-cat" type="text" name="category" value="<%=product?product.category:''%>" list="cat-list" placeholder="Ej: Bebidas" class="input" />
             <datalist id="cat-list"><% categories.forEach(c=>{%><option value="<%=c%>"><% }) %></datalist>
           </div>
         </div>
 
         <div>
-          <label class="label">Estado</label>
-          <select name="status" class="input" style="appearance:none;cursor:pointer">
-            <option value="available" <%=!product||product.status==='available'?'selected':''%>>✅ Disponible</option>
-            <option value="unavailable" <%=product&&product.status==='unavailable'?'selected':''%>>❌ Agotado</option>
+          <label class="label" for="p-status">Estado</label>
+          <select id="p-status" name="status" class="input">
+            <option value="available" <%=!product||product.status==='available'?'selected':''%>>Disponible</option>
+            <option value="unavailable" <%=product&&product.status==='unavailable'?'selected':''%>>Agotado</option>
           </select>
         </div>
 
         <div>
           <label class="label">Imagen del producto</label>
           <% if(product && product.image){ %>
-          <div style="margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem">
+          <div style="margin-bottom:.875rem;display:flex;align-items:center;gap:.875rem">
             <img src="<%=product.image%>" alt="" style="width:4.5rem;height:4.5rem;object-fit:cover;border-radius:9px;border:1px solid var(--border)" />
             <p style="font-size:.78rem;color:var(--gray)">Imagen actual. Sube otra para reemplazarla.</p>
           </div>
           <% } %>
-          <input type="file" name="image" accept="image/*" style="font-size:.875rem;color:var(--gray);font-family:'Exo 2',sans-serif" />
-          <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">JPG, PNG o WEBP. Máx. 5MB.</p>
+          <input type="file" name="image" accept="image/*" style="font-size:.875rem;color:var(--gray);font-family:'Exo 2',sans-serif;width:100%" />
+          <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">JPG, PNG o WEBP. Máximo 5 MB.</p>
         </div>
 
-        <div style="display:flex;gap:.75rem;padding-top:.5rem;border-top:1px solid var(--border)">
-          <button type="submit" class="btn-primary">
+        <div style="display:flex;gap:.75rem;padding-top:.5rem;border-top:1px solid var(--border);flex-wrap:wrap">
+          <button type="submit" class="btn btn-primary">
             <%=product?'Guardar cambios':'Crear producto'%>
           </button>
-          <a href="/dashboard/products" class="btn-ghost">Cancelar</a>
+          <a href="/dashboard/products" class="btn btn-ghost">Cancelar</a>
         </div>
 
       </form>

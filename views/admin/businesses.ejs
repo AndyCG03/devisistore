@@ -1,58 +1,62 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
-
-<div style="background:var(--bg);min-height:calc(100vh - 3.75rem);padding:2rem 1.5rem">
+<div style="background:var(--bg);min-height:calc(100vh - var(--nav-h));padding:2rem 1.5rem;flex:1">
   <div style="max-width:1100px;margin:0 auto">
-
-    <div style="margin-bottom:2rem">
-      <a href="/admin" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none;margin-bottom:.5rem" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Panel admin
-      </a>
+    <a href="/admin" class="back-link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Panel admin
+    </a>
+    <div style="margin-bottom:1.75rem">
       <h1 class="section-title">Negocios</h1>
       <p class="section-sub"><%=businesses.length%> negocio(s) registrados</p>
     </div>
-
     <%- include('../partials/flash') %>
-
     <div class="card" style="overflow:hidden">
-      <table class="ds-table">
-        <thead><tr>
-          <th>Negocio</th><th>Propietario</th><th>URL pública</th><th>Estado</th><th style="text-align:right">Acciones</th>
-        </tr></thead>
-        <tbody>
-          <% if(businesses.length===0){ %>
-          <tr><td colspan="5" style="text-align:center;padding:3rem;color:var(--gray)">No hay negocios registrados aún.</td></tr>
-          <% } %>
-          <% businesses.forEach(b=>{ %>
-          <tr>
-            <td>
-              <div style="display:flex;align-items:center;gap:.75rem">
-                <% if(b.logo){ %>
-                  <img src="<%=b.logo%>" alt="" style="width:2.5rem;height:2.5rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
-                <% } else { %>
-                  <div style="width:2.5rem;height:2.5rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">🏪</div>
-                <% } %>
-                <span style="font-weight:700;color:var(--dark)"><%=b.name%></span>
-              </div>
-            </td>
-            <td style="color:var(--gray);font-size:.8rem"><%=b.owner_email%></td>
-            <td>
-              <a href="/shop/<%=b.slug%>" target="_blank" style="font-family:monospace;font-size:.78rem;color:var(--blue);text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">/shop/<%=b.slug%></a>
-            </td>
-            <td><span class="<%=b.active?'badge-green':'badge-red'%>"><%=b.active?'Activo':'Inactivo'%></span></td>
-            <td style="text-align:right">
-              <form action="/admin/businesses/<%=b.id%>/toggle" method="POST" style="margin:0">
-                <button class="<%=b.active?'btn-warn':'btn-secondary'%> btn-sm" style="font-family:'Exo 2',sans-serif"><%=b.active?'Desactivar':'Activar'%></button>
-              </form>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <div style="overflow-x:auto">
+        <table class="ds-table">
+          <thead><tr>
+            <th>Negocio</th>
+            <th class="col-hide-sm">Propietario</th>
+            <th class="col-hide-sm">URL</th>
+            <th>Estado</th>
+            <th style="text-align:right">Acciones</th>
+          </tr></thead>
+          <tbody>
+            <% if(!businesses.length){ %>
+            <tr><td colspan="5" style="text-align:center;padding:3rem;color:var(--gray)">No hay negocios registrados.</td></tr>
+            <% } %>
+            <% businesses.forEach(b=>{ %>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:.75rem">
+                  <% if(b.logo){ %>
+                    <img src="<%=b.logo%>" alt="" style="width:2.5rem;height:2.5rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
+                  <% } else { %>
+                    <div style="width:2.5rem;height:2.5rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
+                    </div>
+                  <% } %>
+                  <span style="font-weight:700;color:var(--dark)"><%=b.name%></span>
+                </div>
+              </td>
+              <td class="col-hide-sm" style="color:var(--gray);font-size:.8rem"><%=b.owner_email%></td>
+              <td class="col-hide-sm">
+                <a href="/shop/<%=b.slug%>" target="_blank" style="font-family:monospace;font-size:.78rem;color:var(--blue);text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">/shop/<%=b.slug%></a>
+              </td>
+              <td><span class="badge <%=b.active?'badge-green':'badge-red'%>"><%=b.active?'Activo':'Inactivo'%></span></td>
+              <td style="text-align:right">
+                <form action="/admin/businesses/<%=b.id%>/toggle" method="POST" style="margin:0">
+                  <button class="btn <%=b.active?'btn-warn':'btn-secondary'%> btn-sm"><%=b.active?'Desactivar':'Activar'%></button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
-
 <%- include('../partials/footer') %>
 </body>
 </html>

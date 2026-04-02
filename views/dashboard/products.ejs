@@ -1,18 +1,18 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div style="display:flex;min-height:calc(100vh - 3.75rem)">
+<div class="page-wrap">
   <% locals.activePage = 'products'; %>
   <%- include('../partials/sidebar') %>
 
-  <main style="flex:1;padding:2rem 2.5rem">
+  <main class="page-main">
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem">
       <div>
         <h1 class="section-title">Mis Productos</h1>
         <p class="section-sub"><%= total %> producto(s) en total</p>
       </div>
-      <a href="/dashboard/products/new" class="btn-primary">
+      <a href="/dashboard/products/new" class="btn btn-primary">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nuevo producto
       </a>
@@ -21,78 +21,96 @@
     <%- include('../partials/flash') %>
 
     <!-- Filters -->
-    <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;padding:1.25rem;background:var(--white);border-radius:var(--r-card);border:1px solid var(--border)">
-      <input type="text" name="search" value="<%= search %>" placeholder="Buscar productos…" class="input" style="flex:1;min-width:180px" />
+    <form method="GET" class="card" style="padding:1.25rem;display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem">
+      <input type="text" name="search" value="<%= search %>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px" />
       <select name="category" class="input" style="width:auto;padding:.65rem 1rem">
         <option value="all" <%= category==='all'?'selected':'' %>>Todas las categorías</option>
         <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
       </select>
-      <button type="submit" class="btn-primary btn-sm" style="font-family:'Exo 2',sans-serif">Filtrar</button>
-      <a href="/dashboard/products" class="btn-ghost btn-sm">Limpiar</a>
+      <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+      <a href="/dashboard/products" class="btn btn-ghost btn-sm">Limpiar</a>
     </form>
 
-    <!-- Table -->
+    <!-- Empty state -->
     <% if(products.length===0){ %>
-    <div class="card" style="padding:4rem;text-align:center">
-      <div style="font-size:3rem;margin-bottom:1rem">📦</div>
-      <p style="font-weight:600;color:var(--dark)">Aún no tienes productos</p>
-      <a href="/dashboard/products/new" class="btn-primary btn-sm" style="margin-top:1rem;font-family:'Exo 2',sans-serif">Agregar el primero →</a>
+    <div class="card" style="padding:4rem 2rem;text-align:center">
+      <div style="width:3.5rem;height:3.5rem;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:1.5px solid var(--border)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      </div>
+      <p style="font-weight:700;color:var(--dark);font-size:1.05rem">Aún no tienes productos</p>
+      <p style="color:var(--gray);font-size:.875rem;margin-top:.375rem">Añade tu primer producto al catálogo</p>
+      <a href="/dashboard/products/new" class="btn btn-primary btn-sm" style="margin-top:1.25rem">Agregar producto</a>
     </div>
     <% } else { %>
+
+    <!-- Table -->
     <div class="card" style="overflow:hidden">
-      <table class="ds-table">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Estado</th>
-            <th style="text-align:right">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% products.forEach(p=>{ %>
-          <tr>
-            <td>
-              <div style="display:flex;align-items:center;gap:.875rem">
-                <% if(p.image){ %>
-                  <img src="<%=p.image%>" alt="<%=p.name%>" style="width:3rem;height:3rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
-                <% } else { %>
-                  <div style="width:3rem;height:3rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;border:1px solid var(--border)">📷</div>
-                <% } %>
-                <div>
-                  <p style="font-weight:700;color:var(--dark)"><%=p.name%></p>
-                  <p style="font-size:.78rem;color:var(--gray);margin-top:.1rem"><%=p.description?p.description.slice(0,45)+'…':''%></p>
+      <div style="overflow-x:auto">
+        <table class="ds-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th class="col-hide-sm">Categoría</th>
+              <th>Precio</th>
+              <th>Estado</th>
+              <th style="text-align:right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(p=>{ %>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:.875rem">
+                  <% if(p.image){ %>
+                    <img src="<%=p.image%>" alt="<%=p.name%>" style="width:2.75rem;height:2.75rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
+                  <% } else { %>
+                    <div style="width:2.75rem;height:2.75rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                  <% } %>
+                  <div>
+                    <p style="font-weight:700;color:var(--dark)"><%=p.name%></p>
+                    <p style="font-size:.75rem;color:var(--gray);margin-top:.1rem"><%=p.description?p.description.slice(0,45)+'...':''%></p>
+                  </div>
                 </div>
-              </div>
-            </td>
-            <td><span class="badge-blue"><%=p.category||'—'%></span></td>
-            <td style="font-weight:700;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></td>
-            <td>
-              <% if(p.status==='available'){ %><span class="badge-green">✓ Disponible</span><% }else{ %><span class="badge-red">✗ Agotado</span><% } %>
-            </td>
-            <td style="text-align:right">
-              <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem">
-                <a href="/dashboard/products/<%=p.id%>/edit" class="btn-ghost btn-sm">Editar</a>
-                <form action="/dashboard/products/<%=p.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar este producto?')" style="margin:0">
-                  <button class="btn-danger" style="font-family:'Exo 2',sans-serif">Eliminar</button>
-                </form>
-              </div>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+              </td>
+              <td class="col-hide-sm">
+                <span class="badge badge-blue"><%=p.category||'—'%></span>
+              </td>
+              <td style="font-weight:700;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></td>
+              <td>
+                <% if(p.status==='available'){ %>
+                  <span class="badge badge-green">Disponible</span>
+                <% } else { %>
+                  <span class="badge badge-red">Agotado</span>
+                <% } %>
+              </td>
+              <td style="text-align:right">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem">
+                  <a href="/dashboard/products/<%=p.id%>/edit" class="btn btn-ghost btn-sm">Editar</a>
+                  <form action="/dashboard/products/<%=p.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar este producto?')" style="margin:0">
+                    <button class="btn btn-danger">Eliminar</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
 
+    <!-- Pagination -->
     <% if(pages>1){ %>
     <div style="display:flex;justify-content:center;gap:.5rem;margin-top:1.75rem">
       <% for(let i=1;i<=pages;i++){ %>
-        <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>" style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:var(--tr);<%=i===currentPage?'background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(46,95,168,.25)':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
+        <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>"
+           style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:var(--tr);font-family:'Exo 2',sans-serif;<%=i===currentPage?'background:var(--blue);color:#fff':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
       <% } %>
     </div>
     <% } %>
     <% } %>
+
   </main>
 </div>
 

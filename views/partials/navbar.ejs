@@ -1,29 +1,29 @@
-<nav style="background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(46,95,168,.06)">
-  <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:3.75rem">
+<nav style="background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(46,95,168,.06);height:var(--nav-h)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:100%">
 
-    <a href="/" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
-      <div class="logo-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-        </svg>
-      </div>
-      <div>
-        <span style="font-weight:800;font-size:1.05rem;color:var(--blue)">Devisi</span><span style="font-weight:800;font-size:1.05rem;color:var(--green)">Store</span>
-      </div>
+    <!-- Logo -->
+    <a href="/" style="text-decoration:none;display:flex;align-items:center">
+      <img src="/assets/logo.png" alt="Devisi Store" class="app-logo"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+      <!-- Fallback text logo when PNG is missing -->
+      <span style="display:none;align-items:center;gap:.5rem;font-weight:800;font-size:1.05rem">
+        <span style="color:var(--blue)">Devisi</span><span style="color:var(--green)">Store</span>
+      </span>
     </a>
 
-    <div style="display:flex;align-items:center;gap:.75rem">
+    <!-- Desktop nav -->
+    <div style="display:flex;align-items:center;gap:.5rem">
       <% if (locals.user) { %>
         <% if (user.role === 'admin') { %>
-          <a href="/admin" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .75rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Admin</a>
+          <a href="/admin" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Admin</a>
         <% } %>
-        <a href="/dashboard" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .75rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Mi Panel</a>
+        <a href="/dashboard" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Mi Panel</a>
         <form action="/auth/logout" method="POST" style="margin:0">
-          <button class="btn-ghost btn-sm" style="font-family:'Exo 2',sans-serif">Salir</button>
+          <button class="btn btn-ghost btn-sm">Salir</button>
         </form>
       <% } else { %>
-        <a href="/auth/login" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .75rem;border-radius:8px" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">Iniciar sesión</a>
-        <a href="/auth/register" class="btn-primary btn-sm">Registrarse</a>
+        <a href="/auth/login" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">Iniciar sesión</a>
+        <a href="/auth/register" class="btn btn-primary btn-sm">Registrarse</a>
       <% } %>
     </div>
   </div>

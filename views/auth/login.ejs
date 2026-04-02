@@ -1,40 +1,38 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div style="min-height:calc(100vh - 3.75rem - 4rem);display:flex;align-items:center;justify-content:center;padding:2.5rem 1rem;background:var(--bg)">
+<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1rem;background:var(--bg)">
   <div style="width:100%;max-width:420px">
 
-    <!-- Header -->
     <div style="text-align:center;margin-bottom:2rem">
-      <div class="logo-mark" style="margin:0 auto 1.25rem;width:3rem;height:3rem;border-radius:12px">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+      <div style="width:3.25rem;height:3.25rem;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;box-shadow:0 4px 12px rgba(46,95,168,.25)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
         </svg>
       </div>
       <h1 style="font-size:1.625rem;font-weight:800;color:var(--dark)">Bienvenido de vuelta</h1>
-      <p style="font-size:.875rem;color:var(--gray);margin-top:.375rem">Inicia sesión en tu cuenta DevisiStore</p>
+      <p style="font-size:.875rem;color:var(--gray);margin-top:.375rem">Inicia sesión en tu cuenta</p>
     </div>
 
     <div class="card" style="padding:2rem">
       <%- include('../partials/flash') %>
-
       <form action="/auth/login" method="POST" style="display:flex;flex-direction:column;gap:1.25rem">
         <div>
-          <label class="label">Correo electrónico</label>
-          <input type="email" name="email" required autocomplete="email" placeholder="tu@correo.com" class="input" />
+          <label class="label" for="email">Correo electrónico</label>
+          <input id="email" type="email" name="email" required autocomplete="email" placeholder="tu@correo.com" class="input" />
         </div>
         <div>
-          <label class="label">Contraseña</label>
-          <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••" class="input" />
+          <label class="label" for="pwd">Contraseña</label>
+          <input id="pwd" type="password" name="password" required autocomplete="current-password" placeholder="Introduce tu contraseña" class="input" />
         </div>
-        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:.8rem;font-size:.9375rem;margin-top:.25rem">
-          Iniciar sesión →
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:.8rem;font-size:.9375rem;margin-top:.25rem">
+          Iniciar sesión
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </form>
-
       <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center">
         <p style="font-size:.875rem;color:var(--gray)">
-          ¿No tienes cuenta?&nbsp;<a href="/auth/register" class="link">Regístrate</a>
+          ¿No tienes cuenta? <a href="/auth/register" class="link">Regístrate</a>
         </p>
       </div>
     </div>

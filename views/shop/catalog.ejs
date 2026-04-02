@@ -1,16 +1,15 @@
 <%- include('../partials/head') %>
 
 <!-- Shop navbar -->
-<nav style="background:var(--white);border-bottom:1px solid var(--border);sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(46,95,168,.06);position:sticky">
-  <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:3.75rem">
-    <a href="/" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
-      <div class="logo-mark" style="width:2rem;height:2rem;border-radius:8px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-      </div>
-      <span style="font-weight:800;font-size:.95rem;color:var(--blue)">Devisi</span><span style="font-weight:800;font-size:.95rem;color:var(--green)">Store</span>
+<nav style="background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(46,95,168,.06)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:3.75rem">
+    <a href="/" style="text-decoration:none;display:flex;align-items:center">
+      <img src="/assets/logo.png" alt="Devisi Store" style="height:1.75rem;width:auto;object-fit:contain"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" />
+      <span style="display:none;font-weight:800;font-size:.95rem"><span style="color:var(--blue)">Devisi</span><span style="color:var(--green)">Store</span></span>
     </a>
     <% if(locals.user){ %>
-      <a href="/dashboard" style="font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">Mi Panel</a>
+      <a href="/dashboard" style="font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none">Mi Panel</a>
     <% } else { %>
       <a href="/auth/login" style="font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none">Iniciar sesión</a>
     <% } %>
@@ -19,78 +18,107 @@
 
 <!-- Business header -->
 <header class="hero-gradient" style="padding:3rem 1.5rem">
-  <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:2rem">
+  <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:1.75rem">
+
     <% if(business.logo){ %>
-      <img src="<%=business.logo%>" alt="<%=business.name%>" style="width:6rem;height:6rem;border-radius:16px;object-fit:cover;border:3px solid rgba(255,255,255,.3);box-shadow:0 4px 16px rgba(0,0,0,.2);flex-shrink:0" />
+      <img src="<%=business.logo%>" alt="<%=business.name%>" style="width:5.5rem;height:5.5rem;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,.25);box-shadow:0 4px 16px rgba(0,0,0,.2);flex-shrink:0" />
     <% } else { %>
-      <div style="width:6rem;height:6rem;border-radius:16px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:3rem;flex-shrink:0;border:2px solid rgba(255,255,255,.2)">🏪</div>
+      <div style="width:5.5rem;height:5.5rem;border-radius:14px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid rgba(255,255,255,.2)">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+      </div>
     <% } %>
 
     <div style="flex:1;min-width:200px">
-      <h1 style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:.375rem"><%=business.name%></h1>
+      <h1 style="font-size:clamp(1.5rem,4vw,2.25rem);font-weight:800;color:#fff;margin-bottom:.4rem"><%=business.name%></h1>
       <% if(business.description){ %>
-        <p style="color:rgba(255,255,255,.8);font-size:.9rem;max-width:520px;line-height:1.6;margin-bottom:.875rem"><%=business.description%></p>
+        <p style="color:rgba(255,255,255,.78);font-size:.9rem;max-width:520px;line-height:1.65;margin-bottom:.875rem"><%=business.description%></p>
       <% } %>
-      <div style="display:flex;flex-wrap:wrap;gap:.625rem">
-        <% if(business.phone){ %><span style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.2)">📞 <%=business.phone%></span><% } %>
-        <% if(business.schedule){ %><span style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.2)">🕐 <%=business.schedule%></span><% } %>
-        <% if(business.address){ %><span style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.2)">📍 <%=business.address%></span><% } %>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+        <% if(business.phone){ %>
+        <span style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(255,255,255,.12);color:#fff;font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <%=business.phone%>
+        </span>
+        <% } %>
+        <% if(business.schedule){ %>
+        <span style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(255,255,255,.12);color:#fff;font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
+          <%=business.schedule%>
+        </span>
+        <% } %>
+        <% if(business.address){ %>
+        <span style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(255,255,255,.12);color:#fff;font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <%=business.address%>
+        </span>
+        <% } %>
       </div>
     </div>
 
     <% if(business.whatsapp){ %>
-      <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('¡Hola! Me interesa un producto de tu catálogo.')%>" target="_blank" style="display:inline-flex;align-items:center;gap:.625rem;background:#25D366;color:#fff;font-weight:700;font-size:.9375rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);text-decoration:none;flex-shrink:0;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:var(--tr)" onmouseover="this.style.background='#20BE5C'" onmouseout="this.style.background='#25D366'">
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
-        WhatsApp
-      </a>
+    <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola, me interesa un producto de tu catálogo.')%>" target="_blank"
+       style="display:inline-flex;align-items:center;gap:.625rem;background:#25D366;color:#fff;font-weight:700;font-size:.9375rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);text-decoration:none;flex-shrink:0;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:var(--tr)"
+       onmouseover="this.style.background='#1DA851'" onmouseout="this.style.background='#25D366'">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+      WhatsApp
+    </a>
     <% } %>
   </div>
 </header>
 
 <!-- Catalog -->
-<main style="padding:2.5rem 1.5rem;max-width:1200px;margin:0 auto">
+<main style="padding:2.5rem 1.5rem;max-width:1280px;margin:0 auto;flex:1">
 
   <!-- Filters -->
   <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem">
-    <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos…" class="input" style="flex:1;min-width:200px;max-width:360px" />
-    <select name="category" class="input" style="width:auto;padding:.65rem 1rem;max-width:220px;appearance:none;cursor:pointer">
+    <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px;max-width:360px" />
+    <select name="category" class="input" style="width:auto;padding:.65rem 1rem;max-width:220px">
       <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
       <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
     </select>
-    <button type="submit" class="btn-primary btn-sm" style="font-family:'Exo 2',sans-serif">Buscar</button>
-    <a href="/shop/<%=business.slug%>" class="btn-ghost btn-sm">Ver todo</a>
+    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+    <a href="/shop/<%=business.slug%>" class="btn btn-ghost btn-sm">Ver todo</a>
   </form>
 
-  <!-- Products grid -->
+  <!-- Empty state -->
   <% if(products.length===0){ %>
   <div style="text-align:center;padding:5rem 1rem">
-    <div style="font-size:3.5rem;margin-bottom:1rem">🔍</div>
-    <p style="font-weight:600;color:var(--dark)">No se encontraron productos</p>
+    <div style="width:4rem;height:4rem;background:var(--bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:1.5px solid var(--border)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </div>
+    <p style="font-weight:700;color:var(--dark);font-size:1.05rem">No se encontraron productos</p>
     <p style="color:var(--gray);font-size:.875rem;margin-top:.375rem">Intenta con otra búsqueda o categoría</p>
   </div>
   <% } else { %>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.25rem">
+
+  <!-- Products grid -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.25rem">
     <% products.forEach(p=>{ %>
-    <div class="card card-hover" style="overflow:hidden;opacity:<%=p.status==='unavailable'?.65:1%>">
+    <div class="card card-hover" style="overflow:hidden;opacity:<%=p.status==='unavailable'?.6:1%>">
       <div style="aspect-ratio:1;overflow:hidden;background:var(--bg)">
         <% if(p.image){ %>
-          <img src="<%=p.image%>" alt="<%=p.name%>" style="width:100%;height:100%;object-fit:cover;transition:transform 300ms cubic-bezier(.4,0,.2,1)" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" />
+          <img src="<%=p.image%>" alt="<%=p.name%>" style="width:100%;height:100%;object-fit:cover;transition:transform 320ms ease" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" />
         <% } else { %>
-          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;color:#D1D5DB">📷</div>
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
         <% } %>
       </div>
       <div style="padding:1rem">
-        <% if(p.category){ %><span class="badge-blue" style="margin-bottom:.5rem"><%=p.category%></span><% } %>
-        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;margin-bottom:.25rem;line-height:1.4"><%=p.name%></h3>
+        <% if(p.category){ %><span class="badge badge-blue" style="margin-bottom:.5rem"><%=p.category%></span><% } %>
+        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;line-height:1.4"><%=p.name%></h3>
         <% if(p.description){ %>
-          <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-bottom:.75rem"><%=p.description.length>70?p.description.slice(0,70)+'…':p.description%></p>
+          <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-top:.25rem"><%=p.description.length>70?p.description.slice(0,70)+'...':p.description%></p>
         <% } %>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.875rem;flex-wrap:wrap;gap:.5rem">
           <span style="font-size:1.125rem;font-weight:800;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></span>
           <% if(p.status==='unavailable'){ %>
-            <span class="badge-red">Agotado</span>
+            <span class="badge badge-red">Agotado</span>
           <% } else if(business.whatsapp){ %>
-            <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent(`Hola! Me interesa: ${p.name} ($${parseFloat(p.price).toFixed(2)})`)%>" target="_blank" style="display:inline-flex;align-items:center;gap:.375rem;background:#25D366;color:#fff;font-size:.75rem;font-weight:700;padding:.35rem .875rem;border-radius:7px;text-decoration:none;transition:var(--tr)" onmouseover="this.style.background='#20BE5C'" onmouseout="this.style.background='#25D366'">
+            <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')')%>"
+               target="_blank"
+               style="display:inline-flex;align-items:center;gap:.375rem;background:#25D366;color:#fff;font-size:.75rem;font-weight:700;padding:.35rem .875rem;border-radius:7px;text-decoration:none;transition:var(--tr)"
+               onmouseover="this.style.background='#1DA851'" onmouseout="this.style.background='#25D366'">
               <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
               Pedir
             </a>
@@ -105,21 +133,22 @@
   <% if(pages>1){ %>
   <div style="display:flex;justify-content:center;gap:.5rem;margin-top:2.5rem">
     <% for(let i=1;i<=pages;i++){ %>
-      <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>" style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:var(--tr);<%=i===currentPage?'background:var(--blue);color:#fff':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
+      <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>"
+         style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;font-family:'Exo 2',sans-serif;transition:var(--tr);<%=i===currentPage?'background:var(--blue);color:#fff':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
     <% } %>
   </div>
   <% } %>
   <% } %>
 
   <!-- Social links -->
-  <% const hasSocials=Object.values(socials).some(v=>v&&v.trim()); %>
+  <% var hasSocials=Object.values(socials).some(function(v){return v&&v.trim()}); %>
   <% if(hasSocials){ %>
-  <div style="margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);text-align:center">
-    <p style="font-size:.8rem;color:var(--gray);margin-bottom:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em">Síguenos</p>
-    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1rem">
-      <% if(socials.instagram){ %><a href="https://instagram.com/<%=socials.instagram.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:#E1306C;text-decoration:none">📸 Instagram</a><% } %>
-      <% if(socials.facebook){ %><a href="https://facebook.com/<%=socials.facebook.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:#1877F2;text-decoration:none">👍 Facebook</a><% } %>
-      <% if(socials.tiktok){ %><a href="https://tiktok.com/@<%=socials.tiktok.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:var(--dark);text-decoration:none">🎵 TikTok</a><% } %>
+  <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);text-align:center">
+    <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.875rem">Redes sociales</p>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1.25rem">
+      <% if(socials.instagram){ %><a href="https://instagram.com/<%=socials.instagram.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:#E1306C;text-decoration:none">Instagram</a><% } %>
+      <% if(socials.facebook){ %><a href="https://facebook.com/<%=socials.facebook.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:#1877F2;text-decoration:none">Facebook</a><% } %>
+      <% if(socials.tiktok){ %><a href="https://tiktok.com/@<%=socials.tiktok.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:var(--dark);text-decoration:none">TikTok</a><% } %>
     </div>
   </div>
   <% } %>

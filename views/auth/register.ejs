@@ -1,12 +1,12 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div style="min-height:calc(100vh - 3.75rem - 4rem);display:flex;align-items:center;justify-content:center;padding:2.5rem 1rem;background:var(--bg)">
+<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1rem;background:var(--bg)">
   <div style="width:100%;max-width:420px">
 
     <div style="text-align:center;margin-bottom:2rem">
-      <div style="width:3rem;height:3rem;background:var(--green-light);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:1.5px solid rgba(42,168,101,.2)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="2.5">
+      <div style="width:3.25rem;height:3.25rem;background:var(--green-light);border-radius:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:1.5px solid rgba(42,168,101,.2)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
         </svg>
       </div>
@@ -16,34 +16,36 @@
 
     <div class="card" style="padding:2rem">
       <%- include('../partials/flash') %>
-
       <form action="/auth/register" method="POST" style="display:flex;flex-direction:column;gap:1.25rem">
         <div>
-          <label class="label">Correo electrónico</label>
-          <input type="email" name="email" required autocomplete="email" placeholder="tu@correo.com" class="input" />
+          <label class="label" for="reg-email">Correo electrónico</label>
+          <input id="reg-email" type="email" name="email" required autocomplete="email" placeholder="tu@correo.com" class="input" />
         </div>
         <div>
-          <label class="label">Contraseña <span style="color:var(--gray);font-weight:400">(mínimo 8 caracteres)</span></label>
-          <input type="password" name="password" required minlength="8" placeholder="••••••••" class="input" />
+          <label class="label" for="reg-pwd">
+            Contraseña
+            <span style="font-weight:400;color:var(--gray)">&nbsp;(mínimo 8 caracteres)</span>
+          </label>
+          <input id="reg-pwd" type="password" name="password" required minlength="8" placeholder="Introduce tu contraseña" class="input" />
         </div>
         <div>
-          <label class="label">Clave de acceso</label>
-          <input type="text" name="access_key" required placeholder="CAT-XXXX-XXXX" class="input" style="text-transform:uppercase;letter-spacing:.1em" />
+          <label class="label" for="reg-key">Clave de acceso</label>
+          <input id="reg-key" type="text" name="access_key" required placeholder="CAT-XXXX-XXXX" class="input" style="text-transform:uppercase;letter-spacing:.1em" />
         </div>
-        <button type="submit" class="btn-secondary" style="width:100%;justify-content:center;padding:.8rem;font-size:.9375rem;margin-top:.25rem">
-          Crear mi cuenta →
+        <button type="submit" class="btn btn-secondary" style="width:100%;padding:.8rem;font-size:.9375rem;margin-top:.25rem">
+          Crear mi cuenta
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </form>
 
-      <div style="margin-top:1.25rem;padding:.875rem;background:var(--blue-light);border-radius:9px;border:1px solid rgba(46,95,168,.15)">
-        <p style="font-size:.78rem;color:var(--blue-dark);text-align:center">
-          🔑 &nbsp;¿Sin clave de acceso? Contacta al administrador de la plataforma.
-        </p>
+      <div style="margin-top:1.25rem;padding:.875rem;background:var(--blue-light);border-radius:9px;border:1px solid rgba(46,95,168,.15);display:flex;align-items:flex-start;gap:.625rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" style="flex-shrink:0;margin-top:.1rem"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p style="font-size:.78rem;color:var(--blue-dark);line-height:1.5">Sin clave de acceso, contacta al administrador de la plataforma.</p>
       </div>
 
       <div style="margin-top:1.25rem;text-align:center">
         <p style="font-size:.875rem;color:var(--gray)">
-          ¿Ya tienes cuenta?&nbsp;<a href="/auth/login" class="link">Iniciar sesión</a>
+          ¿Ya tienes cuenta? <a href="/auth/login" class="link">Iniciar sesión</a>
         </p>
       </div>
     </div>
