@@ -28,10 +28,17 @@
           <textarea id="p-desc" name="description" rows="3" placeholder="Descripción breve del producto..." class="input"><%=product?product.description:''%></textarea>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
           <div>
             <label class="label" for="p-price">Precio <span style="color:#DC2626">*</span></label>
             <input id="p-price" type="number" name="price" step="0.01" min="0" required value="<%=product?product.price:''%>" placeholder="0.00" class="input" />
+          </div>
+          <div>
+            <label class="label" for="p-currency">Moneda</label>
+            <select id="p-currency" name="currency" class="input">
+              <option value="USD" <%=!product||product.currency==='USD'?'selected':''%>>USD ($)</option>
+              <option value="CUP" <%=product&&product.currency==='CUP'?'selected':''%>>CUP ($)</option>
+            </select>
           </div>
           <div>
             <label class="label" for="p-cat">Categoría</label>
@@ -40,12 +47,21 @@
           </div>
         </div>
 
-        <div>
-          <label class="label" for="p-status">Estado</label>
-          <select id="p-status" name="status" class="input">
-            <option value="available" <%=!product||product.status==='available'?'selected':''%>>Disponible</option>
-            <option value="unavailable" <%=product&&product.status==='unavailable'?'selected':''%>>Agotado</option>
-          </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div>
+            <label class="label" for="p-status">Estado</label>
+            <select id="p-status" name="status" class="input">
+              <option value="available" <%=!product||product.status==='available'?'selected':''%>>Disponible</option>
+              <option value="unavailable" <%=product&&product.status==='unavailable'?'selected':''%>>Agotado</option>
+            </select>
+          </div>
+          <div>
+            <label class="label" for="p-stock">Disponibilidad</label>
+            <select id="p-stock" name="stock_level" class="input">
+              <option value="normal" <%=!product||product.stock_level==='normal'?'selected':''%>>Normal</option>
+              <option value="low" <%=product&&product.stock_level==='low'?'selected':''%>>Pocas disponibles</option>
+            </select>
+          </div>
         </div>
 
         <div>
@@ -56,8 +72,21 @@
             <p style="font-size:.78rem;color:var(--gray)">Imagen actual. Sube otra para reemplazarla.</p>
           </div>
           <% } %>
-          <input type="file" name="image" accept="image/*" style="font-size:.875rem;color:var(--gray);font-family:'Exo 2',sans-serif;width:100%" />
-          <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">JPG, PNG o WEBP. Máximo 5 MB.</p>
+          
+          <!-- Previsualización -->
+          <div id="imagePreview" style="display:none;margin-bottom:1rem">
+            <img id="previewImg" src="" alt="Previsualización" style="width:150px;height:150px;object-fit:cover;border-radius:12px;border:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.08)" />
+            <p style="font-size:.75rem;color:var(--gray);margin-top:.5rem">Tamaño estimado: <span id="imageSize">-</span> KB</p>
+          </div>
+          
+          <input type="file" id="imageInput" name="image" accept="image/*" style="display:none" />
+          <button type="button" id="selectImageBtn" class="btn btn-ghost btn-sm" style="width:100%;border:1.5px dashed var(--border);padding:1.25rem">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2" style="margin-bottom:.5rem">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span style="color:var(--gray)">Seleccionar imagen</span>
+          </button>
+          <p style="font-size:.75rem;color:var(--gray);margin-top:.5rem">JPG, PNG o WEBP. Máximo 500 KB (se comprime automáticamente)</p>
         </div>
 
         <div style="display:flex;gap:.75rem;padding-top:.5rem;border-top:1px solid var(--border);flex-wrap:wrap">
@@ -73,5 +102,136 @@
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+// Previsualización y compresión de imagen
+document.addEventListener('DOMContentLoaded', function() {
+  const selectImageBtn = document.getElementById('selectImageBtn');
+  const imageInput = document.getElementById('imageInput');
+  const imagePreview = document.getElementById('imagePreview');
+  const previewImg = document.getElementById('previewImg');
+  const imageSize = document.getElementById('imageSize');
+
+  // Click en botón abre selector de archivos
+  if (selectImageBtn) {
+    selectImageBtn.addEventListener('click', function() {
+      imageInput.click();
+    });
+  }
+
+  // Previsualizar y comprimir imagen seleccionada
+  if (imageInput) {
+    imageInput.addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Validar tipo
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+
+      // Leer y comprimir imagen
+      try {
+        const compressedFile = await compressImage(file, 800, 800, 0.7);
+        
+        // Mostrar previsualización
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          previewImg.src = event.target.result;
+          imagePreview.style.display = 'block';
+          imageSize.textContent = Math.round(compressedFile.size / 1024);
+          
+          // Actualizar botón
+          selectImageBtn.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" style="margin-bottom:.5rem">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span style="color:var(--green)">Imagen seleccionada</span>
+          `;
+          selectImageBtn.style.borderColor = 'var(--green)';
+          selectImageBtn.style.background = 'var(--green-light)';
+        };
+        reader.readAsDataURL(compressedFile);
+        
+        // Reemplazar el archivo en el input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(compressedFile);
+        imageInput.files = dataTransfer.files;
+        
+      } catch (err) {
+        console.error('Error al procesar imagen:', err);
+        alert('Error al procesar la imagen. Intenta con otra.');
+      }
+    });
+  }
+});
+
+// Función para comprimir imagen usando canvas
+async function compressImage(file, maxWidth, maxHeight, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = function(event) {
+      const img = new Image();
+      
+      img.onload = function() {
+        // Calcular dimensiones
+        let width = img.width;
+        let height = img.height;
+        
+        // Escalar si es más grande que el máximo
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+        if (height > maxHeight) {
+          width = (maxHeight / height) * width;
+          height = maxHeight;
+        }
+        
+        // Crear canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convertir a blob comprimida
+        canvas.toBlob(
+          function(blob) {
+            if (blob) {
+              // Crear archivo con nombre original
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+              });
+              resolve(compressedFile);
+            } else {
+              reject(new Error('Error al comprimir imagen'));
+            }
+          },
+          'image/jpeg',
+          quality
+        );
+      };
+      
+      img.onerror = function() {
+        reject(new Error('Error al cargar imagen'));
+      };
+      
+      img.src = event.target.result;
+    };
+    
+    reader.onerror = function() {
+      reject(new Error('Error al leer archivo'));
+    };
+    
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+
 </body>
 </html>

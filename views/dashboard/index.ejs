@@ -35,9 +35,12 @@
       <div class="card" style="padding:1.5rem;border-left:3px solid #D1D5DB">
         <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.5rem">URL de tu catálogo</p>
         <% if(business){ %>
-          <p style="font-size:.78rem;font-family:monospace;color:var(--blue);word-break:break-all;margin-top:.25rem">/shop/<%= business.slug %></p>
-          <button onclick="navigator.clipboard.writeText(window.location.origin+'/shop/<%= business.slug %>');this.textContent='Copiado'" class="btn btn-ghost btn-sm" style="margin-top:.625rem">
-            Copiar enlace
+          <p id="catalogUrl" style="font-size:.78rem;font-family:monospace;color:var(--blue);word-break:break-all;margin-top:.25rem">/shop/<%= business.slug %></p>
+          <button id="copyUrlBtn" class="btn btn-ghost btn-sm" style="margin-top:.625rem">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            <span id="copyUrlText">Copiar enlace</span>
           </button>
         <% } else { %>
           <p style="font-size:.8rem;color:var(--gray);margin-top:.25rem">Crea tu negocio primero</p>
@@ -75,5 +78,39 @@
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+// Copiar URL del catálogo
+document.addEventListener('DOMContentLoaded', function() {
+  const copyUrlBtn = document.getElementById('copyUrlBtn');
+  const catalogUrl = document.getElementById('catalogUrl');
+  const copyUrlText = document.getElementById('copyUrlText');
+
+  if (copyUrlBtn && catalogUrl) {
+    copyUrlBtn.addEventListener('click', async function() {
+      try {
+        const fullUrl = window.location.origin + catalogUrl.textContent.trim();
+        await navigator.clipboard.writeText(fullUrl);
+        
+        // Feedback visual
+        const originalText = copyUrlText.textContent;
+        copyUrlText.textContent = '¡Copiado!';
+        copyUrlBtn.style.background = 'var(--green-light)';
+        copyUrlBtn.style.color = 'var(--green-dark)';
+        
+        setTimeout(() => {
+          copyUrlText.textContent = originalText;
+          copyUrlBtn.style.background = '';
+          copyUrlBtn.style.color = '';
+        }, 2000);
+      } catch (err) {
+        console.error('Error al copiar:', err);
+        copyUrlText.textContent = 'Error';
+      }
+    });
+  }
+});
+</script>
+
 </body>
 </html>

@@ -46,6 +46,7 @@ function initDatabase() {
       email        TEXT,
       social_links TEXT    DEFAULT '{}',
       schedule     TEXT,
+      header_color TEXT    DEFAULT '#2E5FA8',
       active       INTEGER NOT NULL DEFAULT 1,
       created_at   TEXT    NOT NULL DEFAULT (datetime('now'))
     );
@@ -56,9 +57,11 @@ function initDatabase() {
       name        TEXT    NOT NULL,
       description TEXT,
       price       REAL    NOT NULL DEFAULT 0,
+      currency    TEXT    DEFAULT 'USD',
       image       TEXT,
       category    TEXT,
       status      TEXT    NOT NULL DEFAULT 'available',
+      stock_level TEXT    DEFAULT 'normal',
       created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
     );
 

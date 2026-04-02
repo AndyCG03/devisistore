@@ -37,8 +37,8 @@ const Product = {
 
   create(data) {
     const stmt = db.prepare(`
-      INSERT INTO products (business_id, name, description, price, image, category, status)
-      VALUES (@business_id, @name, @description, @price, @image, @category, @status)
+      INSERT INTO products (business_id, name, description, price, currency, image, category, status, stock_level)
+      VALUES (@business_id, @name, @description, @price, @currency, @image, @category, @status, @stock_level)
     `);
     const info = stmt.run(data);
     return info.lastInsertRowid;
@@ -48,7 +48,8 @@ const Product = {
     return db.prepare(`
       UPDATE products
       SET name = @name, description = @description, price = @price,
-          image = @image, category = @category, status = @status
+          currency = @currency, image = @image, category = @category,
+          status = @status, stock_level = @stock_level
       WHERE id = @id
     `).run({ ...data, id });
   },

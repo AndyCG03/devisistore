@@ -15,8 +15,8 @@ const Business = {
 
   create(data) {
     const stmt = db.prepare(`
-      INSERT INTO businesses (user_id, name, slug, logo, description, address, phone, whatsapp, email, social_links, schedule)
-      VALUES (@user_id, @name, @slug, @logo, @description, @address, @phone, @whatsapp, @email, @social_links, @schedule)
+      INSERT INTO businesses (user_id, name, slug, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color)
+      VALUES (@user_id, @name, @slug, @logo, @description, @address, @phone, @whatsapp, @email, @social_links, @schedule, @header_color)
     `);
     const info = stmt.run(data);
     return info.lastInsertRowid;
@@ -27,7 +27,8 @@ const Business = {
       UPDATE businesses
       SET name = @name, logo = @logo, description = @description,
           address = @address, phone = @phone, whatsapp = @whatsapp,
-          email = @email, social_links = @social_links, schedule = @schedule
+          email = @email, social_links = @social_links, schedule = @schedule,
+          header_color = @header_color
       WHERE id = @id
     `).run({ ...data, id });
   },

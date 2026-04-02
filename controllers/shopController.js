@@ -63,20 +63,6 @@ exports.downloadCatalogPDF = (req, res) => {
   // PORTADA
   // ═══════════════════════════════════════════════════════════════════════
   
-  // Logo del negocio
-  if (business.logo) {
-    try {
-      doc.image(business.logo, { 
-        width: 100, 
-        height: 100,
-        align: 'left' 
-      });
-      doc.moveDown(0.5);
-    } catch (err) {
-      console.log('Error al cargar logo:', err.message);
-    }
-  }
-  
   // Nombre del negocio
   doc.fontSize(28)
      .font('Helvetica-Bold')
@@ -116,31 +102,31 @@ exports.downloadCatalogPDF = (req, res) => {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`📞 ${business.phone}`);
+         .text(`Telefono: ${business.phone}`);
     }
     if (business.whatsapp) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`💬 ${business.whatsapp}`);
+         .text(`WhatsApp: ${business.whatsapp}`);
     }
     if (business.email) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`✉️ ${business.email}`);
+         .text(`Email: ${business.email}`);
     }
     if (business.address) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`📍 ${business.address}`);
+         .text(`Direccion: ${business.address}`);
     }
     if (business.schedule) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`🕐 ${business.schedule}`);
+         .text(`Horario: ${business.schedule}`);
     }
   }
   
@@ -154,8 +140,8 @@ exports.downloadCatalogPDF = (req, res) => {
      .font('Helvetica-Bold')
      .fillColor('#1F2933')
      .text('Catálogo de Productos', { underline: true });
-  doc.moveDown(0.5);
-  
+  doc.moveDown(1);
+
   if (rows.length === 0) {
     doc.fontSize(11)
        .font('Helvetica')
@@ -178,7 +164,7 @@ exports.downloadCatalogPDF = (req, res) => {
       }
       
       // Categoría, precio y estado
-      const price = `$${parseFloat(p.price).toFixed(2)}`;
+      const price = `${p.currency === 'CUP' ? '$' : '$'}${parseFloat(p.price).toFixed(2)}${p.currency === 'CUP' ? ' CUP' : ''}`;
       const status = p.status === 'available' ? 'Disponible' : 'Agotado';
       const statusColor = p.status === 'available' ? '#059669' : '#DC2626';
       
@@ -194,21 +180,31 @@ exports.downloadCatalogPDF = (req, res) => {
          .fillColor(statusColor)
          .text(` • ${status}`, { continued: true });
       
+      // Stock level
+      if (p.stock_level === 'low' && p.status !== 'unavailable') {
+        doc.fontSize(10)
+           .font('Helvetica')
+           .fillColor('#D97706')
+           .text(` * Pocas`, { continued: true });
+      }
+      
       // Categoría (si existe)
       if (p.category && p.category.trim()) {
         doc.fontSize(10)
            .font('Helvetica')
            .fillColor('#6B7280')
-           .text(` • ${p.category}`);
+           .text(`• ${p.category}`);
       } else {
         doc.text('');
       }
       
-      // Separador entre productos
-      doc.moveDown(0.5);
-      doc.moveTo(50, doc.y)
-         .lineTo(550, doc.y)
-         .stroke('#F3F4F6');
+      // Separador entre productos (solo si hay más productos)
+      if (index < rows.length - 1) {
+        doc.moveDown(0.5);
+        doc.moveTo(50, doc.y)
+           .lineTo(550, doc.y)
+           .stroke('#F3F4F6');
+      }
       doc.moveDown(0.75);
     });
   }

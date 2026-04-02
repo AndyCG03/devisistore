@@ -129,9 +129,33 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Business header -->
-<header class="hero-gradient" style="padding:3rem 1.5rem">
+<%
+  // Función para oscurecer color hexadecimal (se ejecuta en servidor)
+  function darkenColor(hex, percent) {
+    try {
+      hex = String(hex).replace(/^\s*#|\s*$/g, '');
+      if (hex.length === 3) {
+        hex = hex.replace(/(.)/g, '$1$1');
+      }
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      const darkR = Math.max(0, r - (r * percent / 100));
+      const darkG = Math.max(0, g - (g * percent / 100));
+      const darkB = Math.max(0, b - (b * percent / 100));
+      return '#' + ((1 << 24) + (Math.round(darkR) << 16) + (Math.round(darkG) << 8) + Math.round(darkB)).toString(16).slice(1);
+    } catch(e) {
+      return '#1E4585';
+    }
+  }
+  
+  const headerColor = business && business.header_color ? business.header_color : '#2E5FA8';
+  const headerColorDark = darkenColor(headerColor, 20);
+%>
+
+<header class="hero-gradient" style="padding:3rem 1.5rem;background:linear-gradient(135deg,<%=headerColor%> 0%,<%=headerColor%> 50%,<%=headerColorDark%> 100%)">
   <div style="max-width:1100px;margin:0 auto">
-    
+
     <!-- Logo centrado -->
     <div style="text-align:center;margin-bottom:2rem">
       <% if(business.logo){ %>
@@ -225,10 +249,25 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Products grid -->
   <div id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem">
     <% products.forEach(p=>{ %>
-    <div class="card card-hover product-card" 
+    <div class="card card-hover product-card"
          style="overflow:hidden;opacity:<%=p.status==='unavailable'?.6:1%>;cursor:pointer" 
          data-product='<%- JSON.stringify(p) %>'
          data-whatsapp="<%=business.whatsapp || ''%>">
+      <!-- Botón Pedir (siempre visible arriba) -->
+      <% if(p.status !== 'unavailable'){ %>
+      <a href="<%=business.whatsapp ? 'https://wa.me/'+business.whatsapp.replace(/\D/g,'')+'?text='+encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':'')) : 'javascript:void(0)'%>"
+         target="<%=business.whatsapp ? '_blank' : ''%>"
+         class="whatsapp-btn-fixed"
+         data-whatsapp="<%=business.whatsapp || ''%>"
+         data-product-name="<%=p.name%>"
+         data-product-price="<%=parseFloat(p.price).toFixed(2)%>"
+         data-stock-level="<%=p.stock_level%>"
+         style="position:absolute;top:.75rem;right:.75rem;z-index:10;display:inline-flex !important;align-items:center;gap:.375rem;background:#25D366;color:#fff;font-size:.75rem;font-weight:700;padding:.35rem .875rem;border-radius:7px;text-decoration:none;box-shadow:0 2px 8px rgba(37,211,102,.4);pointer-events:<%=business.whatsapp ? 'auto' : 'none'%>;opacity:1 !important">
+        <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+        Pedir
+      </a>
+      <% } %>
+      
       <div style="aspect-ratio:1;overflow:hidden;background:var(--bg)">
         <% if(p.image){ %>
           <img src="<%=p.image%>" alt="<%=p.name%>" class="product-image" style="width:100%;height:100%;object-fit:cover;transition:transform 320ms ease" />
@@ -240,23 +279,25 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
       <div style="padding:1rem">
         <% if(p.category){ %><span class="badge badge-blue" style="margin-bottom:.5rem"><%=p.category%></span><% } %>
-        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;line-height:1.4"><%=p.name%></h3>
-        <% if(p.description){ %>
+        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;line-height:1.4;min-height:2.8rem;display:flex;align-items:center"><%=p.name%></h3>
+        <% if(p.description && p.description.trim()){ %>
           <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-top:.25rem"><%=p.description.length>70?p.description.slice(0,70)+'...':p.description%></p>
         <% } %>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.875rem;flex-wrap:wrap;gap:.5rem">
-          <span style="font-size:1.125rem;font-weight:800;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></span>
-          <% if(p.status==='unavailable'){ %>
-            <span class="badge badge-red">Agotado</span>
-          <% } else if(business.whatsapp){ %>
-            <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')')%>"
-               target="_blank"
-               style="display:inline-flex;align-items:center;gap:.375rem;background:#25D366;color:#fff;font-size:.75rem;font-weight:700;padding:.35rem .875rem;border-radius:7px;text-decoration:none;transition:var(--tr)"
-               onmouseover="this.style.background='#1DA851'" onmouseout="this.style.background='#25D366'">
-              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
-              Pedir
-            </a>
-          <% } %>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:.875rem;flex-wrap:wrap;gap:.5rem">
+          <span style="font-size:1.125rem;font-weight:800;color:var(--dark)">
+            <%=p.currency==='CUP'?'$':'$'%><%=parseFloat(p.price).toFixed(2)%>
+            <% if(p.currency==='CUP'){ %><span style="font-size:.625rem;font-weight:600;color:var(--gray);margin-left:.25rem">CUP</span><% } %>
+          </span>
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:flex-end">
+            <% if(p.status==='unavailable'){ %>
+              <span class="badge badge-red">Agotado</span>
+            <% } else if(p.stock_level==='low'){ %>
+              <span class="badge badge-yellow" style="display:inline-flex;align-items:center;gap:.25rem">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                Pocas
+              </span>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
@@ -341,6 +382,36 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // 2b. Efecto hover en botones de WhatsApp
+  document.querySelectorAll('.whatsapp-btn').forEach(function(btn) {
+    btn.addEventListener('mouseenter', function() {
+      this.style.background = '#1DA851';
+    });
+    btn.addEventListener('mouseleave', function() {
+      this.style.background = '#25D366';
+    });
+  });
+  
+  // 2c. Efecto hover en botones fijos de productos
+  document.querySelectorAll('.whatsapp-btn-fixed').forEach(function(btn) {
+    btn.addEventListener('mouseenter', function() {
+      if (this.getAttribute('data-whatsapp')) {
+        this.style.background = '#1DA851';
+      }
+    });
+    btn.addEventListener('mouseleave', function() {
+      this.style.background = '#25D366';
+    });
+    
+    // Manejar click en botones sin WhatsApp
+    btn.addEventListener('click', function(e) {
+      if (!this.getAttribute('data-whatsapp')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  });
+
   // 3. Botón de cerrar modal
   const modalCloseBtn = document.getElementById('modalCloseBtn');
   const productModal = document.getElementById('productModal');
@@ -405,10 +476,15 @@ function openProductModal(product, whatsapp) {
         }
 
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
-          <span style="font-size:1.5rem;font-weight:800;color:var(--dark)">$${parseFloat(product.price).toFixed(2)}</span>
+          <div>
+            <span style="font-size:1.5rem;font-weight:800;color:var(--dark)">$${parseFloat(product.price).toFixed(2)}</span>
+            ${product.currency === 'CUP' ? '<span style="font-size:.75rem;font-weight:600;color:var(--gray);margin-left:.375rem">CUP</span>' : ''}
+          </div>
           ${product.status === 'unavailable'
             ? '<span class="badge badge-red" style="font-size:.8rem;padding:.4rem .9rem">Agotado</span>'
-            : '<span class="badge badge-green" style="font-size:.8rem;padding:.4rem .9rem">Disponible</span>'
+            : product.stock_level === 'low'
+              ? '<span class="badge badge-yellow" style="font-size:.8rem;padding:.4rem .9rem;display:inline-flex;align-items:center;gap:.375rem"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg> Pocas disponibles</span>'
+              : '<span class="badge badge-green" style="font-size:.8rem;padding:.4rem .9rem">Disponible</span>'
           }
         </div>
 

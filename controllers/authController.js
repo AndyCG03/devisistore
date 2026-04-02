@@ -11,32 +11,23 @@ exports.getLogin = (req, res) => {
 
 // ── POST /auth/login ───────────────────────────────────────────────────────
 exports.postLogin = async (req, res) => {
-  console.log('[LOGIN POST] Body recibido:', req.body);
-  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log('[LOGIN POST] Errores de validación:', errors.array());
     req.session.flashError = errors.array()[0].msg;
     return res.redirect('/auth/login');
   }
 
   const { email, password } = req.body;
-  console.log('[LOGIN] Intento de login para:', email);
-  console.log('[LOGIN] Sesión antes:', req.session.id);
 
   try {
     const user = User.findByEmail(email);
-    console.log('[LOGIN] Usuario encontrado:', user ? user.email : 'NO');
 
     if (!user || !user.active) {
-      console.log('[LOGIN] Usuario no encontrado o inactivo');
       req.session.flashError = 'Credenciales incorrectas o cuenta desactivada.';
       return res.redirect('/auth/login');
     }
 
     const match = await bcrypt.compare(password, user.password);
-    console.log('[LOGIN] Password match:', match);
-    
     if (!match) {
       req.session.flashError = 'Credenciales incorrectas.';
       return res.redirect('/auth/login');
@@ -44,8 +35,10 @@ exports.postLogin = async (req, res) => {
 
     // Guardar sesión
     req.session.user = { id: user.id, email: user.email, role: user.role };
-    console.log('[LOGIN] Sesión guardada:', req.session.user);
     req.session.flashSuccess = `Bienvenido de nuevo, ${user.email}`;
+    
+    // Asegurar que la sesión se guarde antes de redirigir
+    await new Promise((resolve) => req.session.save(resolve));
 
     return res.redirect(user.role === 'admin' ? '/admin' : '/dashboard');
   } catch (err) {

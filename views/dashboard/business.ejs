@@ -30,16 +30,40 @@
           </div>
           <div>
             <label class="label">Logo del negocio</label>
+            
+            <!-- Previsualización -->
+            <div id="logoPreview" style="display:none;margin-bottom:1rem">
+              <img id="previewImg" src="" alt="Previsualización" style="width:100px;height:100px;object-fit:cover;border-radius:12px;border:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.08)" />
+              <p style="font-size:.75rem;color:var(--gray);margin-top:.5rem">Tamaño: <span id="logoSize">-</span> KB</p>
+            </div>
+            
             <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
               <% if(business&&business.logo){ %>
-                <img src="<%=business.logo%>" alt="Logo" style="width:4rem;height:4rem;object-fit:cover;border-radius:9px;border:1px solid var(--border)" />
+                <img id="currentLogo" src="<%=business.logo%>" alt="Logo actual" style="width:4rem;height:4rem;object-fit:cover;border-radius:9px;border:1px solid var(--border)" />
+                <p style="font-size:.78rem;color:var(--gray)">Logo actual. Sube otro para reemplazarlo.</p>
               <% } %>
-              <input type="file" name="logo" accept="image/*" style="font-size:.875rem;color:var(--gray);font-family:'Exo 2',sans-serif" />
             </div>
+            
+            <input type="file" id="logoInput" name="logo" accept="image/*" style="display:none" />
+            <button type="button" id="selectLogoBtn" class="btn btn-ghost btn-sm" style="width:100%;border:1.5px dashed var(--border);padding:1.25rem;margin-top:.75rem">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2" style="margin-bottom:.5rem">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span style="color:var(--gray)">Seleccionar logo</span>
+            </button>
+            <p style="font-size:.75rem;color:var(--gray);margin-top:.5rem">PNG, JPG o WEBP. Se recomienda imagen cuadrada.</p>
           </div>
           <div>
             <label class="label" for="b-desc">Descripción</label>
             <textarea id="b-desc" name="description" rows="3" placeholder="Describe tu negocio brevemente..." class="input"><%=business?business.description:''%></textarea>
+          </div>
+          <div>
+            <label class="label" for="b-color">Color del header</label>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <input id="b-color" type="color" name="header_color" value="<%=business&&business.header_color?business.header_color:'#2E5FA8'%>" style="width:3rem;height:2.5rem;border:none;border-radius:6px;cursor:pointer;background:none" />
+              <input type="text" value="<%=business&&business.header_color?business.header_color:'#2E5FA8'%>" readonly style="flex:1;max-width:120px;padding:.5rem;border:1.5px solid var(--border);border-radius:8px;font-family:monospace;font-size:.8125rem;color:var(--gray);background:var(--bg)" />
+            </div>
+            <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">Elige el color principal de tu catálogo. Por defecto: Azul (#2E5FA8)</p>
           </div>
           <div>
             <label class="label" for="b-sched">Horario de atención</label>
@@ -92,5 +116,64 @@
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+// Previsualización de logo (sin compresión)
+document.addEventListener('DOMContentLoaded', function() {
+  const selectLogoBtn = document.getElementById('selectLogoBtn');
+  const logoInput = document.getElementById('logoInput');
+  const logoPreview = document.getElementById('logoPreview');
+  const previewImg = document.getElementById('previewImg');
+  const logoSize = document.getElementById('logoSize');
+  const currentLogo = document.getElementById('currentLogo');
+
+  // Click en botón abre selector de archivos
+  if (selectLogoBtn) {
+    selectLogoBtn.addEventListener('click', function() {
+      logoInput.click();
+    });
+  }
+
+  // Previsualizar logo seleccionado
+  if (logoInput) {
+    logoInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // Validar tipo
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+
+      // Mostrar previsualización
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        previewImg.src = event.target.result;
+        logoPreview.style.display = 'block';
+        logoSize.textContent = Math.round(file.size / 1024);
+        
+        // Ocultar logo actual si existe
+        if (currentLogo) {
+          currentLogo.style.display = 'none';
+          currentLogo.nextElementSibling.style.display = 'none';
+        }
+        
+        // Actualizar botón
+        selectLogoBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" style="margin-bottom:.5rem">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span style="color:var(--green)">Logo seleccionado</span>
+        `;
+        selectLogoBtn.style.borderColor = 'var(--green)';
+        selectLogoBtn.style.background = 'var(--green-light)';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
+</script>
+
 </body>
 </html>
