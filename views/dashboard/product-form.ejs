@@ -1,91 +1,75 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div class="flex min-h-screen">
+<div style="display:flex;min-height:calc(100vh - 3.75rem)">
   <% locals.activePage = 'products'; %>
   <%- include('../partials/sidebar') %>
 
-  <main class="flex-1 p-6 md:p-10">
-    <div class="max-w-2xl">
-      <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-900"><%= title %></h1>
-        <p class="text-gray-500 mt-1">
-          <%= product ? 'Modifica los datos de tu producto.' : 'Añade un nuevo producto a tu catálogo.' %>
-        </p>
+  <main style="flex:1;padding:2rem 2.5rem">
+    <div style="max-width:640px">
+
+      <div style="margin-bottom:2rem">
+        <a href="/dashboard/products" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none;margin-bottom:1rem" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          Volver a productos
+        </a>
+        <h1 class="section-title"><%=title%></h1>
+        <p class="section-sub"><%=product?'Modifica los datos de tu producto.':'Añade un nuevo producto a tu catálogo.'%></p>
       </div>
 
       <%- include('../partials/flash') %>
 
-      <form action="<%= action %>" method="POST" enctype="multipart/form-data"
-            class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
+      <form action="<%=action%>" method="POST" enctype="multipart/form-data" class="card" style="padding:2rem;display:flex;flex-direction:column;gap:1.375rem">
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Nombre <span class="text-red-500">*</span></label>
-          <input type="text" name="name" required value="<%= product ? product.name : '' %>"
-                 placeholder="Ej: Café Americano"
-                 class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
+          <label class="label">Nombre del producto <span style="color:#DC2626">*</span></label>
+          <input type="text" name="name" required value="<%=product?product.name:''%>" placeholder="Ej: Café Americano" class="input" />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-          <textarea name="description" rows="3"
-                    placeholder="Describe el producto brevemente..."
-                    class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition resize-none"><%= product ? product.description : '' %></textarea>
+          <label class="label">Descripción</label>
+          <textarea name="description" rows="3" placeholder="Describe brevemente el producto…" class="input"><%=product?product.description:''%></textarea>
         </div>
 
-        <div class="grid sm:grid-cols-2 gap-4">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Precio <span class="text-red-500">*</span></label>
-            <input type="number" name="price" step="0.01" min="0" required
-                   value="<%= product ? product.price : '' %>"
-                   placeholder="0.00"
-                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
+            <label class="label">Precio <span style="color:#DC2626">*</span></label>
+            <input type="number" name="price" step="0.01" min="0" required value="<%=product?product.price:''%>" placeholder="0.00" class="input" />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-            <input type="text" name="category" value="<%= product ? product.category : '' %>"
-                   list="cat-list"
-                   placeholder="Ej: Bebidas, Postres..."
-                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
-            <datalist id="cat-list">
-              <% categories.forEach(c => { %><option value="<%= c %>"><% }) %>
-            </datalist>
+            <label class="label">Categoría</label>
+            <input type="text" name="category" value="<%=product?product.category:''%>" list="cat-list" placeholder="Ej: Bebidas…" class="input" />
+            <datalist id="cat-list"><% categories.forEach(c=>{%><option value="<%=c%>"><% }) %></datalist>
           </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-          <select name="status"
-                  class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none bg-white">
-            <option value="available" <%= !product || product.status === 'available' ? 'selected' : '' %>>✅ Disponible</option>
-            <option value="unavailable" <%= product && product.status === 'unavailable' ? 'selected' : '' %>>❌ Agotado</option>
+          <label class="label">Estado</label>
+          <select name="status" class="input" style="appearance:none;cursor:pointer">
+            <option value="available" <%=!product||product.status==='available'?'selected':''%>>✅ Disponible</option>
+            <option value="unavailable" <%=product&&product.status==='unavailable'?'selected':''%>>❌ Agotado</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Imagen del producto</label>
-          <% if (product && product.image) { %>
-            <div class="mb-3">
-              <img src="<%= product.image %>" alt="Imagen actual"
-                   class="w-32 h-32 object-cover rounded-xl border border-gray-200" />
-              <p class="text-xs text-gray-400 mt-1">Imagen actual. Sube otra para reemplazarla.</p>
-            </div>
+          <label class="label">Imagen del producto</label>
+          <% if(product && product.image){ %>
+          <div style="margin-bottom:.75rem;display:flex;align-items:center;gap:.75rem">
+            <img src="<%=product.image%>" alt="" style="width:4.5rem;height:4.5rem;object-fit:cover;border-radius:9px;border:1px solid var(--border)" />
+            <p style="font-size:.78rem;color:var(--gray)">Imagen actual. Sube otra para reemplazarla.</p>
+          </div>
           <% } %>
-          <input type="file" name="image" accept="image/*"
-                 class="text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0
-                        file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer" />
+          <input type="file" name="image" accept="image/*" style="font-size:.875rem;color:var(--gray);font-family:'Exo 2',sans-serif" />
+          <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">JPG, PNG o WEBP. Máx. 5MB.</p>
         </div>
 
-        <div class="flex gap-3 pt-2">
-          <button type="submit"
-                  class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-3 rounded-xl transition shadow">
-            <%= product ? 'Guardar cambios' : 'Crear producto' %>
+        <div style="display:flex;gap:.75rem;padding-top:.5rem;border-top:1px solid var(--border)">
+          <button type="submit" class="btn-primary">
+            <%=product?'Guardar cambios':'Crear producto'%>
           </button>
-          <a href="/dashboard/products"
-             class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-6 py-3 rounded-xl transition">
-            Cancelar
-          </a>
+          <a href="/dashboard/products" class="btn-ghost">Cancelar</a>
         </div>
+
       </form>
     </div>
   </main>

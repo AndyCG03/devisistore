@@ -1,127 +1,97 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div class="flex min-h-screen">
+<div style="display:flex;min-height:calc(100vh - 3.75rem)">
   <% locals.activePage = 'products'; %>
   <%- include('../partials/sidebar') %>
 
-  <main class="flex-1 p-6 md:p-10">
-    <div class="flex items-center justify-between mb-6">
+  <main style="flex:1;padding:2rem 2.5rem">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">Mis Productos</h1>
-        <p class="text-gray-500 mt-1"><%= total %> producto(s) en total</p>
+        <h1 class="section-title">Mis Productos</h1>
+        <p class="section-sub"><%= total %> producto(s) en total</p>
       </div>
-      <a href="/dashboard/products/new"
-         class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow">
-        + Nuevo producto
+      <a href="/dashboard/products/new" class="btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuevo producto
       </a>
     </div>
 
     <%- include('../partials/flash') %>
 
-    <!-- Filtros -->
-    <form method="GET" class="flex flex-wrap gap-3 mb-8 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-      <input type="text" name="search" value="<%= search %>"
-             placeholder="Buscar productos..."
-             class="flex-1 min-w-[180px] px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none" />
-
-      <select name="category"
-              class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none bg-white">
-        <option value="all" <%= category === 'all' ? 'selected' : '' %>>Todas las categorías</option>
-        <% categories.forEach(c => { %>
-          <option value="<%= c %>" <%= category === c ? 'selected' : '' %>><%= c %></option>
-        <% }) %>
+    <!-- Filters -->
+    <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;padding:1.25rem;background:var(--white);border-radius:var(--r-card);border:1px solid var(--border)">
+      <input type="text" name="search" value="<%= search %>" placeholder="Buscar productos…" class="input" style="flex:1;min-width:180px" />
+      <select name="category" class="input" style="width:auto;padding:.65rem 1rem">
+        <option value="all" <%= category==='all'?'selected':'' %>>Todas las categorías</option>
+        <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
       </select>
-
-      <button type="submit" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-700 transition">
-        Filtrar
-      </button>
-      <a href="/dashboard/products" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-200 transition">
-        Limpiar
-      </a>
+      <button type="submit" class="btn-primary btn-sm" style="font-family:'Exo 2',sans-serif">Filtrar</button>
+      <a href="/dashboard/products" class="btn-ghost btn-sm">Limpiar</a>
     </form>
 
-    <!-- Tabla de productos -->
-    <% if (products.length === 0) { %>
-      <div class="text-center py-20 bg-white rounded-2xl border border-gray-100">
-        <div class="text-5xl mb-4">📦</div>
-        <p class="text-gray-500 font-medium">Aún no tienes productos.</p>
-        <a href="/dashboard/products/new"
-           class="inline-block mt-4 text-sm text-brand-600 font-semibold hover:underline">
-          Agregar el primero →
-        </a>
-      </div>
+    <!-- Table -->
+    <% if(products.length===0){ %>
+    <div class="card" style="padding:4rem;text-align:center">
+      <div style="font-size:3rem;margin-bottom:1rem">📦</div>
+      <p style="font-weight:600;color:var(--dark)">Aún no tienes productos</p>
+      <a href="/dashboard/products/new" class="btn-primary btn-sm" style="margin-top:1rem;font-family:'Exo 2',sans-serif">Agregar el primero →</a>
+    </div>
     <% } else { %>
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <table class="w-full text-sm">
-          <thead class="bg-gray-50 border-b border-gray-100">
-            <tr>
-              <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Producto</th>
-              <th class="text-left px-5 py-3.5 font-semibold text-gray-600 hidden md:table-cell">Categoría</th>
-              <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Precio</th>
-              <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Estado</th>
-              <th class="text-right px-5 py-3.5 font-semibold text-gray-600">Acciones</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-50">
-            <% products.forEach(p => { %>
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-5 py-4 flex items-center gap-3">
-                <% if (p.image) { %>
-                  <img src="<%= p.image %>" alt="<%= p.name %>"
-                       class="w-12 h-12 object-cover rounded-xl border border-gray-200 flex-shrink-0" />
+    <div class="card" style="overflow:hidden">
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Estado</th>
+            <th style="text-align:right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(p=>{ %>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:.875rem">
+                <% if(p.image){ %>
+                  <img src="<%=p.image%>" alt="<%=p.name%>" style="width:3rem;height:3rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
                 <% } else { %>
-                  <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span class="text-xl">📷</span>
-                  </div>
+                  <div style="width:3rem;height:3rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;border:1px solid var(--border)">📷</div>
                 <% } %>
                 <div>
-                  <p class="font-medium text-gray-900"><%= p.name %></p>
-                  <p class="text-gray-400 text-xs"><%= p.description ? p.description.slice(0,50)+'...' : '' %></p>
+                  <p style="font-weight:700;color:var(--dark)"><%=p.name%></p>
+                  <p style="font-size:.78rem;color:var(--gray);margin-top:.1rem"><%=p.description?p.description.slice(0,45)+'…':''%></p>
                 </div>
-              </td>
-              <td class="px-5 py-4 hidden md:table-cell">
-                <span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full text-xs"><%= p.category || '—' %></span>
-              </td>
-              <td class="px-5 py-4 font-semibold text-gray-900">$<%= parseFloat(p.price).toFixed(2) %></td>
-              <td class="px-5 py-4">
-                <span class="px-2.5 py-1 rounded-full text-xs font-medium
-                  <%= p.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
-                  <%= p.status === 'available' ? 'Disponible' : 'Agotado' %>
-                </span>
-              </td>
-              <td class="px-5 py-4 text-right">
-                <div class="flex items-center justify-end gap-2">
-                  <a href="/dashboard/products/<%= p.id %>/edit"
-                     class="text-xs bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg hover:bg-brand-100 transition font-medium">
-                    Editar
-                  </a>
-                  <form action="/dashboard/products/<%= p.id %>/delete" method="POST"
-                        onsubmit="return confirm('¿Eliminar este producto?')">
-                    <button class="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 transition font-medium">
-                      Eliminar
-                    </button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
+              </div>
+            </td>
+            <td><span class="badge-blue"><%=p.category||'—'%></span></td>
+            <td style="font-weight:700;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></td>
+            <td>
+              <% if(p.status==='available'){ %><span class="badge-green">✓ Disponible</span><% }else{ %><span class="badge-red">✗ Agotado</span><% } %>
+            </td>
+            <td style="text-align:right">
+              <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem">
+                <a href="/dashboard/products/<%=p.id%>/edit" class="btn-ghost btn-sm">Editar</a>
+                <form action="/dashboard/products/<%=p.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar este producto?')" style="margin:0">
+                  <button class="btn-danger" style="font-family:'Exo 2',sans-serif">Eliminar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
 
-      <!-- Paginación -->
-      <% if (pages > 1) { %>
-      <div class="flex justify-center items-center gap-2 mt-8">
-        <% for (let i = 1; i <= pages; i++) { %>
-          <a href="?page=<%= i %>&category=<%= category %>&search=<%= search %>"
-             class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-medium transition
-                    <%= i === currentPage ? 'bg-brand-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-brand-400' %>">
-            <%= i %>
-          </a>
-        <% } %>
-      </div>
+    <% if(pages>1){ %>
+    <div style="display:flex;justify-content:center;gap:.5rem;margin-top:1.75rem">
+      <% for(let i=1;i<=pages;i++){ %>
+        <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>" style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:var(--tr);<%=i===currentPage?'background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(46,95,168,.25)':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
       <% } %>
+    </div>
+    <% } %>
     <% } %>
   </main>
 </div>

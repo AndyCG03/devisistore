@@ -1,174 +1,132 @@
 <%- include('../partials/head') %>
 
-<!-- Navbar simplificado para página pública -->
-<nav class="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-    <a href="/" class="font-bold text-brand-700 text-lg">CatalogHub</a>
-    <% if (locals.user) { %>
-      <a href="/dashboard" class="text-sm text-gray-500 hover:text-brand-600 font-medium">Mi Panel</a>
+<!-- Shop navbar -->
+<nav style="background:var(--white);border-bottom:1px solid var(--border);sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(46,95,168,.06);position:sticky">
+  <div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:3.75rem">
+    <a href="/" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+      <div class="logo-mark" style="width:2rem;height:2rem;border-radius:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      </div>
+      <span style="font-weight:800;font-size:.95rem;color:var(--blue)">Devisi</span><span style="font-weight:800;font-size:.95rem;color:var(--green)">Store</span>
+    </a>
+    <% if(locals.user){ %>
+      <a href="/dashboard" style="font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">Mi Panel</a>
     <% } else { %>
-      <a href="/auth/login" class="text-sm text-gray-500 hover:text-brand-600 font-medium">Iniciar sesión</a>
+      <a href="/auth/login" style="font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none">Iniciar sesión</a>
     <% } %>
   </div>
 </nav>
 
-<!-- HEADER DEL NEGOCIO -->
-<header class="gradient-hero text-white py-12 px-4">
-  <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center gap-6">
-    <% if (business.logo) { %>
-      <img src="<%= business.logo %>" alt="<%= business.name %>"
-           class="w-24 h-24 rounded-2xl object-cover border-4 border-white/30 shadow-lg flex-shrink-0" />
+<!-- Business header -->
+<header class="hero-gradient" style="padding:3rem 1.5rem">
+  <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:2rem">
+    <% if(business.logo){ %>
+      <img src="<%=business.logo%>" alt="<%=business.name%>" style="width:6rem;height:6rem;border-radius:16px;object-fit:cover;border:3px solid rgba(255,255,255,.3);box-shadow:0 4px 16px rgba(0,0,0,.2);flex-shrink:0" />
     <% } else { %>
-      <div class="w-24 h-24 rounded-2xl bg-white/20 flex items-center justify-center text-5xl flex-shrink-0">🏪</div>
+      <div style="width:6rem;height:6rem;border-radius:16px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:3rem;flex-shrink:0;border:2px solid rgba(255,255,255,.2)">🏪</div>
     <% } %>
-    <div class="text-center sm:text-left">
-      <h1 class="text-3xl font-extrabold mb-1"><%= business.name %></h1>
-      <% if (business.description) { %>
-        <p class="text-blue-100 text-sm max-w-xl"><%= business.description %></p>
+
+    <div style="flex:1;min-width:200px">
+      <h1 style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:.375rem"><%=business.name%></h1>
+      <% if(business.description){ %>
+        <p style="color:rgba(255,255,255,.8);font-size:.9rem;max-width:520px;line-height:1.6;margin-bottom:.875rem"><%=business.description%></p>
       <% } %>
-      <div class="flex flex-wrap items-center gap-3 mt-3 justify-center sm:justify-start">
-        <% if (business.phone) { %>
-          <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">📞 <%= business.phone %></span>
-        <% } %>
-        <% if (business.schedule) { %>
-          <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">🕐 <%= business.schedule %></span>
-        <% } %>
-        <% if (business.address) { %>
-          <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full">📍 <%= business.address %></span>
-        <% } %>
+      <div style="display:flex;flex-wrap:wrap;gap:.625rem">
+        <% if(business.phone){ %><span style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.2)">📞 <%=business.phone%></span><% } %>
+        <% if(business.schedule){ %><span style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.2)">🕐 <%=business.schedule%></span><% } %>
+        <% if(business.address){ %><span style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;font-weight:600;padding:.25rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.2)">📍 <%=business.address%></span><% } %>
       </div>
     </div>
 
-    <!-- Botón WhatsApp -->
-    <% if (business.whatsapp) { %>
-      <div class="sm:ml-auto">
-        <a href="https://wa.me/<%= business.whatsapp.replace(/\D/g,'') %>?text=<%= encodeURIComponent('¡Hola! Me interesa un producto de tu catálogo.') %>"
-           target="_blank"
-           class="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white font-bold px-5 py-3 rounded-xl shadow-lg transition">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.799 9.799 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/>
-          </svg>
-          WhatsApp
-        </a>
-      </div>
+    <% if(business.whatsapp){ %>
+      <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('¡Hola! Me interesa un producto de tu catálogo.')%>" target="_blank" style="display:inline-flex;align-items:center;gap:.625rem;background:#25D366;color:#fff;font-weight:700;font-size:.9375rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);text-decoration:none;flex-shrink:0;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:var(--tr)" onmouseover="this.style.background='#20BE5C'" onmouseout="this.style.background='#25D366'">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+        WhatsApp
+      </a>
     <% } %>
   </div>
 </header>
 
-<!-- CATÁLOGO -->
-<section class="py-10 px-4 max-w-6xl mx-auto">
+<!-- Catalog -->
+<main style="padding:2.5rem 1.5rem;max-width:1200px;margin:0 auto">
 
-  <!-- Filtros -->
-  <form method="GET" class="flex flex-wrap gap-3 mb-8">
-    <input type="text" name="search" value="<%= search %>"
-           placeholder="Buscar productos..."
-           class="flex-1 min-w-[180px] px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none bg-white shadow-sm" />
-
-    <select name="category"
-            class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none bg-white shadow-sm">
-      <option value="all" <%= category === 'all' ? 'selected' : '' %>>Todas las categorías</option>
-      <% categories.forEach(c => { %>
-        <option value="<%= c %>" <%= category === c ? 'selected' : '' %>><%= c %></option>
-      <% }) %>
+  <!-- Filters -->
+  <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem">
+    <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos…" class="input" style="flex:1;min-width:200px;max-width:360px" />
+    <select name="category" class="input" style="width:auto;padding:.65rem 1rem;max-width:220px;appearance:none;cursor:pointer">
+      <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
+      <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
     </select>
-
-    <button type="submit" class="bg-brand-600 text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-brand-700 transition shadow">
-      Buscar
-    </button>
-    <a href="/shop/<%= business.slug %>" class="bg-gray-100 text-gray-600 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-200 transition">
-      Ver todo
-    </a>
+    <button type="submit" class="btn-primary btn-sm" style="font-family:'Exo 2',sans-serif">Buscar</button>
+    <a href="/shop/<%=business.slug%>" class="btn-ghost btn-sm">Ver todo</a>
   </form>
 
-  <!-- Grid de productos -->
-  <% if (products.length === 0) { %>
-    <div class="text-center py-20">
-      <div class="text-5xl mb-4">🔍</div>
-      <p class="text-gray-500 font-medium">No se encontraron productos.</p>
-    </div>
+  <!-- Products grid -->
+  <% if(products.length===0){ %>
+  <div style="text-align:center;padding:5rem 1rem">
+    <div style="font-size:3.5rem;margin-bottom:1rem">🔍</div>
+    <p style="font-weight:600;color:var(--dark)">No se encontraron productos</p>
+    <p style="color:var(--gray);font-size:.875rem;margin-top:.375rem">Intenta con otra búsqueda o categoría</p>
+  </div>
   <% } else { %>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
-      <% products.forEach(p => { %>
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm card-hover overflow-hidden
-                  <%= p.status === 'unavailable' ? 'opacity-70' : '' %>">
-        <div class="aspect-square overflow-hidden bg-gray-50">
-          <% if (p.image) { %>
-            <img src="<%= p.image %>" alt="<%= p.name %>"
-                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-          <% } else { %>
-            <div class="w-full h-full flex items-center justify-center text-5xl text-gray-300">📷</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.25rem">
+    <% products.forEach(p=>{ %>
+    <div class="card card-hover" style="overflow:hidden;opacity:<%=p.status==='unavailable'?.65:1%>">
+      <div style="aspect-ratio:1;overflow:hidden;background:var(--bg)">
+        <% if(p.image){ %>
+          <img src="<%=p.image%>" alt="<%=p.name%>" style="width:100%;height:100%;object-fit:cover;transition:transform 300ms cubic-bezier(.4,0,.2,1)" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" />
+        <% } else { %>
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;color:#D1D5DB">📷</div>
+        <% } %>
+      </div>
+      <div style="padding:1rem">
+        <% if(p.category){ %><span class="badge-blue" style="margin-bottom:.5rem"><%=p.category%></span><% } %>
+        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;margin-bottom:.25rem;line-height:1.4"><%=p.name%></h3>
+        <% if(p.description){ %>
+          <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-bottom:.75rem"><%=p.description.length>70?p.description.slice(0,70)+'…':p.description%></p>
+        <% } %>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.75rem">
+          <span style="font-size:1.125rem;font-weight:800;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></span>
+          <% if(p.status==='unavailable'){ %>
+            <span class="badge-red">Agotado</span>
+          <% } else if(business.whatsapp){ %>
+            <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent(`Hola! Me interesa: ${p.name} ($${parseFloat(p.price).toFixed(2)})`)%>" target="_blank" style="display:inline-flex;align-items:center;gap:.375rem;background:#25D366;color:#fff;font-size:.75rem;font-weight:700;padding:.35rem .875rem;border-radius:7px;text-decoration:none;transition:var(--tr)" onmouseover="this.style.background='#20BE5C'" onmouseout="this.style.background='#25D366'">
+              <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+              Pedir
+            </a>
           <% } %>
-        </div>
-
-        <div class="p-4">
-          <% if (p.category) { %>
-            <span class="text-xs text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full"><%= p.category %></span>
-          <% } %>
-          <h3 class="font-semibold text-gray-900 mt-1 text-sm leading-snug"><%= p.name %></h3>
-          <% if (p.description) { %>
-            <p class="text-xs text-gray-400 mt-0.5 leading-snug">
-              <%= p.description.length > 60 ? p.description.slice(0,60) + '...' : p.description %>
-            </p>
-          <% } %>
-
-          <div class="flex items-center justify-between mt-3">
-            <span class="text-base font-bold text-gray-900">$<%= parseFloat(p.price).toFixed(2) %></span>
-            <% if (p.status === 'unavailable') { %>
-              <span class="text-xs text-red-500 font-medium">Agotado</span>
-            <% } else if (business.whatsapp) { %>
-              <a href="https://wa.me/<%= business.whatsapp.replace(/\D/g,'') %>?text=<%= encodeURIComponent(`Hola! Me interesa el producto: ${p.name} ($${parseFloat(p.price).toFixed(2)})`) %>"
-                 target="_blank"
-                 class="bg-green-500 hover:bg-green-400 text-white text-xs px-3 py-1.5 rounded-lg transition font-medium">
-                Pedir
-              </a>
-            <% } %>
-          </div>
         </div>
       </div>
-      <% }) %>
     </div>
+    <% }) %>
+  </div>
 
-    <!-- Paginación -->
-    <% if (pages > 1) { %>
-    <div class="flex justify-center items-center gap-2 mt-10">
-      <% for (let i = 1; i <= pages; i++) { %>
-        <a href="?page=<%= i %>&category=<%= category %>&search=<%= search %>"
-           class="w-9 h-9 flex items-center justify-center rounded-xl text-sm font-medium transition
-                  <%= i === currentPage ? 'bg-brand-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-brand-400' %>">
-          <%= i %>
-        </a>
-      <% } %>
-    </div>
+  <!-- Pagination -->
+  <% if(pages>1){ %>
+  <div style="display:flex;justify-content:center;gap:.5rem;margin-top:2.5rem">
+    <% for(let i=1;i<=pages;i++){ %>
+      <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>" style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:var(--tr);<%=i===currentPage?'background:var(--blue);color:#fff':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
     <% } %>
+  </div>
+  <% } %>
   <% } %>
 
-  <!-- Redes sociales -->
-  <% const hasSocials = Object.values(socials).some(v => v && v.trim()); %>
-  <% if (hasSocials) { %>
-  <div class="mt-12 text-center">
-    <p class="text-sm text-gray-500 mb-3">Síguenos en redes sociales</p>
-    <div class="flex justify-center gap-4">
-      <% if (socials.instagram) { %>
-        <a href="https://instagram.com/<%= socials.instagram.replace('@','') %>" target="_blank"
-           class="text-pink-500 hover:text-pink-600 font-medium text-sm">📸 Instagram</a>
-      <% } %>
-      <% if (socials.facebook) { %>
-        <a href="https://facebook.com/<%= socials.facebook.replace('@','') %>" target="_blank"
-           class="text-blue-600 hover:text-blue-700 font-medium text-sm">👍 Facebook</a>
-      <% } %>
-      <% if (socials.tiktok) { %>
-        <a href="https://tiktok.com/@<%= socials.tiktok.replace('@','') %>" target="_blank"
-           class="text-gray-900 hover:text-gray-600 font-medium text-sm">🎵 TikTok</a>
-      <% } %>
+  <!-- Social links -->
+  <% const hasSocials=Object.values(socials).some(v=>v&&v.trim()); %>
+  <% if(hasSocials){ %>
+  <div style="margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--border);text-align:center">
+    <p style="font-size:.8rem;color:var(--gray);margin-bottom:.875rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em">Síguenos</p>
+    <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:1rem">
+      <% if(socials.instagram){ %><a href="https://instagram.com/<%=socials.instagram.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:#E1306C;text-decoration:none">📸 Instagram</a><% } %>
+      <% if(socials.facebook){ %><a href="https://facebook.com/<%=socials.facebook.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:#1877F2;text-decoration:none">👍 Facebook</a><% } %>
+      <% if(socials.tiktok){ %><a href="https://tiktok.com/@<%=socials.tiktok.replace('@','')%>" target="_blank" style="font-size:.875rem;font-weight:600;color:var(--dark);text-decoration:none">🎵 TikTok</a><% } %>
     </div>
   </div>
   <% } %>
-</section>
+</main>
 
-<!-- Footer del catálogo -->
-<footer class="border-t border-gray-100 py-6 text-center text-xs text-gray-400 mt-10">
-  Catálogo creado con <a href="/" class="text-brand-600 hover:underline">CatalogHub</a>
+<footer style="background:var(--white);border-top:1px solid var(--border);padding:1.25rem 1.5rem;text-align:center">
+  <p style="font-size:.78rem;color:var(--gray)">Catálogo creado con <a href="/" style="color:var(--blue);font-weight:700;text-decoration:none">DevisiStore</a></p>
 </footer>
 
 </body>

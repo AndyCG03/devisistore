@@ -1,78 +1,72 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div class="flex min-h-screen">
+<div style="display:flex;min-height:calc(100vh - 3.75rem)">
   <% locals.activePage = 'home'; %>
   <%- include('../partials/sidebar') %>
 
-  <main class="flex-1 p-6 md:p-10 max-w-5xl">
-    <div class="mb-8">
-      <h1 class="text-2xl font-bold text-gray-900">Bienvenido, <span class="text-brand-600"><%= user.email %></span></h1>
-      <p class="text-gray-500 mt-1">Aquí tienes un resumen de tu actividad.</p>
+  <main style="flex:1;padding:2rem 2.5rem;max-width:900px">
+
+    <div style="margin-bottom:2rem">
+      <h1 class="section-title">Bienvenido, <span style="color:var(--blue)"><%= user.email.split('@')[0] %></span></h1>
+      <p class="section-sub">Aquí tienes un resumen de tu actividad en DevisiStore.</p>
     </div>
 
     <%- include('../partials/flash') %>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <p class="text-sm text-gray-500 mb-1">Negocio</p>
-        <p class="text-2xl font-bold text-gray-900"><%= business ? business.name : '—' %></p>
-        <% if (business) { %>
-          <a href="/shop/<%= business.slug %>" target="_blank"
-             class="text-xs text-brand-600 hover:underline mt-1 inline-block">Ver catálogo →</a>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;margin-bottom:2.5rem">
+
+      <div class="card" style="padding:1.5rem;border-left:3px solid var(--blue)">
+        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray);margin-bottom:.5rem">Mi negocio</p>
+        <p style="font-size:1.3rem;font-weight:800;color:var(--dark)"><%= business ? business.name : '—' %></p>
+        <% if(business){ %>
+          <a href="/shop/<%= business.slug %>" target="_blank" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--blue);font-weight:600;text-decoration:none;margin-top:.5rem">Ver catálogo →</a>
         <% } else { %>
-          <a href="/dashboard/business" class="text-xs text-yellow-600 hover:underline mt-1 inline-block">Crear negocio →</a>
+          <a href="/dashboard/business" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--green);font-weight:600;text-decoration:none;margin-top:.5rem">Crear negocio →</a>
         <% } %>
       </div>
 
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <p class="text-sm text-gray-500 mb-1">Productos cargados</p>
-        <p class="text-2xl font-bold text-gray-900"><%= productCount %></p>
-        <a href="/dashboard/products" class="text-xs text-brand-600 hover:underline mt-1 inline-block">Gestionar →</a>
+      <div class="card" style="padding:1.5rem;border-left:3px solid var(--green)">
+        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray);margin-bottom:.5rem">Productos</p>
+        <p style="font-size:2rem;font-weight:800;color:var(--dark)"><%= productCount %></p>
+        <a href="/dashboard/products" style="display:inline-flex;align-items:center;gap:.25rem;font-size:.8rem;color:var(--green);font-weight:600;text-decoration:none;margin-top:.5rem">Gestionar →</a>
       </div>
 
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <p class="text-sm text-gray-500 mb-1">URL de tu catálogo</p>
-        <% if (business) { %>
-          <p class="text-sm font-mono text-brand-700 mt-1 break-all">/shop/<%= business.slug %></p>
-          <button onclick="navigator.clipboard.writeText(window.location.origin+'/shop/<%= business.slug %>');this.textContent='¡Copiado!'"
-                  class="text-xs bg-brand-50 text-brand-700 px-2 py-1 rounded mt-2 hover:bg-brand-100 transition">
+      <div class="card" style="padding:1.5rem;border-left:3px solid #D1D5DB">
+        <p style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray);margin-bottom:.5rem">Tu URL pública</p>
+        <% if(business){ %>
+          <p style="font-size:.78rem;font-family:monospace;color:var(--blue);word-break:break-all;margin-top:.25rem">/shop/<%= business.slug %></p>
+          <button onclick="navigator.clipboard.writeText(window.location.origin+'/shop/<%= business.slug %>');this.textContent='¡Copiado ✓'" style="display:inline-flex;align-items:center;font-size:.78rem;font-weight:600;color:var(--gray);background:#F3F4F6;border:1px solid var(--border);padding:.3rem .75rem;border-radius:7px;cursor:pointer;margin-top:.625rem;font-family:'Exo 2',sans-serif;transition:var(--tr)" onmouseover="this.style.background='var(--blue-light)';this.style.color='var(--blue)'" onmouseout="this.style.background='#F3F4F6';this.style.color='var(--gray)'">
             Copiar enlace
           </button>
         <% } else { %>
-          <p class="text-sm text-gray-400 mt-1">Crea tu negocio primero</p>
+          <p style="font-size:.8rem;color:var(--gray);margin-top:.25rem">Crea tu negocio primero</p>
         <% } %>
       </div>
     </div>
 
-    <!-- Acciones rápidas -->
-    <h2 class="text-lg font-bold text-gray-900 mb-4">Acciones rápidas</h2>
-    <div class="grid sm:grid-cols-2 gap-4">
-      <a href="/dashboard/business"
-         class="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:border-brand-300 hover:shadow-md transition card-hover">
-        <div class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center">
-          <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-          </svg>
+    <!-- Quick actions -->
+    <h2 style="font-size:1rem;font-weight:700;color:var(--dark);margin-bottom:1rem">Acciones rápidas</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem">
+
+      <a href="/dashboard/business" class="card card-hover" style="padding:1.5rem;display:flex;align-items:center;gap:1rem;text-decoration:none">
+        <div style="width:2.75rem;height:2.75rem;background:var(--blue-light);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
         </div>
         <div>
-          <p class="font-semibold text-gray-900"><%= business ? 'Editar negocio' : 'Crear negocio' %></p>
-          <p class="text-sm text-gray-500">Logo, descripción, contacto y redes</p>
+          <p style="font-size:.9375rem;font-weight:700;color:var(--dark)"><%= business ? 'Editar negocio' : 'Crear negocio' %></p>
+          <p style="font-size:.8rem;color:var(--gray);margin-top:.2rem">Logo, descripción, contacto y redes</p>
         </div>
       </a>
 
-      <a href="/dashboard/products/new"
-         class="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:border-brand-300 hover:shadow-md transition card-hover">
-        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-          </svg>
+      <a href="/dashboard/products/new" class="card card-hover" style="padding:1.5rem;display:flex;align-items:center;gap:1rem;text-decoration:none">
+        <div style="width:2.75rem;height:2.75rem;background:var(--green-light);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         </div>
         <div>
-          <p class="font-semibold text-gray-900">Nuevo producto</p>
-          <p class="text-sm text-gray-500">Sube foto, precio y descripción</p>
+          <p style="font-size:.9375rem;font-weight:700;color:var(--dark)">Nuevo producto</p>
+          <p style="font-size:.8rem;color:var(--gray);margin-top:.2rem">Sube foto, precio y descripción</p>
         </div>
       </a>
     </div>

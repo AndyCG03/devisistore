@@ -3,52 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- SEO dinámico -->
-  <title><%= locals.title || 'CatalogHub' %></title>
-  <meta name="description" content="<%= locals.description || 'Tu catálogo online profesional con CatalogHub.' %>" />
-
-  <!-- Open Graph -->
-  <meta property="og:title"       content="<%= locals.title || 'CatalogHub' %>" />
+  <title><%= locals.title || 'Devisi Store' %></title>
+  <meta name="description" content="<%= locals.description || 'Tu catálogo online profesional con Devisi Store.' %>" />
+  <meta property="og:title"       content="<%= locals.title || 'Devisi Store' %>" />
   <meta property="og:description" content="<%= locals.description || 'Tu catálogo online profesional.' %>" />
   <meta property="og:type"        content="website" />
-  <% if (locals.ogImage) { %>
-  <meta property="og:image" content="<%= ogImage %>" />
-  <% } %>
-
-  <!-- Tailwind CSS (Play CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50:  '#f0f9ff',
-              100: '#e0f2fe',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              900: '#0c4a6e',
-            }
-          },
-          fontFamily: {
-            sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+      theme: { extend: {
+        colors: {
+          ds: {
+            blue:'#2E5FA8', 'blue-dark':'#1E4585', 'blue-hover':'#3A6BC0', 'blue-light':'#E8F1FB',
+            green:'#2AA865','green-dark':'#1E8A50','green-hover':'#34BF76','green-light':'#E8F7EF',
+            gray:'#6B7280', dark:'#1F2933', border:'#E5E7EB', bg:'#F7F9FC'
           }
-        }
-      }
+        },
+        fontFamily: { sans: ['"Exo 2"','ui-sans-serif','system-ui'] }
+      }}
     }
   </script>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .gradient-hero { background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 100%); }
-    .card-hover    { transition: transform .2s, box-shadow .2s; }
-    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,.12); }
+    :root {
+      --blue:#2E5FA8; --blue-dark:#1E4585; --blue-hover:#3A6BC0; --blue-light:#E8F1FB;
+      --green:#2AA865; --green-dark:#1E8A50; --green-hover:#34BF76; --green-light:#E8F7EF;
+      --gray:#6B7280; --dark:#1F2933; --border:#E5E7EB; --bg:#F7F9FC; --white:#FFFFFF;
+      --r-card:12px; --r-btn:10px; --r-input:8px;
+      --shadow:0 2px 12px rgba(46,95,168,.08);
+      --shadow-lg:0 8px 28px rgba(46,95,168,.14);
+      --tr:all 180ms cubic-bezier(.4,0,.2,1);
+    }
+    *,::before,::after{box-sizing:border-box}
+    body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased}
+    .btn-primary{display:inline-flex;align-items:center;gap:.5rem;background:var(--blue);color:#fff;font-weight:600;font-size:.875rem;padding:.65rem 1.5rem;border-radius:var(--r-btn);border:none;cursor:pointer;box-shadow:0 2px 8px rgba(46,95,168,.22);transition:var(--tr);text-decoration:none}
+    .btn-primary:hover{background:var(--blue-hover);transform:translateY(-1px);box-shadow:0 4px 14px rgba(46,95,168,.30)}
+    .btn-secondary{display:inline-flex;align-items:center;gap:.5rem;background:var(--green);color:#fff;font-weight:600;font-size:.875rem;padding:.65rem 1.5rem;border-radius:var(--r-btn);border:none;cursor:pointer;transition:var(--tr);text-decoration:none}
+    .btn-secondary:hover{background:var(--green-hover);transform:translateY(-1px)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:.5rem;background:transparent;color:var(--dark);font-weight:500;font-size:.875rem;padding:.65rem 1.25rem;border-radius:var(--r-btn);border:1.5px solid var(--border);cursor:pointer;transition:var(--tr);text-decoration:none}
+    .btn-ghost:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+    .btn-sm{padding:.4rem 1rem !important;font-size:.8rem !important}
+    .btn-danger{display:inline-flex;align-items:center;gap:.4rem;background:#FEF2F2;color:#DC2626;font-weight:600;font-size:.8rem;padding:.4rem .9rem;border-radius:8px;border:1px solid #FECACA;cursor:pointer;transition:var(--tr);text-decoration:none}
+    .btn-danger:hover{background:#FEE2E2}
+    .btn-warn{display:inline-flex;align-items:center;gap:.4rem;background:#FFFBEB;color:#D97706;font-weight:600;font-size:.8rem;padding:.4rem .9rem;border-radius:8px;border:1px solid #FDE68A;cursor:pointer;transition:var(--tr);text-decoration:none}
+    .btn-warn:hover{background:#FEF3C7}
+    .card{background:var(--white);border-radius:var(--r-card);box-shadow:var(--shadow);border:1px solid rgba(229,231,235,.7);transition:var(--tr)}
+    .card-hover:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+    .input{width:100%;padding:.7rem 1rem;border:1.5px solid var(--border);border-radius:var(--r-input);font-family:'Exo 2',sans-serif;font-size:.875rem;color:var(--dark);background:var(--white);transition:var(--tr);outline:none}
+    .input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,95,168,.12)}
+    .input::placeholder{color:#9CA3AF}
+    .label{display:block;font-size:.8125rem;font-weight:600;color:var(--dark);margin-bottom:.375rem;letter-spacing:.01em}
+    .badge-green{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:700;background:var(--green-light);color:var(--green-dark)}
+    .badge-blue{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:700;background:var(--blue-light);color:var(--blue-dark)}
+    .badge-gray{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:700;background:#F3F4F6;color:var(--gray)}
+    .badge-red{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:700;background:#FEF2F2;color:#DC2626}
+    .badge-yellow{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:700;background:#FFFBEB;color:#D97706}
+    .badge-purple{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:99px;font-size:.72rem;font-weight:700;background:#F5F3FF;color:#7C3AED}
+    .ds-table{width:100%;border-collapse:collapse;font-size:.875rem}
+    .ds-table thead tr{background:#F7F9FC;border-bottom:1.5px solid var(--border)}
+    .ds-table thead th{text-align:left;padding:.9rem 1.25rem;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gray)}
+    .ds-table tbody tr{border-bottom:1px solid #F3F4F6;transition:background 120ms}
+    .ds-table tbody tr:last-child{border-bottom:none}
+    .ds-table tbody tr:hover{background:#F7F9FC}
+    .ds-table tbody td{padding:.85rem 1.25rem;vertical-align:middle}
+    .nav-link{display:flex;align-items:center;gap:.75rem;padding:.625rem .875rem;border-radius:9px;font-size:.875rem;font-weight:500;color:var(--gray);transition:var(--tr);text-decoration:none}
+    .nav-link:hover{background:var(--blue-light);color:var(--blue)}
+    .nav-link.active{background:var(--blue-light);color:var(--blue);font-weight:700}
+    .logo-mark{width:2.25rem;height:2.25rem;background:linear-gradient(135deg,var(--blue) 0%,var(--green) 100%);border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(46,95,168,.25);flex-shrink:0}
+    .hero-gradient{background:linear-gradient(145deg,#1E3F7A 0%,#2E5FA8 50%,#27956B 100%)}
+    .section-title{font-size:1.375rem;font-weight:700;color:var(--dark)}
+    .section-sub{font-size:.875rem;color:var(--gray);margin-top:.25rem}
+    .link{color:var(--blue);font-weight:600;text-decoration:none}
+    .link:hover{text-decoration:underline}
+    .divider{height:1px;background:var(--border);margin:1.5rem 0}
+    .page-bg{background:var(--bg);min-height:100vh}
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased">
+<body>

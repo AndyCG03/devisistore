@@ -1,60 +1,48 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div class="min-h-screen bg-gray-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Negocios</h1>
-        <p class="text-gray-500 mt-1"><%= businesses.length %> negocio(s) registrados.</p>
-      </div>
-      <a href="/admin" class="text-sm text-brand-600 hover:underline">← Volver al panel</a>
+<div style="background:var(--bg);min-height:calc(100vh - 3.75rem);padding:2rem 1.5rem">
+  <div style="max-width:1100px;margin:0 auto">
+
+    <div style="margin-bottom:2rem">
+      <a href="/admin" style="display:inline-flex;align-items:center;gap:.375rem;font-size:.8rem;font-weight:600;color:var(--gray);text-decoration:none;margin-bottom:.5rem" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Panel admin
+      </a>
+      <h1 class="section-title">Negocios</h1>
+      <p class="section-sub"><%=businesses.length%> negocio(s) registrados</p>
     </div>
 
     <%- include('../partials/flash') %>
 
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-50 border-b border-gray-100">
-          <tr>
-            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Negocio</th>
-            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Propietario</th>
-            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Slug / URL</th>
-            <th class="text-left px-5 py-3.5 font-semibold text-gray-600">Estado</th>
-            <th class="text-right px-5 py-3.5 font-semibold text-gray-600">Acciones</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-50">
-          <% if (businesses.length === 0) { %>
-            <tr><td colspan="5" class="text-center py-10 text-gray-400">No hay negocios aún.</td></tr>
+    <div class="card" style="overflow:hidden">
+      <table class="ds-table">
+        <thead><tr>
+          <th>Negocio</th><th>Propietario</th><th>URL pública</th><th>Estado</th><th style="text-align:right">Acciones</th>
+        </tr></thead>
+        <tbody>
+          <% if(businesses.length===0){ %>
+          <tr><td colspan="5" style="text-align:center;padding:3rem;color:var(--gray)">No hay negocios registrados aún.</td></tr>
           <% } %>
-          <% businesses.forEach(b => { %>
-          <tr class="hover:bg-gray-50 transition">
-            <td class="px-5 py-4 flex items-center gap-3">
-              <% if (b.logo) { %>
-                <img src="<%= b.logo %>" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-gray-200 flex-shrink-0" />
-              <% } else { %>
-                <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-lg flex-shrink-0">🏪</div>
-              <% } %>
-              <span class="font-medium text-gray-900"><%= b.name %></span>
+          <% businesses.forEach(b=>{ %>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:.75rem">
+                <% if(b.logo){ %>
+                  <img src="<%=b.logo%>" alt="" style="width:2.5rem;height:2.5rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
+                <% } else { %>
+                  <div style="width:2.5rem;height:2.5rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">🏪</div>
+                <% } %>
+                <span style="font-weight:700;color:var(--dark)"><%=b.name%></span>
+              </div>
             </td>
-            <td class="px-5 py-4 text-gray-500 text-xs"><%= b.owner_email %></td>
-            <td class="px-5 py-4">
-              <a href="/shop/<%= b.slug %>" target="_blank"
-                 class="text-brand-600 hover:underline font-mono text-xs">/shop/<%= b.slug %></a>
+            <td style="color:var(--gray);font-size:.8rem"><%=b.owner_email%></td>
+            <td>
+              <a href="/shop/<%=b.slug%>" target="_blank" style="font-family:monospace;font-size:.78rem;color:var(--blue);text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">/shop/<%=b.slug%></a>
             </td>
-            <td class="px-5 py-4">
-              <span class="px-2.5 py-1 rounded-full text-xs font-medium
-                           <%= b.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
-                <%= b.active ? 'Activo' : 'Inactivo' %>
-              </span>
-            </td>
-            <td class="px-5 py-4 text-right">
-              <form action="/admin/businesses/<%= b.id %>/toggle" method="POST">
-                <button class="text-xs px-3 py-1.5 rounded-lg font-medium transition
-                               <%= b.active ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100' : 'bg-green-50 text-green-700 hover:bg-green-100' %>">
-                  <%= b.active ? 'Desactivar' : 'Activar' %>
-                </button>
+            <td><span class="<%=b.active?'badge-green':'badge-red'%>"><%=b.active?'Activo':'Inactivo'%></span></td>
+            <td style="text-align:right">
+              <form action="/admin/businesses/<%=b.id%>/toggle" method="POST" style="margin:0">
+                <button class="<%=b.active?'btn-warn':'btn-secondary'%> btn-sm" style="font-family:'Exo 2',sans-serif"><%=b.active?'Desactivar':'Activar'%></button>
               </form>
             </td>
           </tr>

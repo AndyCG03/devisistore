@@ -2,97 +2,97 @@
 <%- include('../partials/navbar') %>
 
 <!-- HERO -->
-<section class="gradient-hero text-white py-24 px-4">
-  <div class="max-w-4xl mx-auto text-center">
-    <span class="inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-6 tracking-wide">
-      🚀 Tu catálogo online en minutos
+<section class="hero-gradient" style="padding:5rem 1.5rem 4rem">
+  <div style="max-width:900px;margin:0 auto;text-align:center">
+    <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.15);color:#fff;font-size:.8rem;font-weight:700;padding:.4rem 1rem;border-radius:99px;margin-bottom:1.75rem;border:1px solid rgba(255,255,255,.2);letter-spacing:.04em">
+      🚀 &nbsp;CATÁLOGO DIGITAL PROFESIONAL
     </span>
-    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-      Muestra tus productos<br/>
-      <span class="text-yellow-300">al mundo entero</span>
+    <h1 style="font-size:clamp(2.2rem,5vw,3.75rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:1.25rem">
+      Tu negocio, online<br/>
+      <span style="color:#6EE7B7">en minutos</span>
     </h1>
-    <p class="text-lg md:text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-      Crea tu catálogo digital gratuito, comparte el enlace con tus clientes
-      y gestiona tus productos desde un panel intuitivo.
+    <p style="font-size:1.125rem;color:rgba(255,255,255,.8);max-width:560px;margin:0 auto 2.5rem;line-height:1.7">
+      Crea tu catálogo digital, sube tus productos con fotos y comparte el enlace con tus clientes. Sin código. Sin diseñadores.
     </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="/auth/register"
-         class="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold px-8 py-4 rounded-xl text-lg transition shadow-lg">
-        Comenzar ahora →
+    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center">
+      <a href="/auth/register" style="display:inline-flex;align-items:center;gap:.5rem;background:#2AA865;color:#fff;font-weight:700;font-size:1rem;padding:.85rem 2rem;border-radius:var(--r-btn);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(42,168,101,.35);transition:var(--tr);text-decoration:none" onmouseover="this.style.background='#34BF76'" onmouseout="this.style.background='#2AA865'">
+        Crear mi catálogo gratis →
       </a>
-      <a href="#features"
-         class="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-xl text-lg transition border border-white/30">
+      <a href="#como-funciona" style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:1rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);border:1.5px solid rgba(255,255,255,.3);transition:var(--tr);text-decoration:none">
         Ver cómo funciona
       </a>
     </div>
-  </div>
-</section>
 
-<!-- CÓMO FUNCIONA -->
-<section id="features" class="py-20 px-4 bg-white">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-14">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-        Tan fácil como 1, 2, 3
-      </h2>
-      <p class="text-gray-500 text-lg">Sin complicaciones. Sin código. Sin diseñadores.</p>
-    </div>
-    <div class="grid md:grid-cols-3 gap-8">
-      <% const steps = [
-        { icon: '🔑', num: '01', title: 'Obtén tu acceso', desc: 'Solicita una clave de acceso al administrador y regístrate en segundos.' },
-        { icon: '🏪', num: '02', title: 'Crea tu negocio', desc: 'Agrega el logo, descripción, contacto y redes sociales de tu negocio.' },
-        { icon: '📦', num: '03', title: 'Sube tus productos', desc: 'Carga fotos, precios y categorías. Tu catálogo queda publicado de inmediato.' },
-      ]; %>
-      <% steps.forEach(s => { %>
-      <div class="relative bg-gray-50 rounded-2xl p-8 border border-gray-100 card-hover">
-        <div class="absolute -top-4 -left-2 text-5xl opacity-20 font-black text-brand-600"><%= s.num %></div>
-        <div class="text-4xl mb-4"><%= s.icon %></div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900"><%= s.title %></h3>
-        <p class="text-gray-500 leading-relaxed"><%= s.desc %></p>
+    <!-- Stats strip -->
+    <div style="display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:center;margin-top:3.5rem;padding-top:2.5rem;border-top:1px solid rgba(255,255,255,.15)">
+      <% [['Sin código','✓'],['Imágenes incluidas','✓'],['Botón WhatsApp','✓'],['URL pública','✓']].forEach(([t,i])=>{ %>
+      <div style="display:flex;align-items:center;gap:.5rem;color:rgba(255,255,255,.9);font-size:.875rem;font-weight:600">
+        <span style="color:#6EE7B7;font-size:1rem"><%=i%></span> <%=t%>
       </div>
       <% }) %>
     </div>
   </div>
 </section>
 
-<!-- BENEFICIOS -->
-<section class="py-20 px-4 bg-gray-50">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-14">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Todo lo que necesitas</h2>
-      <p class="text-gray-500 text-lg">Funcionalidades pensadas para pequeños negocios.</p>
+<!-- STEPS -->
+<section id="como-funciona" style="padding:5rem 1.5rem;background:var(--white)">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:3.5rem">
+      <h2 style="font-size:2rem;font-weight:800;color:var(--dark)">¿Cómo funciona?</h2>
+      <p style="color:var(--gray);margin-top:.5rem;font-size:1rem">Tres pasos para tener tu catálogo online</p>
     </div>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% const features = [
-        { icon: '🌐', title: 'URL pública única',     desc: 'Cada negocio tiene su propio enlace para compartir.' },
-        { icon: '📱', title: 'Botón de WhatsApp',     desc: 'Tus clientes te contactan con un solo clic.' },
-        { icon: '🔍', title: 'Búsqueda y filtros',    desc: 'Tus clientes encuentran lo que buscan al instante.' },
-        { icon: '🖼️', title: 'Imágenes de productos', desc: 'Sube fotos de tus productos fácilmente.' },
-        { icon: '📊', title: 'Panel de control',      desc: 'Gestiona todo desde un dashboard intuitivo.' },
-        { icon: '🔒', title: 'Acceso controlado',     desc: 'Solo usuarios invitados pueden registrarse.' },
-      ]; %>
-      <% features.forEach(f => { %>
-      <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm card-hover">
-        <div class="text-3xl mb-3"><%= f.icon %></div>
-        <h4 class="font-bold text-gray-900 mb-1"><%= f.title %></h4>
-        <p class="text-gray-500 text-sm"><%= f.desc %></p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.75rem">
+      <% const steps=[
+        {num:'01',icon:'🔑',title:'Obtén acceso',desc:'Solicita tu clave de acceso al administrador y crea tu cuenta en segundos.',color:'var(--blue-light)',border:'rgba(46,95,168,.2)'},
+        {num:'02',icon:'🏪',title:'Crea tu negocio',desc:'Agrega logo, descripción, horario, contacto y redes sociales de tu negocio.',color:'var(--green-light)',border:'rgba(42,168,101,.2)'},
+        {num:'03',icon:'📦',title:'Publica productos',desc:'Sube fotos, precios y categorías. Tu catálogo queda publicado de inmediato.',color:'var(--blue-light)',border:'rgba(46,95,168,.2)'},
+      ]; steps.forEach(s=>{ %>
+      <div style="background:var(--white);border-radius:var(--r-card);padding:2rem;border:1.5px solid <%=s.border%>;position:relative;overflow:hidden">
+        <div style="position:absolute;top:1rem;right:1.25rem;font-size:3rem;font-weight:900;color:<%=s.color%>;line-height:1;font-family:'Exo 2',sans-serif"><%=s.num%></div>
+        <div style="font-size:2.5rem;margin-bottom:1rem"><%=s.icon%></div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.5rem"><%=s.title%></h3>
+        <p style="font-size:.875rem;color:var(--gray);line-height:1.7"><%=s.desc%></p>
       </div>
       <% }) %>
     </div>
   </div>
 </section>
 
-<!-- CTA FINAL -->
-<section class="py-20 px-4 bg-brand-700 text-white text-center">
-  <div class="max-w-2xl mx-auto">
-    <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
-      ¿Listo para tener tu catálogo online?
-    </h2>
-    <p class="text-blue-200 text-lg mb-8">
-      Únete y empieza a vender de forma más profesional hoy mismo.
-    </p>
-    <a href="/auth/register"
-       class="inline-block bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold px-10 py-4 rounded-xl text-lg transition shadow-lg">
+<!-- FEATURES -->
+<section style="padding:5rem 1.5rem;background:var(--bg)">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:3.5rem">
+      <h2 style="font-size:2rem;font-weight:800;color:var(--dark)">Todo lo que necesitas</h2>
+      <p style="color:var(--gray);margin-top:.5rem">Funcionalidades pensadas para pequeños negocios</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem">
+      <% const features=[
+        {icon:'🌐',t:'URL pública única',d:'Cada negocio tiene su propio enlace para compartir.'},
+        {icon:'💬',t:'Botón WhatsApp',d:'Tus clientes te contactan con un solo clic desde cada producto.'},
+        {icon:'🔍',t:'Búsqueda y filtros',d:'Tus clientes encuentran lo que buscan al instante.'},
+        {icon:'🖼️',t:'Galería de imágenes',d:'Sube fotos de alta calidad para cada producto.'},
+        {icon:'📊',t:'Panel de control',d:'Gestiona todo desde un dashboard intuitivo y moderno.'},
+        {icon:'🔒',t:'Acceso controlado',d:'Solo usuarios invitados pueden registrarse en la plataforma.'},
+      ]; features.forEach(f=>{ %>
+      <div class="card" style="padding:1.5rem;display:flex;gap:1rem;align-items:flex-start">
+        <div style="width:2.5rem;height:2.5rem;background:var(--blue-light);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0"><%=f.icon%></div>
+        <div>
+          <h4 style="font-size:.9rem;font-weight:700;color:var(--dark);margin-bottom:.25rem"><%=f.t%></h4>
+          <p style="font-size:.8rem;color:var(--gray);line-height:1.6"><%=f.d%></p>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:5rem 1.5rem;background:var(--white);text-align:center">
+  <div style="max-width:600px;margin:0 auto">
+    <div style="width:4rem;height:4rem;background:var(--green-light);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.5rem">🚀</div>
+    <h2 style="font-size:2rem;font-weight:800;color:var(--dark);margin-bottom:.75rem">¿Listo para empezar?</h2>
+    <p style="color:var(--gray);margin-bottom:2rem;line-height:1.7">Crea tu catálogo profesional hoy y empieza a vender de forma más inteligente.</p>
+    <a href="/auth/register" class="btn-secondary" style="font-size:1rem;padding:.9rem 2.25rem">
       Crear mi catálogo gratis →
     </a>
   </div>

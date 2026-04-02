@@ -76,7 +76,7 @@ app.use((req, res, next) => {
   res.locals.user          = req.session.user || null;
   res.locals.flashSuccess  = req.session.flashSuccess || null;
   res.locals.flashError    = req.session.flashError   || null;
-  res.locals.appName       = 'CatalogHub';
+  res.locals.appName       = 'Devisi Store';
   delete req.session.flashSuccess;
   delete req.session.flashError;
   next();

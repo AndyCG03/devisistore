@@ -1,17 +1,13 @@
-<footer class="bg-white border-t border-gray-100 mt-auto">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <div class="w-7 h-7 bg-brand-600 rounded-lg flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h8M4 18h8M14 14l2 2 4-4"/>
-          </svg>
-        </div>
-        <span class="font-bold text-gray-700">CatalogHub</span>
+<footer style="background:var(--white);border-top:1px solid var(--border);margin-top:auto">
+  <div style="max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+    <a href="/" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
+      <div class="logo-mark" style="width:1.75rem;height:1.75rem;border-radius:7px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+        </svg>
       </div>
-      <p class="text-sm text-gray-400">
-        &copy; <%= new Date().getFullYear() %> CatalogHub. Tu catálogo online profesional.
-      </p>
-    </div>
+      <span style="font-weight:800;font-size:.9rem;color:var(--blue)">Devisi</span><span style="font-weight:800;font-size:.9rem;color:var(--green)">Store</span>
+    </a>
+    <p style="font-size:.8rem;color:var(--gray)">&copy; <%= new Date().getFullYear() %> DevisiStore. Tu catálogo online profesional.</p>
   </div>
 </footer>

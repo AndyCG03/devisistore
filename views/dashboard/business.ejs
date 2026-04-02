@@ -1,119 +1,83 @@
 <%- include('../partials/head') %>
 <%- include('../partials/navbar') %>
 
-<div class="flex min-h-screen">
+<div style="display:flex;min-height:calc(100vh - 3.75rem)">
   <% locals.activePage = 'business'; %>
   <%- include('../partials/sidebar') %>
 
-  <main class="flex-1 p-6 md:p-10">
-    <div class="max-w-3xl">
-      <div class="mb-8 flex items-center justify-between">
+  <main style="flex:1;padding:2rem 2.5rem">
+    <div style="max-width:720px">
+
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
         <div>
-          <h1 class="text-2xl font-bold text-gray-900"><%= business ? 'Editar Negocio' : 'Crear Negocio' %></h1>
-          <p class="text-gray-500 mt-1">Tu información pública en el catálogo.</p>
+          <h1 class="section-title"><%=business?'Editar Negocio':'Crear Negocio'%></h1>
+          <p class="section-sub">Tu información pública visible en el catálogo.</p>
         </div>
-        <% if (business) { %>
-          <a href="/shop/<%= business.slug %>" target="_blank"
-             class="text-sm bg-brand-50 text-brand-700 border border-brand-200 px-4 py-2 rounded-xl hover:bg-brand-100 transition">
-            Ver catálogo →
-          </a>
+        <% if(business){ %>
+          <a href="/shop/<%=business.slug%>" target="_blank" class="btn-ghost btn-sm">Ver catálogo →</a>
         <% } %>
       </div>
 
       <%- include('../partials/flash') %>
 
-      <form action="/dashboard/business" method="POST" enctype="multipart/form-data" class="space-y-8">
+      <form action="/dashboard/business" method="POST" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:1.5rem">
 
-        <!-- Información básica -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
-          <h2 class="font-semibold text-gray-900 border-b border-gray-100 pb-3">Información básica</h2>
-
+        <!-- Info básica -->
+        <div class="card" style="padding:1.75rem;display:flex;flex-direction:column;gap:1.25rem">
+          <h2 style="font-size:.875rem;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.07em">Información básica</h2>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del negocio <span class="text-red-500">*</span></label>
-            <input type="text" name="name" required value="<%= business ? business.name : '' %>"
-                   placeholder="Ej: Cafetería Central"
-                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition" />
+            <label class="label">Nombre del negocio <span style="color:#DC2626">*</span></label>
+            <input type="text" name="name" required value="<%=business?business.name:''%>" placeholder="Ej: Cafetería Central" class="input" />
           </div>
-
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Logo del negocio</label>
-            <div class="flex items-center gap-4">
-              <% if (business && business.logo) { %>
-                <img src="<%= business.logo %>" alt="Logo" class="w-16 h-16 object-cover rounded-xl border border-gray-200" />
+            <label class="label">Logo del negocio</label>
+            <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+              <% if(business&&business.logo){ %>
+                <img src="<%=business.logo%>" alt="Logo" style="width:4rem;height:4rem;object-fit:cover;border-radius:9px;border:1px solid var(--border)" />
               <% } %>
-              <input type="file" name="logo" accept="image/*"
-                     class="text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0
-                            file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer" />
+              <input type="file" name="logo" accept="image/*" style="font-size:.875rem;color:var(--gray);font-family:'Exo 2',sans-serif" />
             </div>
           </div>
-
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-            <textarea name="description" rows="3"
-                      placeholder="Describe tu negocio brevemente..."
-                      class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition resize-none"><%= business ? business.description : '' %></textarea>
+            <label class="label">Descripción</label>
+            <textarea name="description" rows="3" placeholder="Describe tu negocio brevemente…" class="input"><%=business?business.description:''%></textarea>
           </div>
-
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Horario de atención</label>
-            <input type="text" name="schedule" value="<%= business ? business.schedule : '' %>"
-                   placeholder="Ej: Lun-Vie 9:00 am – 6:00 pm"
-                   class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
+            <label class="label">Horario de atención</label>
+            <input type="text" name="schedule" value="<%=business?business.schedule:''%>" placeholder="Ej: Lun-Vie 9:00 am – 6:00 pm" class="input" />
           </div>
         </div>
 
         <!-- Contacto -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5">
-          <h2 class="font-semibold text-gray-900 border-b border-gray-100 pb-3">Contacto</h2>
-          <div class="grid sm:grid-cols-2 gap-4">
+        <div class="card" style="padding:1.75rem;display:flex;flex-direction:column;gap:1.25rem">
+          <h2 style="font-size:.875rem;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.07em">Contacto</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem">
+            <div><label class="label">Dirección</label><input type="text" name="address" value="<%=business?business.address:''%>" class="input" /></div>
+            <div><label class="label">Teléfono</label><input type="text" name="phone" value="<%=business?business.phone:''%>" class="input" /></div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-              <input type="text" name="address" value="<%= business ? business.address : '' %>"
-                     class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
+              <label class="label">WhatsApp <span style="color:var(--gray);font-weight:400">(con código de país)</span></label>
+              <input type="text" name="whatsapp" value="<%=business?business.whatsapp:''%>" placeholder="5215512345678" class="input" />
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-              <input type="text" name="phone" value="<%= business ? business.phone : '' %>"
-                     class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp (con código de país)</label>
-              <input type="text" name="whatsapp" value="<%= business ? business.whatsapp : '' %>"
-                     placeholder="5215512345678"
-                     class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Email de contacto</label>
-              <input type="email" name="email" value="<%= business ? business.email : '' %>"
-                     class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
-            </div>
+            <div><label class="label">Email de contacto</label><input type="email" name="email" value="<%=business?business.email:''%>" class="input" /></div>
           </div>
         </div>
 
         <!-- Redes sociales -->
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-          <h2 class="font-semibold text-gray-900 border-b border-gray-100 pb-3">Redes sociales</h2>
-          <div class="grid sm:grid-cols-2 gap-4">
-            <% const nets = ['instagram','facebook','twitter','tiktok']; %>
-            <% nets.forEach(n => { %>
+        <div class="card" style="padding:1.75rem;display:flex;flex-direction:column;gap:1.25rem">
+          <h2 style="font-size:.875rem;font-weight:700;color:var(--dark);text-transform:uppercase;letter-spacing:.07em">Redes sociales</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem">
+            <% ['instagram','facebook','twitter','tiktok'].forEach(n=>{ %>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1 capitalize"><%= n %></label>
-              <input type="text" name="<%= n %>" value="<%= socials[n] || '' %>"
-                     placeholder="@usuario"
-                     class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none transition" />
+              <label class="label" style="text-transform:capitalize"><%=n%></label>
+              <input type="text" name="<%=n%>" value="<%=socials[n]||''%>" placeholder="@usuario" class="input" />
             </div>
             <% }) %>
           </div>
         </div>
 
-        <div class="flex gap-3">
-          <button type="submit"
-                  class="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-3 rounded-xl transition shadow">
-            <%= business ? 'Guardar cambios' : 'Crear negocio' %>
-          </button>
-          <a href="/dashboard" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-6 py-3 rounded-xl transition">
-            Cancelar
-          </a>
+        <div style="display:flex;gap:.75rem">
+          <button type="submit" class="btn-primary"><%=business?'Guardar cambios':'Crear negocio'%></button>
+          <a href="/dashboard" class="btn-ghost">Cancelar</a>
         </div>
       </form>
     </div>
