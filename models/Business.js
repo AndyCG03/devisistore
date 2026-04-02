@@ -41,6 +41,16 @@ const Business = {
     `).all();
   },
 
+  getAllActive() {
+    return db.prepare(`
+      SELECT b.*, u.email as owner_email
+      FROM businesses b
+      JOIN users u ON b.user_id = u.id
+      WHERE b.active = 1
+      ORDER BY b.created_at DESC
+    `).all();
+  },
+
   toggleActive(id, active) {
     return db.prepare('UPDATE businesses SET active = ? WHERE id = ?').run(active, id);
   },

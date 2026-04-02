@@ -17,6 +17,7 @@ const authRoutes     = require('./routes/authRoutes');
 const adminRoutes    = require('./routes/adminRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const shopRoutes     = require('./routes/shopRoutes');
+const businessRoutes = require('./routes/businessRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +33,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc:  ["'self'", "'unsafe-inline'", "cdn.tailwindcss.com", "cdn.jsdelivr.net"],
+        scriptSrc:  ["'self'", "'unsafe-inline'", "'unsafe-hashes'", "cdn.tailwindcss.com", "cdn.jsdelivr.net"],
         styleSrc:   ["'self'", "'unsafe-inline'", "cdn.tailwindcss.com", "fonts.googleapis.com"],
         fontSrc:    ["'self'", "fonts.gstatic.com"],
         imgSrc:     ["'self'", "data:", "blob:"],
@@ -112,10 +113,16 @@ app.use('/auth',      authRoutes);
 app.use('/admin',     adminRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/shop',      shopRoutes);
+app.use('/businesses', businessRoutes);
 
 // Página de inicio
 app.get('/', (req, res) => {
-  res.render('home/index', { title: 'DevisiStore – Tu catálogo online' });
+  const Business = require('./models/Business');
+  const businesses = Business.getAllActive().slice(0, 6); // Mostrar solo 6 en home
+  res.render('home/index', { 
+    title: 'DevisiStore – Tu catálogo online',
+    businesses
+  });
 });
 
 // ── Manejo de errores 404 ──────────────────────────────────────────────────

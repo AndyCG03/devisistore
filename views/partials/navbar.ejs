@@ -13,6 +13,7 @@
 
     <!-- Desktop nav -->
     <div style="display:flex;align-items:center;gap:.5rem">
+      <a href="/businesses" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Negocios</a>
       <% if (locals.user) { %>
         <% if (user.role === 'admin') { %>
           <a href="/admin" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Admin</a>

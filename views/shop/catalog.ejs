@@ -18,51 +18,63 @@
 
 <!-- Business header -->
 <header class="hero-gradient" style="padding:3rem 1.5rem">
-  <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:1.75rem">
-
-    <% if(business.logo){ %>
-      <img src="<%=business.logo%>" alt="<%=business.name%>" style="width:5.5rem;height:5.5rem;border-radius:14px;object-fit:cover;border:3px solid rgba(255,255,255,.25);box-shadow:0 4px 16px rgba(0,0,0,.2);flex-shrink:0" />
-    <% } else { %>
-      <div style="width:5.5rem;height:5.5rem;border-radius:14px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid rgba(255,255,255,.2)">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
-      </div>
-    <% } %>
-
-    <div style="flex:1;min-width:200px">
-      <h1 style="font-size:clamp(1.5rem,4vw,2.25rem);font-weight:800;color:#fff;margin-bottom:.4rem"><%=business.name%></h1>
-      <% if(business.description){ %>
-        <p style="color:rgba(255,255,255,.78);font-size:.9rem;max-width:520px;line-height:1.65;margin-bottom:.875rem"><%=business.description%></p>
+  <div style="max-width:1100px;margin:0 auto">
+    
+    <!-- Logo centrado -->
+    <div style="text-align:center;margin-bottom:2rem">
+      <% if(business.logo){ %>
+        <img src="<%=business.logo%>" alt="<%=business.name%>" style="width:6rem;height:6rem;border-radius:16px;object-fit:cover;border:3px solid rgba(255,255,255,.25);box-shadow:0 4px 16px rgba(0,0,0,.2)" />
+      <% } else { %>
+        <div style="width:6rem;height:6rem;border-radius:16px;background:rgba(255,255,255,.12);display:inline-flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.2)">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+        </div>
       <% } %>
-      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-        <% if(business.phone){ %>
-        <span style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(255,255,255,.12);color:#fff;font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-          <%=business.phone%>
-        </span>
-        <% } %>
-        <% if(business.schedule){ %>
-        <span style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(255,255,255,.12);color:#fff;font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
-          <%=business.schedule%>
-        </span>
-        <% } %>
-        <% if(business.address){ %>
-        <span style="display:inline-flex;align-items:center;gap:.375rem;background:rgba(255,255,255,.12);color:#fff;font-size:.78rem;font-weight:600;padding:.3rem .75rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          <%=business.address%>
-        </span>
-        <% } %>
-      </div>
     </div>
 
-    <% if(business.whatsapp){ %>
-    <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola, me interesa un producto de tu catálogo.')%>" target="_blank"
-       style="display:inline-flex;align-items:center;gap:.625rem;background:#25D366;color:#fff;font-weight:700;font-size:.9375rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);text-decoration:none;flex-shrink:0;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:var(--tr)"
-       onmouseover="this.style.background='#1DA851'" onmouseout="this.style.background='#25D366'">
-      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
-      WhatsApp
-    </a>
-    <% } %>
+    <!-- Nombre y descripción alineados a la izquierda -->
+    <div style="margin-bottom:1.5rem">
+      <h1 style="font-size:clamp(1.5rem,4vw,2.25rem);font-weight:800;color:#fff;margin-bottom:.5rem;text-align:left"><%=business.name%></h1>
+      <% if(business.description){ %>
+        <p style="color:rgba(255,255,255,.78);font-size:.9rem;max-width:600px;line-height:1.65;text-align:left"><%=business.description%></p>
+      <% } %>
+    </div>
+
+    <!-- Información alineada a la izquierda -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:1rem;justify-content:flex-start">
+      <!-- WhatsApp -->
+      <% if(business.whatsapp){ %>
+      <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola, me interesa un producto de tu catálogo.')%>" target="_blank"
+         style="display:inline-flex;align-items:center;gap:.625rem;background:#25D366;color:#fff;font-weight:700;font-size:.9375rem;padding:.85rem 1.75rem;border-radius:var(--r-btn);text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:var(--tr)"
+         onmouseover="this.style.background='#1DA851'" onmouseout="this.style.background='#25D366'">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+        WhatsApp
+      </a>
+      <% } %>
+
+      <!-- Teléfono -->
+      <% if(business.phone){ %>
+      <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);color:#fff;font-size:.85rem;font-weight:600;padding:.5rem 1rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        <%=business.phone%>
+      </span>
+      <% } %>
+
+      <!-- Horario -->
+      <% if(business.schedule){ %>
+      <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);color:#fff;font-size:.85rem;font-weight:600;padding:.5rem 1rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/></svg>
+        <%=business.schedule%>
+      </span>
+      <% } %>
+
+      <!-- Dirección -->
+      <% if(business.address){ %>
+      <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);color:#fff;font-size:.85rem;font-weight:600;padding:.5rem 1rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <%=business.address%>
+      </span>
+      <% } %>
+    </div>
   </div>
 </header>
 
@@ -70,15 +82,22 @@
 <main style="padding:2.5rem 1.5rem;max-width:1280px;margin:0 auto;flex:1">
 
   <!-- Filters -->
-  <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem">
-    <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px;max-width:360px" />
-    <select name="category" class="input" style="width:auto;padding:.65rem 1rem;max-width:220px">
-      <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
-      <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
-    </select>
-    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
-    <a href="/shop/<%=business.slug%>" class="btn btn-ghost btn-sm">Ver todo</a>
-  </form>
+  <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;align-items:center">
+    <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;flex:1">
+      <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px;max-width:360px" />
+      <select name="category" class="input" style="width:auto;padding:.65rem 1rem;max-width:220px">
+        <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
+        <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
+      </select>
+      <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+    </form>
+    <button id="downloadPdf" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:.5rem">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+      </svg>
+      Descargar PDF
+    </button>
+  </div>
 
   <!-- Empty state -->
   <% if(products.length===0){ %>
@@ -92,12 +111,15 @@
   <% } else { %>
 
   <!-- Products grid -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.25rem">
+  <div id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem">
     <% products.forEach(p=>{ %>
-    <div class="card card-hover" style="overflow:hidden;opacity:<%=p.status==='unavailable'?.6:1%>">
+    <div class="card card-hover product-card" 
+         style="overflow:hidden;opacity:<%=p.status==='unavailable'?.6:1%>;cursor:pointer" 
+         data-product='<%- JSON.stringify(p) %>'
+         data-whatsapp="<%=business.whatsapp || ''%>">
       <div style="aspect-ratio:1;overflow:hidden;background:var(--bg)">
         <% if(p.image){ %>
-          <img src="<%=p.image%>" alt="<%=p.name%>" style="width:100%;height:100%;object-fit:cover;transition:transform 320ms ease" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" />
+          <img src="<%=p.image%>" alt="<%=p.name%>" class="product-image" style="width:100%;height:100%;object-fit:cover;transition:transform 320ms ease" />
         <% } else { %>
           <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -153,6 +175,155 @@
   </div>
   <% } %>
 </main>
+
+<!-- Product Modal -->
+<div id="productModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center;padding:1.5rem">
+  <div style="background:var(--white);border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative">
+    <button id="modalCloseBtn" style="position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── Event Delegation para todo ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // 0. Botón Descargar PDF
+  const downloadPdfBtn = document.getElementById('downloadPdf');
+  const businessSlug = '<%= business.slug %>';
+  
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', function() {
+      window.open(`/shop/${businessSlug}/pdf`, '_blank');
+    });
+  }
+
+  // 1. Click en cards de productos para abrir modal
+  const productsGrid = document.getElementById('productsGrid');
+  if (productsGrid) {
+    productsGrid.addEventListener('click', function(e) {
+      const card = e.target.closest('.product-card');
+      if (!card) return;
+
+      try {
+        const productData = card.getAttribute('data-product');
+        const whatsapp = card.getAttribute('data-whatsapp');
+        const product = JSON.parse(productData);
+        openProductModal(product, whatsapp);
+      } catch (err) {
+        console.error('Error al abrir modal del producto:', err);
+      }
+    });
+  }
+
+  // 2. Efecto hover en imágenes de productos
+  document.querySelectorAll('.product-image').forEach(function(img) {
+    img.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.06)';
+    });
+    img.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+    });
+  });
+
+  // 3. Botón de cerrar modal
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const productModal = document.getElementById('productModal');
+  
+  if (modalCloseBtn && productModal) {
+    modalCloseBtn.addEventListener('click', function() {
+      closeProductModalDirect();
+    });
+
+    // 4. Cerrar modal al hacer click fuera del contenido
+    productModal.addEventListener('click', function(e) {
+      if (e.target === productModal) {
+        closeProductModalDirect();
+      }
+    });
+  }
+
+  // 5. Cerrar modal con tecla Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeProductModalDirect();
+    }
+  });
+});
+
+// ── Funciones globales ──────────────────────────────────────────────────────
+
+function openProductModal(product, whatsapp) {
+  const modal = document.getElementById('productModal');
+  const content = document.getElementById('modalContent');
+
+  // Escapar caracteres especiales para HTML
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  const whatsappMsg = whatsapp
+    ? encodeURIComponent('Hola! Me interesa: ' + product.name + ' ($' + parseFloat(product.price).toFixed(2) + ')')
+    : '';
+  const whatsappLink = whatsapp ? 'https://wa.me/' + whatsapp.replace(/\D/g,'') + '?text=' + whatsappMsg : '#';
+
+  content.innerHTML = `
+    <div style="padding:0">
+      <div style="aspect-ratio:1;overflow:hidden;background:var(--bg)">
+        ${product.image
+          ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" style="width:100%;height:100%;object-fit:cover" />`
+          : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg)"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>`
+        }
+      </div>
+
+      <div style="padding:1.5rem">
+        ${product.category ? `<span class="badge badge-blue" style="margin-bottom:.75rem;display:inline-flex">${escapeHtml(product.category)}</span>` : ''}
+
+        <h2 style="font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:.5rem;line-height:1.3">${escapeHtml(product.name)}</h2>
+
+        ${product.description
+          ? `<p style="color:var(--gray);line-height:1.65;margin-bottom:1rem;font-size:.9375rem">${escapeHtml(product.description)}</p>`
+          : ''
+        }
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
+          <span style="font-size:1.5rem;font-weight:800;color:var(--dark)">$${parseFloat(product.price).toFixed(2)}</span>
+          ${product.status === 'unavailable'
+            ? '<span class="badge badge-red" style="font-size:.8rem;padding:.4rem .9rem">Agotado</span>'
+            : '<span class="badge badge-green" style="font-size:.8rem;padding:.4rem .9rem">Disponible</span>'
+          }
+        </div>
+
+        ${whatsapp && product.status !== 'unavailable'
+          ? `<a href="${whatsappLink}" target="_blank"
+               style="display:flex;align-items:center;justify-content:center;gap:.625rem;background:#25D366;color:#fff;font-weight:700;font-size:1rem;padding:1rem 1.5rem;border-radius:var(--r-btn);text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:var(--tr)">
+               <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+               Contactar por WhatsApp
+             </a>`
+          : ''
+        }
+      </div>
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductModalDirect() {
+  const modal = document.getElementById('productModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+</script>
 
 <footer style="background:var(--white);border-top:1px solid var(--border);padding:1.25rem 1.5rem;text-align:center">
   <p style="font-size:.78rem;color:var(--gray)">Catálogo creado con <a href="/" style="color:var(--blue);font-weight:700;text-decoration:none">DevisiStore</a></p>

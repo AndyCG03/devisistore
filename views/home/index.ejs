@@ -121,6 +121,55 @@
   </div>
 </section>
 
+<!-- ── BUSINESSES ─────────────────────────────────────────────────── -->
+<section style="padding:5.5rem 1.5rem;background:var(--bg)">
+  <div style="max-width:1100px;margin:0 auto">
+
+    <div class="fade-in" style="text-align:center;margin-bottom:3rem">
+      <h2 style="font-size:clamp(1.5rem,3vw,2.25rem);font-weight:800;color:var(--dark)">Negocios destacados</h2>
+      <p style="color:var(--gray);margin-top:.5rem;font-size:1rem">Explora los negocios que ya están en DevisiStore</p>
+    </div>
+
+    <% if(businesses && businesses.length > 0){ %>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem">
+      <% businesses.forEach(b=>{ %>
+      <a href="/shop/<%=b.slug%>" class="card card-hover fade-in" style="text-decoration:none;display:flex;flex-direction:column;overflow:hidden">
+        <div style="height:140px;overflow:hidden;background:linear-gradient(135deg,var(--blue-light) 0%,var(--green-light) 100%);display:flex;align-items:center;justify-content:center;position:relative">
+          <% if(b.logo){ %>
+            <img src="<%=b.logo%>" alt="<%=b.name%>" style="width:5rem;height:5rem;border-radius:12px;object-fit:cover;border:3px solid rgba(255,255,255,.8);box-shadow:0 4px 12px rgba(0,0,0,.15);position:absolute" />
+          <% } else { %>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(46,95,168,.3)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+          <% } %>
+        </div>
+        <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column">
+          <h3 style="font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:.5rem;line-height:1.4"><%=b.name%></h3>
+          <% if(b.description){ %>
+            <p style="font-size:.8125rem;color:var(--gray);line-height:1.6;margin-bottom:1rem;flex:1"><%=b.description.length>100?b.description.slice(0,100)+'...':b.description%></p>
+          <% } %>
+          <div style="display:flex;align-items:center;gap:.5rem;color:var(--blue);font-size:.8125rem;font-weight:600;margin-top:auto">
+            Ver catálogo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+
+    <div style="text-align:center">
+      <a href="/businesses" class="btn btn-primary btn-lg">Ver todos los negocios</a>
+    </div>
+    <% } else { %>
+    <div style="text-align:center;padding:3rem 1rem;background:var(--white);border-radius:16px;border:1.5px solid var(--border)">
+      <div style="width:4rem;height:4rem;background:var(--bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+      </div>
+      <p style="font-weight:700;color:var(--dark);font-size:1.05rem">Próximamente negocios destacados</p>
+      <p style="color:var(--gray);font-size:.875rem;margin-top:.375rem">Sé el primero en crear tu catálogo en DevisiStore</p>
+    </div>
+    <% } %>
+  </div>
+</section>
+
 <!-- ── CTA ────────────────────────────────────────────────────────── -->
 <section style="padding:5.5rem 1.5rem;background:var(--white);text-align:center">
   <div style="max-width:580px;margin:0 auto">
