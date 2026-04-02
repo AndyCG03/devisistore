@@ -5,8 +5,8 @@ const path         = require('path');
 const morgan       = require('morgan');
 const helmet       = require('helmet');
 const session      = require('express-session');
+const FileStore    = require('session-file-store')(session);
 const rateLimit    = require('express-rate-limit');
-const SQLiteStore  = require('connect-sqlite3')(session);
 
 // ── Inicializar base de datos ──────────────────────────────────────────────
 const { initDatabase } = require('./config/database');
@@ -51,7 +51,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ── Sesiones ───────────────────────────────────────────────────────────────
 app.use(
   session({
-    store: new SQLiteStore({ db: 'sessions.db', dir: './' }),
+    store: new FileStore({
+      path:    './sessions',   // carpeta donde se guardan los archivos de sesión
+      ttl:     86400,          // 24 horas en segundos
+      retries: 0,
+    }),
     secret:            process.env.SESSION_SECRET || 'secreto_desarrollo_cambiar',
     resave:            false,
     saveUninitialized: false,
