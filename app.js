@@ -100,7 +100,7 @@ app.use('/shop',      shopRoutes);
 
 // Página de inicio
 app.get('/', (req, res) => {
-  res.render('home/index', { title: 'CatalogHub – Tu catálogo online' });
+  res.render('home/index', { title: 'DevisiStore – Tu catálogo online' });
 });
 
 // ── Manejo de errores 404 ──────────────────────────────────────────────────
@@ -121,7 +121,7 @@ app.use((err, req, res, next) => {
 
 // ── Iniciar servidor ───────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`✅  CatalogHub corriendo en http://localhost:${PORT}`);
+  console.log(`✅  DevisiStore corriendo en http://localhost:${PORT}`);
   console.log(`🌍  Entorno: ${process.env.NODE_ENV || 'development'}`);
 });
 

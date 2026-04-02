@@ -67,7 +67,7 @@ function initDatabase() {
   `);
 
   // Crear admin inicial si no existe
-  const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@cataloghub.com';
+  const adminEmail    = process.env.ADMIN_EMAIL    || 'devisi.software@gmail.com';
   const adminPassword = process.env.ADMIN_PASSWORD || 'Admin1234!';
 
   const existing = db.prepare('SELECT id FROM users WHERE role = ?').get('admin');

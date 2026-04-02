@@ -1,4 +1,4 @@
-# CatalogHub 🛒
+# DevisiStore 🛒
 
 > Plataforma multi-usuario de catálogos digitales. Cada negocio tiene su propia página pública con productos, imágenes, precios y contacto directo por WhatsApp.
 
@@ -56,7 +56,7 @@ Logging:    Morgan
 ## Arquitectura del proyecto
 
 ```
-cataloghub/
+devisistore/
 ├── app.js                    ← Punto de entrada, configuración de Express
 ├── package.json
 ├── .env.example
@@ -115,7 +115,7 @@ cataloghub/
 
 ```bash
 # 1. Clonar o descomprimir el proyecto
-cd cataloghub
+cd devisistore
 
 # 2. Instalar dependencias
 npm install
@@ -152,7 +152,7 @@ NODE_ENV=development
 SESSION_SECRET=cambia_esto_por_algo_largo_y_aleatorio
 
 # Ruta del archivo SQLite
-DB_PATH=./cataloghub.db
+DB_PATH=./devisistore.db
 
 # Credenciales del administrador inicial
 # Solo se usa la primera vez que se ejecuta la app
@@ -175,7 +175,7 @@ LOGIN_WINDOW_MINUTES=15
 
 Al iniciar por primera vez, la aplicación:
 
-1. **Crea la base de datos** (`cataloghub.db`) con todas las tablas.
+1. **Crea la base de datos** (`devisistore.db`) con todas las tablas.
 2. **Crea el usuario administrador** con las credenciales de `.env`.
 3. Imprime en consola: `🔑 Admin inicial creado: admin@...`
 
@@ -218,8 +218,8 @@ Hostinger Business Hosting soporta Node.js directamente desde el panel hPanel.
 # En tu VPS o panel hPanel terminal:
 
 # 1. Subir archivos (via FTP, Git o File Manager)
-git clone https://github.com/tu-usuario/cataloghub.git
-cd cataloghub
+git clone https://github.com/tu-usuario/devisistore.git
+cd devisistore
 
 # 2. Instalar dependencias
 npm install --production
@@ -233,7 +233,7 @@ nano .env
 
 # 4. Iniciar con PM2 (proceso persistente)
 npm install -g pm2
-pm2 start app.js --name "cataloghub"
+pm2 start app.js --name "devisistore"
 pm2 save
 pm2 startup  # para que se inicie solo al reiniciar el servidor
 ```
@@ -288,7 +288,7 @@ Las imágenes se guardan en `public/uploads/`. En un VPS estándar no hay proble
   node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
   ```
 - [ ] **Logs de auditoría**: registrar eventos de seguridad (login fallido, etc.)
-- [ ] **Backup automático** del archivo `cataloghub.db`
+- [ ] **Backup automático** del archivo `devisistore.db`
 - [ ] Revisar permisos del directorio `public/uploads/` (solo escritura del proceso Node)
 
 ---
@@ -463,7 +463,7 @@ npm install file-type
 En un VPS normal, no. Las imágenes están en `public/uploads/` que es persistente. En servicios PaaS con file system efímero (Heroku, Railway), sí se pierden. Usa almacenamiento en la nube para esos casos.
 
 **¿Cómo cambio el nombre de la plataforma?**
-Busca `CatalogHub` en `views/` y `app.js`. También puedes agregar una variable `APP_NAME` en `.env` y leerla desde `app.js` (`res.locals.appName`).
+Busca `DevisiStore` en `views/` y `app.js`. También puedes agregar una variable `APP_NAME` en `.env` y leerla desde `app.js` (`res.locals.appName`).
 
 **¿Puedo permitir que los negocios tengan múltiples usuarios?**
 Actualmente un usuario = un negocio. Para soportar equipos, agrega una tabla `business_members` con `(business_id, user_id, role)` y actualiza los middlewares de ownership.
