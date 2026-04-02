@@ -4,12 +4,12 @@ const router  = express.Router();
 const auth    = require('../controllers/authController');
 
 const loginRules = [
-  body('email').isEmail().withMessage('Email inválido.').normalizeEmail(),
+  body('email').isEmail().withMessage('Email inválido.'),
   body('password').notEmpty().withMessage('Contraseña requerida.'),
 ];
 
 const registerRules = [
-  body('email').isEmail().withMessage('Email inválido.').normalizeEmail(),
+  body('email').isEmail().withMessage('Email inválido.'),
   body('password')
     .isLength({ min: 8 })
     .withMessage('La contraseña debe tener al menos 8 caracteres.'),

@@ -21,6 +21,11 @@ const shopRoutes     = require('./routes/shopRoutes');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
+// ── Trust proxy (solo en producción) ───────────────────────────────────────
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', true);
+}
+
 // ── Seguridad con Helmet ───────────────────────────────────────────────────
 app.use(
   helmet({
@@ -48,21 +53,31 @@ app.use(express.json());
 // ── Archivos estáticos ─────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ── Asegurar carpeta de sesiones ───────────────────────────────────────────
+const fs = require('fs');
+const sessionsDir = path.join(__dirname, 'sessions');
+if (!fs.existsSync(sessionsDir)) {
+  fs.mkdirSync(sessionsDir, { recursive: true });
+  console.log('📁 Carpeta de sesiones creada:', sessionsDir);
+}
+
 // ── Sesiones ───────────────────────────────────────────────────────────────
 app.use(
   session({
     store: new FileStore({
-      path:    './sessions',   // carpeta donde se guardan los archivos de sesión
+      path:    sessionsDir,     // carpeta donde se guardan los archivos de sesión
       ttl:     86400,          // 24 horas en segundos
       retries: 0,
+      logFn:  () => {},        // Silenciar logs de session-file-store
     }),
     secret:            process.env.SESSION_SECRET || 'secreto_desarrollo_cambiar',
     resave:            false,
     saveUninitialized: false,
     cookie: {
-      secure:   process.env.NODE_ENV === 'production',
+      secure:   false, // Cambiar a true en producción con HTTPS
       httpOnly: true,
       maxAge:   1000 * 60 * 60 * 24, // 24 horas
+      sameSite: 'lax',
     },
   })
 );

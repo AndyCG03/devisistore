@@ -66,9 +66,9 @@ function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_businesses_slug   ON businesses(slug);
   `);
 
-  // Crear admin inicial si no existe
+  // Crear o actualizar admin inicial
   const adminEmail    = process.env.ADMIN_EMAIL    || 'devisi.software@gmail.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin1234!';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Devisi123*';
 
   const existing = db.prepare('SELECT id FROM users WHERE role = ?').get('admin');
   if (!existing) {
@@ -77,6 +77,11 @@ function initDatabase() {
       'INSERT INTO users (email, password, role) VALUES (?, ?, ?)'
     ).run(adminEmail, hash, 'admin');
     console.log(`🔑  Admin inicial creado: ${adminEmail}`);
+  } else {
+    // Actualizar contraseña del admin existente
+    const hash = bcrypt.hashSync(adminPassword, 12);
+    db.prepare('UPDATE users SET email = ?, password = ? WHERE role = ?').run(adminEmail, hash, 'admin');
+    console.log(`🔑  Admin actualizado: ${adminEmail}`);
   }
 }
 
