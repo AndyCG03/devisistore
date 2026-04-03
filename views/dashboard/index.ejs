@@ -36,12 +36,20 @@
         <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.5rem">URL de tu catálogo</p>
         <% if(business){ %>
           <p id="catalogUrl" style="font-size:.78rem;font-family:monospace;color:var(--blue);word-break:break-all;margin-top:.25rem">/shop/<%= business.slug %></p>
-          <button id="copyUrlBtn" class="btn btn-ghost btn-sm" style="margin-top:.625rem">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-            </svg>
-            <span id="copyUrlText">Copiar enlace</span>
-          </button>
+          <div style="display:flex;gap:.5rem;margin-top:.625rem;flex-wrap:wrap">
+            <button id="copyUrlBtn" class="btn btn-ghost btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+              <span id="copyUrlText">Copiar</span>
+            </button>
+            <a href="/dashboard/qr" class="btn btn-ghost btn-sm" style="color:var(--blue);border-color:var(--blue)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 8h.01M4 12h.01M4 8h.01M4 16h.01M8 12h.01M8 8h.01M8 16h.01"/>
+              </svg>
+              QR
+            </a>
+          </div>
         <% } else { %>
           <p style="font-size:.8rem;color:var(--gray);margin-top:.25rem">Crea tu negocio primero</p>
         <% } %>

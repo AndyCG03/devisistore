@@ -81,3 +81,15 @@ exports.toggleBusiness = (req, res) => {
   req.session.flashSuccess = `Negocio ${biz.active ? 'desactivado' : 'activado'}.`;
   res.redirect('/admin/businesses');
 };
+
+// ── POST /admin/businesses/:id/delete ─────────────────────────────────────
+exports.deleteBusiness = (req, res) => {
+  const biz = Business.findById(req.params.id);
+  if (!biz) {
+    req.session.flashError = 'Negocio no encontrado.';
+    return res.redirect('/admin/businesses');
+  }
+  Business.deleteById(biz.id);
+  req.session.flashSuccess = `Negocio "${biz.name}" eliminado permanentemente.`;
+  res.redirect('/admin/businesses');
+};

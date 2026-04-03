@@ -19,17 +19,17 @@
 
     <!-- Desktop nav -->
     <div id="desktopNav" style="display:flex;align-items:center;gap:.5rem">
-      <a href="/businesses" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Negocios</a>
+      <a href="/businesses" class="main-nav-link" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)">Negocios</a>
       <% if (locals.user) { %>
         <% if (user.role === 'admin') { %>
-          <a href="/admin" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Admin</a>
+          <a href="/admin" class="main-nav-link" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)">Admin</a>
         <% } %>
-        <a href="/dashboard" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)';this.style.background='var(--blue-light)'" onmouseout="this.style.color='var(--gray)';this.style.background='transparent'">Mi Panel</a>
+        <a href="/dashboard" class="main-nav-link" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)">Mi Panel</a>
         <form action="/auth/logout" method="POST" style="margin:0">
           <button class="btn btn-ghost btn-sm">Salir</button>
         </form>
       <% } else { %>
-        <a href="/auth/login" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)" onmouseover="this.style.color='var(--blue)'" onmouseout="this.style.color='var(--gray)'">Iniciar sesión</a>
+        <a href="/auth/login" class="main-nav-link" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)">Iniciar sesión</a>
         <a href="/auth/register" class="btn btn-primary btn-sm">Registrarse</a>
       <% } %>
     </div>
@@ -169,5 +169,17 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.background = 'none';
     });
   }
+
+  // Efecto hover en links de nav principal
+  document.querySelectorAll('.main-nav-link').forEach(function(link) {
+    link.addEventListener('mouseenter', function() {
+      this.style.color = 'var(--blue)';
+      this.style.background = 'var(--blue-light)';
+    });
+    link.addEventListener('mouseleave', function() {
+      this.style.color = 'var(--gray)';
+      this.style.background = 'transparent';
+    });
+  });
 });
 </script>

@@ -37,7 +37,9 @@
               <td>
                 <div style="display:flex;align-items:center;gap:.625rem">
                   <code style="background:var(--blue-light);color:var(--blue-dark);padding:.25rem .75rem;border-radius:7px;font-size:.875rem;font-weight:700;letter-spacing:.07em"><%=k.key_value%></code>
-                  <button onclick="navigator.clipboard.writeText('<%=k.key_value%>');this.textContent='Copiado'" style="background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--gray);font-size:.75rem;padding:.2rem .5rem;font-family:'Exo 2',sans-serif;transition:var(--tr)" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='none'">Copiar</button>
+                  <button class="copyKeyBtn" data-key="<%=k.key_value%>" style="background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--gray);font-size:.75rem;padding:.2rem .5rem;font-family:'Exo 2',sans-serif;transition:var(--tr)">
+                    <span class="copyKeyText">Copiar</span>
+                  </button>
                 </div>
               </td>
               <td><span class="badge <%=k.used?'badge-gray':'badge-green'%>"><%=k.used?'Utilizada':'Disponible'%></span></td>
@@ -45,7 +47,7 @@
               <td class="col-hide-sm" style="color:var(--gray);font-size:.8rem"><%=new Date(k.created_at).toLocaleDateString('es')%></td>
               <td style="text-align:right">
                 <% if(!k.used){ %>
-                <form action="/admin/keys/<%=k.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar esta clave?')" style="margin:0">
+                <form action="/admin/keys/<%=k.id%>/delete" method="POST" class="deleteKeyForm" style="margin:0">
                   <button class="btn btn-danger">Eliminar</button>
                 </form>
                 <% } %>
@@ -58,6 +60,44 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Copy key functionality
+  document.querySelectorAll('.copyKeyBtn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const key = this.getAttribute('data-key');
+      const textEl = this.querySelector('.copyKeyText');
+      navigator.clipboard.writeText(key).then(() => {
+        textEl.textContent = '¡Copiado!';
+        this.style.background = 'var(--green-light)';
+        this.style.color = 'var(--green-dark)';
+        setTimeout(() => {
+          textEl.textContent = 'Copiar';
+          this.style.background = 'none';
+          this.style.color = 'var(--gray)';
+        }, 2000);
+      });
+    });
+    btn.addEventListener('mouseenter', function() {
+      this.style.background = 'var(--blue-light)';
+    });
+    btn.addEventListener('mouseleave', function() {
+      this.style.background = 'none';
+    });
+  });
+
+  // Delete key confirmation
+  document.querySelectorAll('.deleteKeyForm').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      if (!confirm('¿Eliminar esta clave de acceso?')) {
+        e.preventDefault();
+      }
+    });
+  });
+});
+</script>
+
 <%- include('../partials/footer') %>
 </body>
 </html>

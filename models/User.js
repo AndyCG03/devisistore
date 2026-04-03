@@ -22,6 +22,21 @@ const User = {
   },
 
   deleteById(id) {
+    // Eliminar en cascada: productos → negocios → usuario
+    const businesses = db.prepare('SELECT id FROM businesses WHERE user_id = ?').all(id);
+    
+    businesses.forEach(biz => {
+      // Eliminar productos del negocio
+      db.prepare('DELETE FROM products WHERE business_id = ?').run(biz.id);
+    });
+    
+    // Eliminar negocios del usuario
+    db.prepare('DELETE FROM businesses WHERE user_id = ?').run(id);
+    
+    // Eliminar access keys usadas por el usuario
+    db.prepare('DELETE FROM access_keys WHERE used_by = ?').run(id);
+    
+    // Finalmente eliminar el usuario
     return db.prepare('DELETE FROM users WHERE id = ?').run(id);
   },
 

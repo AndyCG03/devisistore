@@ -35,7 +35,7 @@
                   <form action="/admin/users/<%=u.id%>/toggle" method="POST" style="margin:0">
                     <button class="btn <%=u.active?'btn-warn':'btn-secondary'%> btn-sm"><%=u.active?'Desactivar':'Activar'%></button>
                   </form>
-                  <form action="/admin/users/<%=u.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar a <%=u.email%>?')" style="margin:0">
+                  <form action="/admin/users/<%=u.id%>/delete" method="POST" class="deleteUserForm" style="margin:0">
                     <button class="btn btn-danger">Eliminar</button>
                   </form>
                 </div>
@@ -51,6 +51,19 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.deleteUserForm').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) {
+        e.preventDefault();
+      }
+    });
+  });
+});
+</script>
+
 <%- include('../partials/footer') %>
 </body>
 </html>

@@ -56,6 +56,12 @@ const Business = {
     return db.prepare('UPDATE businesses SET active = ? WHERE id = ?').run(active, id);
   },
 
+  deleteById(id) {
+    // Eliminar productos primero, luego el negocio
+    db.prepare('DELETE FROM products WHERE business_id = ?').run(id);
+    return db.prepare('DELETE FROM businesses WHERE id = ?').run(id);
+  },
+
   count() {
     return db.prepare('SELECT COUNT(*) as total FROM businesses').get().total;
   },

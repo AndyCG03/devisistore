@@ -3,6 +3,7 @@ const slugify  = require('slugify');
 const { validationResult } = require('express-validator');
 const Business = require('../models/Business');
 const Product  = require('../models/Product');
+const QRCode   = require('qrcode');
 
 // ── GET /dashboard ─────────────────────────────────────────────────────────
 exports.getIndex = (req, res) => {
@@ -203,4 +204,41 @@ exports.deleteProduct = (req, res) => {
     req.session.flashSuccess = 'Producto eliminado.';
   }
   res.redirect('/dashboard/products');
+};
+
+// ── GET /dashboard/qr ─────────────────────────────────────────────────────
+exports.getQR = async (req, res) => {
+  const business = Business.findByUserId(req.session.user.id);
+  if (!business) {
+    req.session.flashError = 'Primero crea tu negocio.';
+    return res.redirect('/dashboard/business');
+  }
+
+  try {
+    // Construir URL completa del catálogo
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const catalogUrl = `${protocol}://${host}/shop/${business.slug}`;
+
+    // Generar QR como imagen PNG
+    const qrImage = await QRCode.toDataURL(catalogUrl, {
+      width: 400,
+      margin: 2,
+      color: {
+        dark: '#2E5FA8',
+        light: '#FFFFFF'
+      }
+    });
+
+    res.render('dashboard/qr', {
+      title: 'Código QR del Catálogo',
+      business,
+      catalogUrl,
+      qrImage,
+    });
+  } catch (err) {
+    console.error('Error al generar QR:', err);
+    req.session.flashError = 'Error al generar el código QR.';
+    res.redirect('/dashboard');
+  }
 };

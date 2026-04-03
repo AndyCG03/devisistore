@@ -60,8 +60,8 @@ const Product = {
 
   getCategories(businessId) {
     return db.prepare(
-      'SELECT DISTINCT category FROM products WHERE business_id = ? AND category IS NOT NULL ORDER BY category'
-    ).all(businessId).map(r => r.category);
+      'SELECT DISTINCT category FROM products WHERE business_id = ? AND category IS NOT NULL AND category != ? ORDER BY category'
+    ).all(businessId, '').map(r => r.category).filter(c => c && c.trim());
   },
 
   countByBusiness(businessId) {

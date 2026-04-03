@@ -88,8 +88,8 @@
               <td style="text-align:right">
                 <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem">
                   <a href="/dashboard/products/<%=p.id%>/edit" class="btn btn-ghost btn-sm">Editar</a>
-                  <form action="/dashboard/products/<%=p.id%>/delete" method="POST" onsubmit="return confirm('¿Eliminar este producto?')" style="margin:0">
-                    <button class="btn btn-danger">Eliminar</button>
+                  <form action="/dashboard/products/<%=p.id%>/delete" method="POST" class="deleteProductForm" style="margin:0">
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
                   </form>
                 </div>
               </td>
@@ -115,5 +115,19 @@
 </div>
 
 <%- include('../partials/footer') %>
+
+<script>
+// Confirmación para eliminar productos
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.deleteProductForm').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      if (!confirm('¿Eliminar este producto? Esta acción no se puede deshacer.')) {
+        e.preventDefault();
+      }
+    });
+  });
+});
+</script>
+
 </body>
 </html>

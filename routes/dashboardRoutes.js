@@ -33,8 +33,34 @@ const upload = multer({
 
 // ── Validaciones ───────────────────────────────────────────────────────────
 const bizRules = [
-  body('name').notEmpty().trim().withMessage('El nombre del negocio es requerido.'),
-  body('email').optional({ checkFalsy: true }).isEmail().withMessage('Email inválido.'),
+  body('name')
+    .notEmpty().trim().isLength({ min: 2, max: 100 })
+    .withMessage('El nombre debe tener entre 2 y 100 caracteres.')
+    .matches(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s\-.,&]+$/)
+    .withMessage('El nombre solo puede contener letras, números y espacios.'),
+  body('description')
+    .optional({ checkFalsy: true })
+    .trim().isLength({ max: 500 })
+    .withMessage('La descripción no puede exceder 500 caracteres.'),
+  body('phone')
+    .optional({ checkFalsy: true })
+    .trim().matches(/^[\d\s\-\+\(\)]{7,20}$/)
+    .withMessage('Teléfono inválido. Solo números, +, -, paréntesis.'),
+  body('whatsapp')
+    .optional({ checkFalsy: true })
+    .trim().matches(/^\d{7,15}$/)
+    .withMessage('WhatsApp inválido. Solo números con código de país.'),
+  body('email')
+    .optional({ checkFalsy: true })
+    .isEmail().withMessage('Email inválido.'),
+  body('address')
+    .optional({ checkFalsy: true })
+    .trim().isLength({ max: 200 })
+    .withMessage('La dirección no puede exceder 200 caracteres.'),
+  body('schedule')
+    .optional({ checkFalsy: true })
+    .trim().isLength({ max: 100 })
+    .withMessage('El horario no puede exceder 100 caracteres.'),
 ];
 
 const productRules = [
@@ -54,5 +80,6 @@ router.post('/products/new',          upload.single('image'), productRules, dash
 router.get('/products/:id/edit',      dash.getEditProduct);
 router.post('/products/:id/edit',     upload.single('image'), productRules, dash.postEditProduct);
 router.post('/products/:id/delete',   dash.deleteProduct);
+router.get('/qr',                     dash.getQR);
 
 module.exports = router;

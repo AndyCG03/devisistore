@@ -1,0 +1,93 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<div class="page-wrap">
+  <% locals.activePage = 'qr'; %>
+  <%- include('../partials/sidebar') %>
+
+  <main class="page-main">
+    <div style="max-width:600px">
+      <a href="/dashboard" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        Volver al panel
+      </a>
+      <h1 class="section-title" style="margin-bottom:.25rem">Código QR de tu Catálogo</h1>
+      <p class="section-sub" style="margin-bottom:1.75rem">Comparte este código QR para que tus clientes accedan directamente a tu catálogo.</p>
+
+      <%- include('../partials/flash') %>
+
+      <div class="card" style="padding:2rem;text-align:center">
+        <!-- QR Image -->
+        <div style="background:#fff;display:inline-block;padding:1.5rem;border-radius:16px;border:2px solid var(--border);margin-bottom:1.5rem">
+          <img src="<%=qrImage%>" alt="QR Code" style="width:300px;height:300px;display:block" />
+        </div>
+
+        <!-- URL -->
+        <div style="margin-bottom:1.5rem">
+          <p style="font-size:.8rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">URL de tu catálogo</p>
+          <p id="catalogUrl" style="font-family:monospace;font-size:.875rem;color:var(--blue);word-break:break-all;background:var(--bg);padding:.75rem 1rem;border-radius:8px;border:1px solid var(--border)"><%=catalogUrl%></p>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+          <a id="downloadQrBtn" href="<%=qrImage%>" download="<%=business.slug%>-qr.png" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Descargar QR
+          </a>
+          <button id="copyUrlBtn" class="btn btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Copiar URL
+          </button>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <div style="margin-top:1.5rem;padding:1.25rem;background:var(--blue-light);border-radius:12px;border:1px solid rgba(46,95,168,.15)">
+        <p style="font-size:.8125rem;font-weight:700;color:var(--blue-dark);margin-bottom:.5rem">💡 Ideas de uso</p>
+        <ul style="font-size:.8125rem;color:var(--blue-dark);line-height:1.8;padding-left:1.25rem;margin:0">
+          <li>Imprime el QR en tarjetas de presentación</li>
+          <li>Pégalo en la entrada de tu negocio</li>
+          <li>Compártelo en redes sociales</li>
+          <li>Inclúyelo en facturas o recibos</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+// Copiar URL al portapapeles
+document.addEventListener('DOMContentLoaded', function() {
+  const copyUrlBtn = document.getElementById('copyUrlBtn');
+  const catalogUrl = document.getElementById('catalogUrl');
+
+  if (copyUrlBtn && catalogUrl) {
+    copyUrlBtn.addEventListener('click', async function() {
+      try {
+        await navigator.clipboard.writeText(catalogUrl.textContent.trim());
+        const originalText = this.innerHTML;
+        this.innerHTML = '✅ ¡Copiado!';
+        this.style.background = 'var(--green-light)';
+        this.style.color = 'var(--green-dark)';
+        
+        setTimeout(() => {
+          this.innerHTML = originalText;
+          this.style.background = '';
+          this.style.color = '';
+        }, 2000);
+      } catch (err) {
+        console.error('Error al copiar:', err);
+      }
+    });
+  }
+});
+</script>
+
+</body>
+</html>

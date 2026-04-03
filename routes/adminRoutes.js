@@ -15,5 +15,6 @@ router.post('/keys/generate',           admin.generateKey);
 router.post('/keys/:id/delete',         admin.deleteKey);
 router.get('/businesses',               admin.getBusinesses);
 router.post('/businesses/:id/toggle',   admin.toggleBusiness);
+router.post('/businesses/:id/delete',   admin.deleteBusiness);
 
 module.exports = router;
