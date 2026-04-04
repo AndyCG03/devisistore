@@ -12,12 +12,12 @@
     <!-- Mobile menu button -->
     <div style="display:flex;align-items:center;gap:.5rem">
       <% if(business.enable_cart){ %>
-      <button id="cartBtnMobile" style="position:relative;background:none;border:none;cursor:pointer;padding:.5rem;border-radius:8px;transition:var(--tr)">
+      <button id="cartBtnMobile" style="display:none;position:relative;background:none;border:none;cursor:pointer;padding:.5rem;border-radius:8px;transition:var(--tr)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         <span id="cartCountMobile" style="position:absolute;top:0;right:0;background:var(--blue);color:#fff;font-size:.625rem;font-weight:700;width:1rem;height:1rem;border-radius:50%;display:flex;align-items:center;justify-content:center">0</span>
       </button>
       <% } %>
-      <button id="mobileMenuBtn" style="background:none;border:none;cursor:pointer;padding:.5rem;border-radius:8px;transition:var(--tr)">
+      <button id="mobileMenuBtn" style="display:none;background:none;border:none;cursor:pointer;padding:.5rem;border-radius:8px;transition:var(--tr)">
         <svg id="menuIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         <svg id="closeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2" style="display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
@@ -101,11 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function updateMenuDisplay() {
+    const cartBtnMobileEl = document.getElementById('cartBtnMobile');
     if (isMobile()) {
       mobileMenuBtn.style.display = 'block';
+      if (cartBtnMobileEl) cartBtnMobileEl.style.display = 'block';
       desktopNav.style.display = 'none';
     } else {
       mobileMenuBtn.style.display = 'none';
+      if (cartBtnMobileEl) cartBtnMobileEl.style.display = 'none';
       desktopNav.style.display = 'flex';
       closeMenu();
     }
