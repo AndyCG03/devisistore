@@ -4,6 +4,76 @@
 <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem 1rem;background:var(--bg)">
   <div style="width:100%;max-width:420px">
 
+    <% if(locals.rateLimited){ %>
+    <!-- Rate Limited State -->
+    <div style="text-align:center;margin-bottom:2rem">
+      <div style="width:4rem;height:4rem;background:#FEF2F2;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;border:2px solid #FECACA">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+        </svg>
+      </div>
+      <h1 style="font-size:1.5rem;font-weight:800;color:var(--dark)">Demasiados intentos</h1>
+      <p style="font-size:.875rem;color:var(--gray);margin-top:.5rem">Tu cuenta está temporalmente bloqueada</p>
+    </div>
+
+    <div class="card" style="padding:2rem;text-align:center">
+      <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem">
+        <p style="font-size:1.125rem;font-weight:800;color:#DC2626;margin-bottom:.5rem">
+          ⏱️ Intenta de nuevo en <span id="countdown"><%=retryMins%> minuto(s)</span>
+        </p>
+        <p style="font-size:.8125rem;color:#991B1B;line-height:1.6">
+          Has superado el límite de <strong><%=maxAttempts%> intentos</strong> en los últimos <strong><%=windowMinutes%> minutos</strong>.
+        </p>
+      </div>
+
+      <div style="text-align:left;background:var(--bg);padding:1.25rem;border-radius:10px;margin-bottom:1.5rem">
+        <p style="font-size:.8125rem;font-weight:700;color:var(--dark);margin-bottom:.75rem">🔒 ¿Por qué sucede esto?</p>
+        <ul style="font-size:.8125rem;color:var(--gray);line-height:1.7;padding-left:1.25rem;margin:0">
+          <li>Es una medida de seguridad para proteger tu cuenta</li>
+          <li>Evita que alguien intente adivinar tu contraseña</li>
+          <li>El bloqueo se elimina automáticamente después del tiempo indicado</li>
+        </ul>
+      </div>
+
+      <div style="text-align:left;background:var(--blue-light);padding:1.25rem;border-radius:10px;border:1px solid rgba(46,95,168,.15)">
+        <p style="font-size:.8125rem;font-weight:700;color:var(--blue-dark);margin-bottom:.5rem">💡 ¿Qué puedes hacer?</p>
+        <ul style="font-size:.8125rem;color:var(--blue-dark);line-height:1.7;padding-left:1.25rem;margin:0">
+          <li>Espera el tiempo indicado y vuelve a intentarlo</li>
+          <li>Verifica que tu contraseña sea correcta antes de intentar</li>
+          <li>Si olvidaste tu contraseña, contacta al administrador</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+        <a href="/" class="btn btn-ghost btn-sm">Volver al inicio</a>
+      </div>
+    </div>
+
+    <script>
+      // Countdown timer
+      let remainingSecs = <%=retryAfterSecs%>;
+      const countdownEl = document.getElementById('countdown');
+      
+      function updateCountdown() {
+        if (remainingSecs <= 0) {
+          countdownEl.textContent = '¡Ya puedes intentar!';
+          countdownEl.style.color = 'var(--green)';
+          setTimeout(() => window.location.reload(), 2000);
+          return;
+        }
+        
+        const mins = Math.floor(remainingSecs / 60);
+        const secs = remainingSecs % 60;
+        countdownEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+        remainingSecs--;
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    </script>
+
+    <% } else { %>
+    <!-- Normal Login Form -->
     <div style="text-align:center;margin-bottom:2rem">
       <div style="width:3.25rem;height:3.25rem;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:13px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;box-shadow:0 4px 12px rgba(46,95,168,.25)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
@@ -36,6 +106,7 @@
         </p>
       </div>
     </div>
+    <% } %>
 
   </div>
 </div>

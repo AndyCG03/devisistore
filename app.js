@@ -102,9 +102,23 @@ app.use((req, res, next) => {
 const loginLimiter = rateLimit({
   windowMs: (parseInt(process.env.LOGIN_WINDOW_MINUTES) || 15) * 60 * 1000,
   max:      parseInt(process.env.LOGIN_MAX_ATTEMPTS)     || 10,
-  message:  'Demasiados intentos. Intenta más tarde.',
   standardHeaders: true,
   legacyHeaders:   false,
+  handler: (req, res) => {
+    // Calcular tiempo restante
+    const windowMinutes = parseInt(process.env.LOGIN_WINDOW_MINUTES) || 15;
+    const retryAfterSecs = Math.ceil((req.rateLimit.resetTime - Date.now()) / 1000);
+    const retryMins = Math.ceil(retryAfterSecs / 60);
+    
+    res.status(429).render('auth/login', {
+      title: 'Demasiados intentos',
+      rateLimited: true,
+      retryAfterSecs,
+      retryMins,
+      windowMinutes,
+      maxAttempts: parseInt(process.env.LOGIN_MAX_ATTEMPTS) || 10,
+    });
+  },
 });
 app.use('/auth/login', loginLimiter);
 
