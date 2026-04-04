@@ -43,9 +43,10 @@ exports.postBusiness = (req, res, next) => {
     const existing = Business.findByUserId(userId);
 
     const { name, description, address, phone, whatsapp, email, schedule,
-            instagram, facebook, twitter, tiktok, header_color } = req.body;
+            instagram, facebook, twitter, tiktok, header_color, enable_cart } = req.body;
 
     const social_links = JSON.stringify({ instagram, facebook, twitter, tiktok });
+    const enableCartVal = (enable_cart === '1' || enable_cart === 1 || enable_cart === 'on') ? 1 : 0;
 
     // Logo: si se subió uno nuevo, usar ese; si no, mantener el anterior
     let logo = existing ? existing.logo : null;
@@ -54,7 +55,7 @@ exports.postBusiness = (req, res, next) => {
     }
 
     if (existing) {
-      Business.update(existing.id, { name, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color: header_color || '#2E5FA8' });
+      Business.update(existing.id, { name, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color: header_color || '#2E5FA8', enable_cart: enableCartVal });
       req.session.flashSuccess = 'Negocio actualizado correctamente.';
     } else {
       // Crear slug único
@@ -64,7 +65,7 @@ exports.postBusiness = (req, res, next) => {
         counter++;
         slug = slugify(name, { lower: true, strict: true }) + '-' + counter;
       }
-      Business.create({ user_id: userId, name, slug, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color: header_color || '#2E5FA8' });
+      Business.create({ user_id: userId, name, slug, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color: header_color || '#2E5FA8', enable_cart: enableCartVal });
       req.session.flashSuccess = '¡Negocio creado! Ya tienes tu catálogo público.';
     }
 
@@ -220,12 +221,15 @@ exports.getQR = async (req, res) => {
     const host = req.get('host');
     const catalogUrl = `${protocol}://${host}/shop/${business.slug}`;
 
+    // Color del QR (usar header_color del negocio o azul por defecto)
+    const qrColor = business.header_color || '#2E5FA8';
+
     // Generar QR como imagen PNG
     const qrImage = await QRCode.toDataURL(catalogUrl, {
       width: 400,
       margin: 2,
       color: {
-        dark: '#2E5FA8',
+        dark: qrColor,
         light: '#FFFFFF'
       }
     });
@@ -235,10 +239,31 @@ exports.getQR = async (req, res) => {
       business,
       catalogUrl,
       qrImage,
+      qrColor,
     });
   } catch (err) {
     console.error('Error al generar QR:', err);
     req.session.flashError = 'Error al generar el código QR.';
     res.redirect('/dashboard');
+  }
+};
+
+// ── GET /api/generate-qr ──────────────────────────────────────────────────
+exports.generateQR = async (req, res) => {
+  try {
+    const { url, color } = req.query;
+    if (!url) return res.status(400).json({ error: 'URL requerida' });
+
+    const qrColor = color || '#2E5FA8';
+    const qrImage = await QRCode.toDataURL(url, {
+      width: 400,
+      margin: 2,
+      color: { dark: qrColor, light: '#FFFFFF' }
+    });
+
+    res.json({ qrImage });
+  } catch (err) {
+    console.error('Error al generar QR:', err);
+    res.status(500).json({ error: 'Error al generar QR' });
   }
 };

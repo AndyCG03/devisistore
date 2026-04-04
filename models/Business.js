@@ -15,10 +15,10 @@ const Business = {
 
   create(data) {
     const stmt = db.prepare(`
-      INSERT INTO businesses (user_id, name, slug, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color)
-      VALUES (@user_id, @name, @slug, @logo, @description, @address, @phone, @whatsapp, @email, @social_links, @schedule, @header_color)
+      INSERT INTO businesses (user_id, name, slug, logo, description, address, phone, whatsapp, email, social_links, schedule, header_color, enable_cart)
+      VALUES (@user_id, @name, @slug, @logo, @description, @address, @phone, @whatsapp, @email, @social_links, @schedule, @header_color, @enable_cart)
     `);
-    const info = stmt.run(data);
+    const info = stmt.run({ ...data, enable_cart: data.enable_cart || 0 });
     return info.lastInsertRowid;
   },
 
@@ -28,9 +28,9 @@ const Business = {
       SET name = @name, logo = @logo, description = @description,
           address = @address, phone = @phone, whatsapp = @whatsapp,
           email = @email, social_links = @social_links, schedule = @schedule,
-          header_color = @header_color
+          header_color = @header_color, enable_cart = @enable_cart
       WHERE id = @id
-    `).run({ ...data, id });
+    `).run({ ...data, id, enable_cart: data.enable_cart || 0 });
   },
 
   getAll() {

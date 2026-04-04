@@ -81,5 +81,6 @@ router.get('/products/:id/edit',      dash.getEditProduct);
 router.post('/products/:id/edit',     upload.single('image'), productRules, dash.postEditProduct);
 router.post('/products/:id/delete',   dash.deleteProduct);
 router.get('/qr',                     dash.getQR);
+router.get('/api/generate-qr',        dash.generateQR);
 
 module.exports = router;

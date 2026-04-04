@@ -17,6 +17,12 @@
     
     <!-- Desktop nav -->
     <div id="desktopNav" style="display:flex;align-items:center;gap:.5rem">
+      <% if(business.enable_cart){ %>
+      <button id="cartBtn" style="position:relative;background:none;border:none;cursor:pointer;padding:.5rem;border-radius:8px;transition:var(--tr)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <span id="cartCount" style="position:absolute;top:0;right:0;background:var(--blue);color:#fff;font-size:.625rem;font-weight:700;width:1rem;height:1rem;border-radius:50%;display:flex;align-items:center;justify-content:center">0</span>
+      </button>
+      <% } %>
       <% if(locals.user){ %>
         <a href="/dashboard" class="nav-link-item" style="font-size:.875rem;font-weight:600;color:var(--gray);text-decoration:none;padding:.4rem .875rem;border-radius:8px;transition:var(--tr)">Mi Panel</a>
       <% } else { %>
@@ -247,7 +253,18 @@ document.addEventListener('DOMContentLoaded', function() {
   <% } else { %>
 
   <!-- Products grid -->
-  <div id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem">
+  <div id="productsGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1rem">
+    <style>
+      @media(min-width:768px){#productsGrid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))!important;gap:1.25rem!important}}
+      @media(max-width:480px){
+        .cart-btn-text{display:none}
+        .add-cart-btn{padding:.35rem!important;min-width:2rem;justify-content:center}
+        .whatsapp-btn span{display:none}
+        .whatsapp-btn{padding:.3rem!important;min-width:2rem;justify-content:center}
+        #cartModal > div{max-width:100%!important;width:100%!important;height:100%!important;max-height:100%!important;border-radius:0!important;margin:0!important}
+        #cartModal{padding:0!important}
+      }
+    </style>
     <% products.forEach(p=>{ %>
     <div class="card card-hover product-card"
          style="overflow:hidden;opacity:<%=p.status==='unavailable'?.6:1%>;cursor:pointer" 
@@ -289,6 +306,21 @@ document.addEventListener('DOMContentLoaded', function() {
             <% if(p.currency==='CUP'){ %><span style="font-size:.625rem;font-weight:600;color:var(--gray);margin-left:.25rem">CUP</span><% } %>
           </span>
           <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:flex-end">
+            <% if(business.whatsapp && p.status !== 'unavailable'){ %>
+            <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':''))%>"
+               target="_blank"
+               class="whatsapp-btn"
+               style="display:inline-flex;align-items:center;gap:.25rem;background:#25D366;color:#fff;font-size:.6875rem;font-weight:700;padding:.3rem .5rem;border-radius:6px;text-decoration:none;transition:var(--tr)">
+              <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+              Pedir
+            </a>
+            <% } %>
+            <% if(business.enable_cart && p.status !== 'unavailable'){ %>
+            <button data-product-id="<%=p.id%>" data-product='<%- JSON.stringify(p).replace(/'/g, "&#39;") %>' class="add-cart-btn" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:.35rem .625rem;font-size:.75rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.25rem;transition:var(--tr)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              <span class="cart-btn-text">Agregar</span>
+            </button>
+            <% } %>
             <% if(p.status==='unavailable'){ %>
               <span class="badge badge-red">Agotado</span>
             <% } else if(p.stock_level==='low'){ %>
@@ -354,6 +386,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // 0b. Botón del carrito
+  const cartBtn = document.getElementById('cartBtn');
+  if (cartBtn) {
+    cartBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openCart();
+    });
+  }
+
+  // Cart modal close listeners
+  const cartCloseBtn = document.getElementById('cartCloseBtn');
+  const cartModal = document.getElementById('cartModal');
+
+  if (cartCloseBtn) {
+    cartCloseBtn.addEventListener('click', closeCart);
+  }
+
+  if (cartModal) {
+    cartModal.addEventListener('click', function(e) {
+      if (e.target === cartModal) closeCart();
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && cartModal && cartModal.style.display === 'flex') {
+      closeCart();
+    }
+  });
+
   // 1. Click en cards de productos para abrir modal
   const productsGrid = document.getElementById('productsGrid');
   if (productsGrid) {
@@ -371,6 +432,20 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  // 1b. Botones de agregar al carrito
+  document.querySelectorAll('.add-cart-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      try {
+        const productData = this.getAttribute('data-product');
+        const product = JSON.parse(productData);
+        addToCart(product);
+      } catch (err) {
+        console.error('Error al agregar al carrito:', err);
+      }
+    });
+  });
 
   // 2. Efecto hover en imágenes de productos
   document.querySelectorAll('.product-image').forEach(function(img) {
@@ -533,7 +608,199 @@ function closeProductModalDirect() {
     document.body.style.overflow = '';
   }
 }
+
+// ── Carrito de compras ──────────────────────────────────────────────────────
+let cart = JSON.parse(localStorage.getItem('cart_<%=business.slug%>') || '[]');
+
+function updateCartUI() {
+  const cartCount = document.getElementById('cartCount');
+  if (cartCount) {
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    cartCount.textContent = totalItems;
+    cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+}
+
+function saveCart() {
+  localStorage.setItem('cart_<%=business.slug%>', JSON.stringify(cart));
+  updateCartUI();
+}
+
+function addToCart(product) {
+  const existing = cart.find(item => item.id === product.id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id: product.id, name: product.name, price: product.price, currency: product.currency || 'USD', qty: 1 });
+  }
+  saveCart();
+  
+  // Feedback visual
+  const btn = document.querySelector(`[data-product-id="${product.id}"]`);
+  if (btn) {
+    const original = btn.innerHTML;
+    btn.innerHTML = '✓ Agregado';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; }, 1500);
+  }
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  saveCart();
+  renderCart();
+}
+
+function changeQty(productId, delta) {
+  const item = cart.find(i => i.id === productId);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    saveCart();
+    renderCart();
+  }
+}
+
+function renderCart() {
+  const content = document.getElementById('cartContent');
+  if (!content) return;
+  
+  if (cart.length === 0) {
+    content.innerHTML = `
+      <div style="text-align:center;padding:3rem 1rem">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.5" style="margin-bottom:1rem"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <p style="font-weight:700;color:var(--dark)">Tu carrito está vacío</p>
+        <p style="font-size:.875rem;color:var(--gray);margin-top:.25rem">Agrega productos del catálogo</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const currency = cart[0].currency || 'USD';
+  
+  let html = '<div style="max-height:50vh;overflow-y:auto">';
+  cart.forEach(item => {
+    html += `
+      <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border)">
+        <div style="flex:1;min-width:0">
+          <p style="font-weight:700;color:var(--dark);font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</p>
+          <p style="font-size:.75rem;color:var(--gray)">${item.currency === 'CUP' ? '$' : '$'}${item.price.toFixed(2)} ${item.currency === 'CUP' ? 'CUP' : ''}</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:.375rem;flex-shrink:0">
+          <button data-qty-change="${item.id}" data-delta="-1" style="width:1.5rem;height:1.5rem;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.875rem;color:var(--gray)">−</button>
+          <span style="font-weight:700;min-width:1.25rem;text-align:center;font-size:.875rem">${item.qty}</span>
+          <button data-qty-change="${item.id}" data-delta="1" style="width:1.5rem;height:1.5rem;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.875rem;color:var(--gray)">+</button>
+        </div>
+        <button data-remove="${item.id}" style="background:none;border:none;cursor:pointer;color:var(--red,#DC2626);padding:.25rem;flex-shrink:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        </button>
+      </div>
+    `;
+  });
+  html += '</div>';
+  
+  html += `
+    <div style="padding:1rem 0 0;border-top:2px solid var(--border);margin-top:.75rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+        <span style="font-weight:700;color:var(--dark);font-size:.9375rem">Total:</span>
+        <span style="font-size:1.125rem;font-weight:800;color:var(--blue)">${currency === 'CUP' ? '$' : '$'}${total.toFixed(2)} ${currency === 'CUP' ? 'CUP' : ''}</span>
+      </div>
+      <% if(business.whatsapp){ %>
+      <button id="sendOrderBtn" class="btn btn-secondary" style="width:100%;padding:.75rem;font-size:.875rem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right:.375rem"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+        Enviar pedido por WhatsApp
+      </button>
+      <% } else { %>
+      <div style="text-align:center;padding:1rem;background:var(--bg);border-radius:10px;border:1px solid var(--border)">
+        <p style="font-size:.8125rem;color:var(--gray);margin:0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:.25rem"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          El negocio no ha configurado WhatsApp aún
+        </p>
+      </div>
+      <% } %>
+    </div>
+  `;
+  
+  content.innerHTML = html;
+  
+  // Cart item buttons - use event delegation
+  content.querySelectorAll('[data-qty-change]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const productId = parseInt(this.getAttribute('data-qty-change'));
+      const delta = parseInt(this.getAttribute('data-delta'));
+      changeQty(productId, delta);
+    });
+  });
+  
+  content.querySelectorAll('[data-remove]').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      removeFromCart(parseInt(this.getAttribute('data-remove')));
+    });
+  });
+  
+  // Send order via WhatsApp
+  const sendBtn = document.getElementById('sendOrderBtn');
+  if (sendBtn) {
+    sendBtn.addEventListener('click', function() {
+      const whatsapp = '<%=business.whatsapp%>';
+      if (!whatsapp) return;
+      
+      let msg = '🛒 *Nuevo Pedido*\n\n';
+      cart.forEach(item => {
+        msg += `• ${item.name} x${item.qty} - ${item.currency === 'CUP' ? '$' : '$'}${(item.price * item.qty).toFixed(2)}${item.currency === 'CUP' ? ' CUP' : ''}\n`;
+      });
+      msg += `\n💰 *Total: ${currency === 'CUP' ? '$' : '$'}${total.toFixed(2)} ${currency === 'CUP' ? 'CUP' : ''}*`;
+      
+      window.open(`https://wa.me/${whatsapp.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+    });
+  }
+}
+
+function openCart() {
+  const modal = document.getElementById('cartModal');
+  if (modal) {
+    renderCart();
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeCart() {
+  const modal = document.getElementById('cartModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+// Init cart UI
+updateCartUI();
 </script>
+
+<!-- Cart Modal -->
+<% if(business.enable_cart){ %>
+<div id="cartModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center;padding:1.5rem">
+  <div style="background:var(--white);border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative">
+    <button id="cartCloseBtn" style="position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    
+    <div style="padding:1.5rem">
+      <h2 style="font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        Mi Carrito
+      </h2>
+      <div id="cartContent"></div>
+    </div>
+  </div>
+</div>
+<% } %>
 
 <footer style="background:var(--white);border-top:1px solid var(--border);padding:1.25rem 1.5rem;text-align:center">
   <p style="font-size:.78rem;color:var(--gray)">Catálogo creado con <a href="/" style="color:var(--blue);font-weight:700;text-decoration:none">DevisiStore</a></p>

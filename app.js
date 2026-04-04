@@ -125,6 +125,16 @@ app.get('/', (req, res) => {
   });
 });
 
+// Manual de usuario
+app.get('/manual', (req, res) => {
+  res.render('home/manual', { title: 'Manual de usuario – DevisiStore' });
+});
+
+// Términos y condiciones
+app.get('/terminos', (req, res) => {
+  res.render('home/terminos', { title: 'Términos y condiciones – DevisiStore' });
+});
+
 // ── Manejo de errores 404 ──────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).render('errors/404', { title: 'Página no encontrada' });

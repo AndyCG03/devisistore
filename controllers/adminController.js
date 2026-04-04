@@ -2,6 +2,7 @@ const User       = require('../models/User');
 const AccessKey  = require('../models/AccessKey');
 const Business   = require('../models/Business');
 const Product    = require('../models/Product');
+const Plan       = require('../models/Plan');
 
 // ── GET /admin ─────────────────────────────────────────────────────────────
 exports.getDashboard = (req, res) => {
@@ -9,6 +10,7 @@ exports.getDashboard = (req, res) => {
     users:      User.count(),
     businesses: Business.count(),
     keys:       AccessKey.count(),
+    plans:      Plan.getAll().length,
   };
   res.render('admin/index', { title: 'Panel de administración', stats });
 };
@@ -16,7 +18,8 @@ exports.getDashboard = (req, res) => {
 // ── GET /admin/users ───────────────────────────────────────────────────────
 exports.getUsers = (req, res) => {
   const users = User.getAll();
-  res.render('admin/users', { title: 'Usuarios', users });
+  const plans = Plan.getAll();
+  res.render('admin/users', { title: 'Usuarios', users, plans });
 };
 
 // ── POST /admin/users/:id/toggle ───────────────────────────────────────────
@@ -92,4 +95,110 @@ exports.deleteBusiness = (req, res) => {
   Business.deleteById(biz.id);
   req.session.flashSuccess = `Negocio "${biz.name}" eliminado permanentemente.`;
   res.redirect('/admin/businesses');
+};
+
+// ── GET /admin/plans ──────────────────────────────────────────────────────
+exports.getPlans = (req, res) => {
+  const plans = Plan.getAllIncludingInactive();
+  res.render('admin/plans', { title: 'Planes', plans });
+};
+
+// ── POST /admin/plans ─────────────────────────────────────────────────────
+exports.createPlan = (req, res) => {
+  try {
+    const { name, slug, description, price, currency, billing_period,
+            max_businesses, max_products, max_storage_mb,
+            enable_cart, enable_custom_domain, enable_analytics,
+            enable_priority_support, features, is_default, sort_order } = req.body;
+
+    Plan.create({
+      name, slug, description,
+      price: parseFloat(price) || 0,
+      currency: currency || 'USD',
+      billing_period: billing_period || 'monthly',
+      max_businesses: parseInt(max_businesses) || 1,
+      max_products: parseInt(max_products) || 50,
+      max_storage_mb: parseInt(max_storage_mb) || 100,
+      enable_cart: enable_cart ? 1 : 0,
+      enable_custom_domain: enable_custom_domain ? 1 : 0,
+      enable_analytics: enable_analytics ? 1 : 0,
+      enable_priority_support: enable_priority_support ? 1 : 0,
+      features: features || '[]',
+      is_default: is_default ? 1 : 0,
+      sort_order: parseInt(sort_order) || 0,
+    });
+
+    req.session.flashSuccess = 'Plan creado correctamente.';
+  } catch (err) {
+    console.error('Error al crear plan:', err);
+    req.session.flashError = 'Error al crear el plan.';
+  }
+  res.redirect('/admin/plans');
+};
+
+// ── POST /admin/plans/:id ─────────────────────────────────────────────────
+exports.updatePlan = (req, res) => {
+  try {
+    const { name, slug, description, price, currency, billing_period,
+            max_businesses, max_products, max_storage_mb,
+            enable_cart, enable_custom_domain, enable_analytics,
+            enable_priority_support, features, is_active, is_default, sort_order } = req.body;
+
+    Plan.update(req.params.id, {
+      name, slug, description,
+      price: parseFloat(price) || 0,
+      currency: currency || 'USD',
+      billing_period: billing_period || 'monthly',
+      max_businesses: parseInt(max_businesses) || 1,
+      max_products: parseInt(max_products) || 50,
+      max_storage_mb: parseInt(max_storage_mb) || 100,
+      enable_cart: enable_cart ? 1 : 0,
+      enable_custom_domain: enable_custom_domain ? 1 : 0,
+      enable_analytics: enable_analytics ? 1 : 0,
+      enable_priority_support: enable_priority_support ? 1 : 0,
+      features: features || '[]',
+      is_active: is_active ? 1 : 0,
+      is_default: is_default ? 1 : 0,
+      sort_order: parseInt(sort_order) || 0,
+    });
+
+    req.session.flashSuccess = 'Plan actualizado correctamente.';
+  } catch (err) {
+    console.error('Error al actualizar plan:', err);
+    req.session.flashError = 'Error al actualizar el plan.';
+  }
+  res.redirect('/admin/plans');
+};
+
+// ── POST /admin/plans/:id/toggle ──────────────────────────────────────────
+exports.togglePlan = (req, res) => {
+  const plan = Plan.findById(req.params.id);
+  if (!plan) {
+    req.session.flashError = 'Plan no encontrado.';
+    return res.redirect('/admin/plans');
+  }
+  Plan.toggleActive(plan.id);
+  req.session.flashSuccess = `Plan ${plan.is_active ? 'desactivado' : 'activado'}.`;
+  res.redirect('/admin/plans');
+};
+
+// ── POST /admin/users/:id/plan ────────────────────────────────────────────
+exports.updateUserPlan = (req, res) => {
+  const { plan_id } = req.body;
+  const user = User.findById(req.params.id);
+  
+  if (!user) {
+    req.session.flashError = 'Usuario no encontrado.';
+    return res.redirect('/admin/users');
+  }
+
+  const plan = Plan.findById(plan_id);
+  if (!plan) {
+    req.session.flashError = 'Plan no válido.';
+    return res.redirect('/admin/users');
+  }
+
+  User.updatePlan(user.id, plan_id);
+  req.session.flashSuccess = `Plan de ${user.email} cambiado a "${plan.name}".`;
+  res.redirect('/admin/users');
 };

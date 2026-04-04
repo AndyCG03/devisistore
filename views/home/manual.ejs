@@ -1,0 +1,158 @@
+<%- include('../partials/head') %>
+<%- include('../partials/navbar') %>
+
+<!-- Header -->
+<header style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);padding:3rem 1.5rem">
+  <div style="max-width:900px;margin:0 auto;text-align:center">
+    <h1 style="font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;color:#fff;margin-bottom:.75rem">Manual de Usuario</h1>
+    <p style="color:rgba(255,255,255,.85);font-size:1rem;max-width:600px;margin:0 auto">Aprende a usar DevisiStore paso a paso</p>
+  </div>
+</header>
+
+<!-- Content -->
+<main style="padding:3rem 1.5rem;max-width:900px;margin:0 auto;flex:1">
+
+  <!-- Table of contents -->
+  <div class="card" style="padding:2rem;margin-bottom:2rem">
+    <h2 style="font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:1rem">📋 Contenido</h2>
+    <ol style="padding-left:1.5rem;line-height:2;color:var(--blue)">
+      <li><a href="#registro" style="color:var(--blue);text-decoration:none">Registro y acceso</a></li>
+      <li><a href="#negocio" style="color:var(--blue);text-decoration:none">Crear tu negocio</a></li>
+      <li><a href="#productos" style="color:var(--blue);text-decoration:none">Agregar productos</a></li>
+      <li><a href="#catalogo" style="color:var(--blue);text-decoration:none">Ver tu catálogo público</a></li>
+      <li><a href="#qr" style="color:var(--blue);text-decoration:none">Generar código QR</a></li>
+      <li><a href="#carrito" style="color:var(--blue);text-decoration:none">Carrito de compras</a></li>
+      <li><a href="#pdf" style="color:var(--blue);text-decoration:none">Exportar catálogo en PDF</a></li>
+    </ol>
+  </div>
+
+  <!-- Sections -->
+  <section id="registro" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">1. Registro y acceso</h2>
+    
+    <h3 style="font-size:1.125rem;font-weight:700;color:var(--dark);margin:1.5rem 0 .75rem">¿Cómo registrarse?</h3>
+    <ol style="padding-left:1.5rem;line-height:1.8;color:var(--dark)">
+      <li>Ve a la página principal de <strong>DevisiStore</strong></li>
+      <li>Haz clic en <strong>"Registrarse"</strong> en la esquina superior derecha</li>
+      <li>Ingresa tu <strong>correo electrónico</strong> y una <strong>contraseña</strong> (mínimo 8 caracteres)</li>
+      <li>Introduce la <strong>clave de acceso</strong> que te proporcionó el administrador</li>
+      <li>Haz clic en <strong>"Crear mi cuenta"</strong></li>
+    </ol>
+
+    <div style="background:var(--blue-light);padding:1rem;border-radius:10px;margin:1rem 0;border:1px solid rgba(46,95,168,.15)">
+      <p style="font-size:.875rem;color:var(--blue-dark);margin:0"><strong>💡 Nota:</strong> Si no tienes clave de acceso, haz clic en "Solicitar clave de acceso" y envía tu solicitud por WhatsApp al administrador.</p>
+    </div>
+
+    <h3 style="font-size:1.125rem;font-weight:700;color:var(--dark);margin:1.5rem 0 .75rem">Iniciar sesión</h3>
+    <p style="color:var(--gray);line-height:1.7">Usa el mismo correo y contraseña que registraste. Si olvidaste tu contraseña, contacta al administrador.</p>
+  </section>
+
+  <section id="negocio" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">2. Crear tu negocio</h2>
+    
+    <h3 style="font-size:1.125rem;font-weight:700;color:var(--dark);margin:1.5rem 0 .75rem">Información básica</h3>
+    <ol style="padding-left:1.5rem;line-height:1.8;color:var(--dark)">
+      <li>Desde el panel, ve a <strong>"Mi Negocio"</strong></li>
+      <li>Completa el <strong>nombre</strong> de tu negocio (obligatorio)</li>
+      <li>Sube un <strong>logo</strong> (recomendado: imagen cuadrada, PNG o JPG)</li>
+      <li>Agrega una <strong>descripción</strong> breve de tu negocio</li>
+      <li>Elige el <strong>color del header</strong> de tu catálogo</li>
+      <li>Activa el <strong>carrito de compras</strong> si deseas que los clientes agreguen productos</li>
+    </ol>
+
+    <h3 style="font-size:1.125rem;font-weight:700;color:var(--dark);margin:1.5rem 0 .75rem">Información de contacto</h3>
+    <ul style="padding-left:1.5rem;line-height:1.8;color:var(--gray)">
+      <li><strong>Dirección:</strong> Ubicación física de tu negocio</li>
+      <li><strong>Teléfono:</strong> Número de contacto</li>
+      <li><strong>WhatsApp:</strong> Número con código de país (ej: 5355847601)</li>
+      <li><strong>Email:</strong> Correo de contacto</li>
+      <li><strong>Horario:</strong> Horario de atención (ej: Lun-Vie 9:00 am – 6:00 pm)</li>
+    </ul>
+
+    <h3 style="font-size:1.125rem;font-weight:700;color:var(--dark);margin:1.5rem 0 .75rem">Redes sociales</h3>
+    <p style="color:var(--gray);line-height:1.7">Agrega tus usuarios de Instagram, Facebook, Twitter y TikTok con el formato @usuario.</p>
+  </section>
+
+  <section id="productos" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">3. Agregar productos</h2>
+    
+    <ol style="padding-left:1.5rem;line-height:1.8;color:var(--dark)">
+      <li>Ve a <strong>"Productos"</strong> en el menú lateral</li>
+      <li>Haz clic en <strong>"Nuevo producto"</strong></li>
+      <li>Completa los campos:
+        <ul style="padding-left:1.5rem;margin-top:.5rem">
+          <li><strong>Nombre:</strong> Nombre del producto (obligatorio)</li>
+          <li><strong>Descripción:</strong> Detalles del producto</li>
+          <li><strong>Precio:</strong> Precio numérico</li>
+          <li><strong>Moneda:</strong> USD o CUP</li>
+          <li><strong>Categoría:</strong> Clasificación del producto</li>
+          <li><strong>Estado:</strong> Disponible o Agotado</li>
+          <li><strong>Disponibilidad:</strong> Normal o Pocas unidades</li>
+          <li><strong>Imagen:</strong> Foto del producto (se comprime automáticamente)</li>
+        </ul>
+      </li>
+      <li>Haz clic en <strong>"Crear producto"</strong></li>
+    </ol>
+
+    <div style="background:var(--green-light);padding:1rem;border-radius:10px;margin:1rem 0;border:1px solid rgba(42,168,101,.15)">
+      <p style="font-size:.875rem;color:var(--green-dark);margin:0"><strong>✅ Tip:</strong> Las imágenes se comprimen automáticamente a ~200KB para optimizar el rendimiento.</p>
+    </div>
+  </section>
+
+  <section id="catalogo" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">4. Ver tu catálogo público</h2>
+    <p style="color:var(--gray);line-height:1.7">Tu catálogo está disponible en <strong>/shop/tu-slug</strong>. Puedes acceder desde:</p>
+    <ul style="padding-left:1.5rem;line-height:1.8;color:var(--gray)">
+      <li>El botón <strong>"Ver catálogo"</strong> en Mi Negocio</li>
+      <li>El enlace en tu panel de administración</li>
+      <li>Compartiendo la URL directamente</li>
+    </ul>
+  </section>
+
+  <section id="qr" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">5. Generar código QR</h2>
+    <ol style="padding-left:1.5rem;line-height:1.8;color:var(--dark)">
+      <li>Ve al <strong>Panel principal</strong></li>
+      <li>Haz clic en el botón <strong>"QR"</strong> junto a "Copiar"</li>
+      <li>Verás tu código QR con el logo de tu negocio en el centro</li>
+      <li>Usa el <strong>selector de color</strong> para cambiar el color del QR</li>
+      <li>Haz clic en <strong>"Descargar QR"</strong> para guardar la imagen</li>
+      <li>Usa <strong>"Copiar URL"</strong> para copiar el enlace de tu catálogo</li>
+    </ol>
+  </section>
+
+  <section id="carrito" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">6. Carrito de compras</h2>
+    <p style="color:var(--gray);line-height:1.7">Si activaste el carrito en la configuración de tu negocio:</p>
+    <ul style="padding-left:1.5rem;line-height:1.8;color:var(--gray)">
+      <li>Los clientes verán un botón <strong>"Agregar"</strong> en cada producto</li>
+      <li>El ícono del <strong>carrito</strong> en la navbar muestra la cantidad de items</li>
+      <li>Al hacer clic en el carrito, pueden ajustar cantidades o eliminar productos</li>
+      <li>El botón <strong>"Enviar pedido por WhatsApp"</strong> envía el resumen del pedido</li>
+    </ul>
+  </section>
+
+  <section id="pdf" style="margin-bottom:3rem">
+    <h2 style="font-size:1.5rem;font-weight:800;color:var(--dark);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--border)">7. Exportar catálogo en PDF</h2>
+    <ol style="padding-left:1.5rem;line-height:1.8;color:var(--dark)">
+      <li>En tu catálogo público, haz clic en <strong>"Descargar PDF"</strong></li>
+      <li>Se generará un documento con:
+        <ul style="padding-left:1.5rem;margin-top:.5rem">
+          <li>Nombre y descripción del negocio</li>
+          <li>Información de contacto</li>
+          <li>Lista completa de productos con precios</li>
+        </ul>
+      </li>
+      <li>El PDF se descargará automáticamente</li>
+    </ol>
+  </section>
+
+  <!-- CTA -->
+  <div style="text-align:center;padding:2.5rem;background:linear-gradient(135deg,var(--blue-light) 0%,var(--green-light) 100%);border-radius:16px;border:1.5px solid rgba(46,95,168,.15)">
+    <h2 style="font-size:1.25rem;font-weight:800;color:var(--dark);margin-bottom:.5rem">¿Necesitas ayuda?</h2>
+    <p style="color:var(--gray);margin-bottom:1.25rem">Contacta al administrador de la plataforma</p>
+    <a href="/" class="btn btn-primary">Volver al inicio</a>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

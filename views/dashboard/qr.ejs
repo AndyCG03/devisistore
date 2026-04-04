@@ -17,9 +17,24 @@
       <%- include('../partials/flash') %>
 
       <div class="card" style="padding:2rem;text-align:center">
-        <!-- QR Image -->
-        <div style="background:#fff;display:inline-block;padding:1.5rem;border-radius:16px;border:2px solid var(--border);margin-bottom:1.5rem">
-          <img src="<%=qrImage%>" alt="QR Code" style="width:300px;height:300px;display:block" />
+        <!-- QR Image with logo overlay -->
+        <div style="background:#fff;display:inline-block;padding:1.5rem;border-radius:16px;border:2px solid var(--border);margin-bottom:1.5rem;position:relative">
+          <img id="qrImage" src="<%=qrImage%>" alt="QR Code" style="width:300px;height:300px;display:block" />
+          <% if(business.logo){ %>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15);border:2px solid var(--border)">
+            <img src="<%=business.logo%>" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px" />
+          </div>
+          <% } %>
+        </div>
+
+        <!-- Color picker -->
+        <div style="margin-bottom:1.5rem">
+          <p style="font-size:.8rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Color del QR</p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:.75rem">
+            <input id="qrColorPicker" type="color" value="<%=qrColor%>" style="width:3rem;height:2.5rem;border:none;border-radius:6px;cursor:pointer" />
+            <input id="qrColorText" type="text" value="<%=qrColor%>" readonly style="width:100px;padding:.5rem;border:1.5px solid var(--border);border-radius:8px;font-family:monospace;font-size:.8125rem;color:var(--gray);background:var(--bg)" />
+            <button id="regenerateQr" class="btn btn-primary btn-sm">Regenerar</button>
+          </div>
         </div>
 
         <!-- URL -->
@@ -84,6 +99,44 @@ document.addEventListener('DOMContentLoaded', function() {
       } catch (err) {
         console.error('Error al copiar:', err);
       }
+    });
+  }
+
+  // QR Color picker sync
+  const qrColorPicker = document.getElementById('qrColorPicker');
+  const qrColorText = document.getElementById('qrColorText');
+  const regenerateQr = document.getElementById('regenerateQr');
+  const qrImage = document.getElementById('qrImage');
+
+  if (qrColorPicker && qrColorText) {
+    qrColorPicker.addEventListener('input', function() {
+      qrColorText.value = this.value;
+    });
+  }
+
+  // Regenerate QR with new color
+  if (regenerateQr) {
+    regenerateQr.addEventListener('click', async function() {
+      const color = qrColorPicker.value;
+      const catalogUrl = document.getElementById('catalogUrl').textContent.trim();
+      
+      this.textContent = 'Generando...';
+      this.disabled = true;
+      
+      try {
+        const response = await fetch(`/dashboard/api/generate-qr?url=${encodeURIComponent(catalogUrl)}&color=${encodeURIComponent(color)}`);
+        const data = await response.json();
+        
+        if (data.qrImage) {
+          qrImage.src = data.qrImage;
+          document.getElementById('downloadQrBtn').href = data.qrImage;
+        }
+      } catch (err) {
+        console.error('Error al regenerar QR:', err);
+      }
+      
+      this.innerHTML = 'Regenerar';
+      this.disabled = false;
     });
   }
 });

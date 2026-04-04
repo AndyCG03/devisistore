@@ -66,6 +66,18 @@
             <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">Elige el color principal de tu catálogo. Por defecto: Azul (#2E5FA8)</p>
           </div>
           <div>
+            <label class="label">Carrito de compras</label>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <label class="toggle-switch" style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer">
+                <input type="checkbox" id="enableCartCheckbox" name="enable_cart" value="1" <%=business&&business.enable_cart?'checked':''%> style="opacity:0;width:0;height:0" />
+                <span class="toggle-slider" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:<%=business&&business.enable_cart?'var(--green)':'var(--gray)'%>;border-radius:26px;transition:var(--tr)"></span>
+                <span class="toggle-knob" style="position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:var(--tr);transform:<%=business&&business.enable_cart?'translateX(22px)':'translateX(0)'%>"></span>
+              </label>
+              <span style="font-size:.8125rem;color:var(--gray)">Habilitar carrito en el catálogo</span>
+            </div>
+            <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">Los clientes podrán agregar productos y enviar el pedido por WhatsApp</p>
+          </div>
+          <div>
             <label class="label" for="b-sched">Horario de atención</label>
             <input id="b-sched" type="text" name="schedule" value="<%=business?business.schedule:''%>" placeholder="Ej: Lun-Vie 9:00 am – 6:00 pm" class="input" />
           </div>
@@ -170,6 +182,24 @@ document.addEventListener('DOMContentLoaded', function() {
         selectLogoBtn.style.background = 'var(--green-light)';
       };
       reader.readAsDataURL(file);
+    });
+  }
+
+  // Toggle switch para carrito
+  const enableCartCheckbox = document.getElementById('enableCartCheckbox');
+  if (enableCartCheckbox) {
+    enableCartCheckbox.addEventListener('change', function() {
+      const parent = this.closest('.toggle-switch');
+      const slider = parent.querySelector('.toggle-slider');
+      const knob = parent.querySelector('.toggle-knob');
+      
+      if (this.checked) {
+        slider.style.background = 'var(--green)';
+        knob.style.transform = 'translateX(22px)';
+      } else {
+        slider.style.background = 'var(--gray)';
+        knob.style.transform = 'translateX(0)';
+      }
     });
   }
 });

@@ -10,11 +10,16 @@ router.get('/',                         admin.getDashboard);
 router.get('/users',                    admin.getUsers);
 router.post('/users/:id/toggle',        admin.toggleUser);
 router.post('/users/:id/delete',        admin.deleteUser);
+router.post('/users/:id/plan',          admin.updateUserPlan);
 router.get('/keys',                     admin.getKeys);
 router.post('/keys/generate',           admin.generateKey);
 router.post('/keys/:id/delete',         admin.deleteKey);
 router.get('/businesses',               admin.getBusinesses);
 router.post('/businesses/:id/toggle',   admin.toggleBusiness);
 router.post('/businesses/:id/delete',   admin.deleteBusiness);
+router.get('/plans',                    admin.getPlans);
+router.post('/plans',                   admin.createPlan);
+router.post('/plans/:id',               admin.updatePlan);
+router.post('/plans/:id/toggle',        admin.togglePlan);
 
 module.exports = router;

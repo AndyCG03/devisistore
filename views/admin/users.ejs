@@ -17,7 +17,7 @@
       <div style="overflow-x:auto">
         <table class="ds-table">
           <thead><tr>
-            <th>#</th><th>Email</th><th>Rol</th><th>Estado</th>
+            <th>#</th><th>Email</th><th>Plan</th><th>Rol</th><th>Estado</th>
             <th class="col-hide-sm">Registro</th>
             <th style="text-align:right">Acciones</th>
           </tr></thead>
@@ -26,17 +26,19 @@
             <tr>
               <td style="color:var(--gray);font-family:monospace;font-size:.78rem">#<%=u.id%></td>
               <td style="font-weight:600;color:var(--dark)"><%=u.email%></td>
+              <td><span class="badge badge-blue"><%=u.plan_name||'Gratuito'%></span></td>
               <td><span class="badge <%=u.role==='admin'?'badge-purple':'badge-gray'%>"><%=u.role%></span></td>
               <td><span class="badge <%=u.active?'badge-green':'badge-red'%>"><%=u.active?'Activo':'Inactivo'%></span></td>
               <td class="col-hide-sm" style="color:var(--gray);font-size:.8rem"><%=new Date(u.created_at).toLocaleDateString('es')%></td>
               <td style="text-align:right">
                 <% if(u.role!=='admin'){ %>
                 <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem;flex-wrap:wrap">
+                  <button class="changePlanBtn btn btn-ghost btn-sm" data-user-id="<%=u.id%>" data-user-email="<%=u.email%>" data-user-plan="<%=u.plan_id%>">Cambiar plan</button>
                   <form action="/admin/users/<%=u.id%>/toggle" method="POST" style="margin:0">
                     <button class="btn <%=u.active?'btn-warn':'btn-secondary'%> btn-sm"><%=u.active?'Desactivar':'Activar'%></button>
                   </form>
                   <form action="/admin/users/<%=u.id%>/delete" method="POST" class="deleteUserForm" style="margin:0">
-                    <button class="btn btn-danger">Eliminar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
                   </form>
                 </div>
                 <% } else { %>
@@ -52,14 +54,92 @@
   </div>
 </div>
 
+<!-- Change Plan Modal -->
+<div id="changePlanModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center;padding:1.5rem">
+  <div style="background:var(--white);border-radius:16px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative">
+    <button id="changePlanClose" style="position:absolute;top:1rem;right:1rem;width:2rem;height:2rem;border-radius:50%;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <div style="padding:1.5rem">
+      <h2 style="font-size:1.125rem;font-weight:800;color:var(--dark);margin-bottom:.5rem">Cambiar plan</h2>
+      <p id="changePlanEmail" style="font-size:.875rem;color:var(--gray);margin-bottom:1.25rem"></p>
+      <form id="changePlanForm" method="POST" style="display:flex;flex-direction:column;gap:1rem">
+        <div>
+          <label class="label" for="newPlan">Nuevo plan</label>
+          <select id="newPlan" name="plan_id" class="input" required></select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Guardar cambio</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Delete user confirmation
   document.querySelectorAll('.deleteUserForm').forEach(function(form) {
     form.addEventListener('submit', function(e) {
       if (!confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')) {
         e.preventDefault();
       }
     });
+  });
+
+  // Change plan modal
+  const changePlanModal = document.getElementById('changePlanModal');
+  const changePlanClose = document.getElementById('changePlanClose');
+  const changePlanEmail = document.getElementById('changePlanEmail');
+  const changePlanForm = document.getElementById('changePlanForm');
+  const newPlanSelect = document.getElementById('newPlan');
+
+  // Load plans into select
+  fetch('/admin/plans')
+    .then(r => r.text())
+    .then(html => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      // We'll load plans from a data attribute instead
+    });
+
+  // Open modal
+  document.querySelectorAll('.changePlanBtn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const userId = this.getAttribute('data-user-id');
+      const email = this.getAttribute('data-user-email');
+      const currentPlan = this.getAttribute('data-user-plan');
+      
+      changePlanEmail.textContent = email;
+      changePlanForm.action = `/admin/users/${userId}/plan`;
+      
+      // Load plans (we need to fetch them)
+      loadPlans(currentPlan);
+      
+      changePlanModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function loadPlans(currentPlanId) {
+    // Fetch plans from API - we'll use inline data for now
+    const plans = <%- JSON.stringify(plans || []) %>;
+    newPlanSelect.innerHTML = '';
+    plans.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = `${p.name} ($${p.price})`;
+      if (p.id == currentPlanId) opt.selected = true;
+      newPlanSelect.appendChild(opt);
+    });
+  }
+
+  function closeChangePlan() {
+    changePlanModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  changePlanClose.addEventListener('click', closeChangePlan);
+  changePlanModal.addEventListener('click', function(e) {
+    if (e.target === changePlanModal) closeChangePlan();
   });
 });
 </script>
