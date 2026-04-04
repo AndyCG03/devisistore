@@ -65,6 +65,19 @@
         </div>
 
         <div>
+          <label class="label">Mostrar precio en el catálogo</label>
+          <div style="display:flex;align-items:center;gap:.75rem">
+            <label style="position:relative;display:inline-block;width:48px;height:26px;cursor:pointer">
+              <input type="checkbox" id="showPriceToggle" name="show_price" value="1" <%=!product||product.show_price!==0?'checked':''%> style="opacity:0;width:0;height:0" />
+              <span class="price-toggle-slider" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:<%=!product||product.show_price!==0?'var(--green)':'var(--gray)'%>;border-radius:26px;transition:var(--tr)"></span>
+              <span class="price-toggle-knob" style="position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:var(--tr);transform:<%=!product||product.show_price!==0?'translateX(22px)':'translateX(0)'%>"></span>
+            </label>
+            <span style="font-size:.8125rem;color:var(--gray)">El precio será visible para los clientes</span>
+          </div>
+          <p style="font-size:.75rem;color:var(--gray);margin-top:.375rem">Desactiva esta opción si prefieres que los clientes contacten por WhatsApp para consultar el precio</p>
+        </div>
+
+        <div>
           <label class="label">Imagen del producto</label>
           <% if(product && product.image){ %>
           <div style="margin-bottom:.875rem;display:flex;align-items:center;gap:.875rem">
@@ -229,6 +242,23 @@ async function compressImage(file, maxWidth, maxHeight, quality) {
     };
     
     reader.readAsDataURL(file);
+  });
+}
+
+// Toggle switch para mostrar precio
+const showPriceToggle = document.getElementById('showPriceToggle');
+if (showPriceToggle) {
+  showPriceToggle.addEventListener('change', function() {
+    const slider = this.parentElement.querySelector('.price-toggle-slider');
+    const knob = this.parentElement.querySelector('.price-toggle-knob');
+    
+    if (this.checked) {
+      slider.style.background = 'var(--green)';
+      knob.style.transform = 'translateX(22px)';
+    } else {
+      slider.style.background = 'var(--gray)';
+      knob.style.transform = 'translateX(0)';
+    }
   });
 }
 </script>

@@ -131,7 +131,7 @@ exports.postNewProduct = (req, res, next) => {
     const business = Business.findByUserId(req.session.user.id);
     if (!business) return res.redirect('/dashboard/business');
 
-    const { name, description, price, currency, category, status, stock_level } = req.body;
+    const { name, description, price, currency, category, status, stock_level, show_price } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : null;
 
     Product.create({
@@ -142,6 +142,7 @@ exports.postNewProduct = (req, res, next) => {
       image, category,
       status: status || 'available',
       stock_level: stock_level || 'normal',
+      show_price: show_price ? 1 : 0,
     });
 
     req.session.flashSuccess = 'Producto creado correctamente.';
@@ -185,10 +186,10 @@ exports.postEditProduct = (req, res, next) => {
     const product  = Product.findByIdAndBusiness(req.params.id, business.id);
     if (!product) return res.redirect('/dashboard/products');
 
-    const { name, description, price, currency, category, status, stock_level } = req.body;
+    const { name, description, price, currency, category, status, stock_level, show_price } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : product.image;
 
-    Product.update(product.id, { name, description, price: parseFloat(price) || 0, currency: currency || 'USD', image, category, status: status || 'available', stock_level: stock_level || 'normal' });
+    Product.update(product.id, { name, description, price: parseFloat(price) || 0, currency: currency || 'USD', image, category, status: status || 'available', stock_level: stock_level || 'normal', show_price: show_price ? 1 : 0 });
     req.session.flashSuccess = 'Producto actualizado.';
     return res.redirect('/dashboard/products');
   } catch (err) {

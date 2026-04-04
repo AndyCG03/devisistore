@@ -319,10 +319,14 @@ document.addEventListener('DOMContentLoaded', function() {
           <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-top:.25rem"><%=p.description.length>70?p.description.slice(0,70)+'...':p.description%></p>
         <% } %>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:.875rem;flex-wrap:wrap;gap:.5rem">
+          <% if(p.show_price !== 0){ %>
           <span style="font-size:1.125rem;font-weight:800;color:var(--dark)">
             <%=p.currency==='CUP'?'$':'$'%><%=parseFloat(p.price).toFixed(2)%>
             <% if(p.currency==='CUP'){ %><span style="font-size:.625rem;font-weight:600;color:var(--gray);margin-left:.25rem">CUP</span><% } %>
           </span>
+          <% } else { %>
+          <span style="font-size:.8125rem;font-weight:600;color:var(--blue);font-style:italic">Consultar precio</span>
+          <% } %>
           <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:flex-end">
             <% if(business.whatsapp && p.status !== 'unavailable'){ %>
             <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':''))%>"
@@ -687,7 +691,7 @@ function addToCart(product) {
   if (existing) {
     existing.qty++;
   } else {
-    cart.push({ id: product.id, name: product.name, price: product.price, currency: product.currency || 'USD', qty: 1 });
+    cart.push({ id: product.id, name: product.name, price: product.price, currency: product.currency || 'USD', show_price: product.show_price !== undefined ? product.show_price : 1, qty: 1 });
   }
   saveCart();
   
@@ -735,8 +739,9 @@ function renderCart() {
     return;
   }
   
-  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const total = cart.reduce((sum, item) => sum + (item.show_price !== 0 ? item.price * item.qty : 0), 0);
   const currency = cart[0].currency || 'USD';
+  const hasHiddenPrices = cart.some(item => item.show_price === 0);
   
   let html = '<div style="max-height:50vh;overflow-y:auto">';
   cart.forEach(item => {
@@ -744,7 +749,7 @@ function renderCart() {
       <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border)">
         <div style="flex:1;min-width:0">
           <p style="font-weight:700;color:var(--dark);font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</p>
-          <p style="font-size:.75rem;color:var(--gray)">${item.currency === 'CUP' ? '$' : '$'}${item.price.toFixed(2)} ${item.currency === 'CUP' ? 'CUP' : ''}</p>
+          <p style="font-size:.75rem;color:var(--gray)">${item.show_price !== 0 ? (item.currency === 'CUP' ? '$' : '$') + item.price.toFixed(2) + (item.currency === 'CUP' ? ' CUP' : '') : 'Consultar precio'}</p>
         </div>
         <div style="display:flex;align-items:center;gap:.375rem;flex-shrink:0">
           <button data-qty-change="${item.id}" data-delta="-1" style="width:1.5rem;height:1.5rem;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.875rem;color:var(--gray)">−</button>
@@ -763,7 +768,7 @@ function renderCart() {
     <div style="padding:1rem 0 0;border-top:2px solid var(--border);margin-top:.75rem">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
         <span style="font-weight:700;color:var(--dark);font-size:.9375rem">Total:</span>
-        <span style="font-size:1.125rem;font-weight:800;color:var(--blue)">${currency === 'CUP' ? '$' : '$'}${total.toFixed(2)} ${currency === 'CUP' ? 'CUP' : ''}</span>
+        <span style="font-size:1.125rem;font-weight:800;color:var(--blue)">${hasHiddenPrices ? 'Consultar' : (currency === 'CUP' ? '$' : '$') + total.toFixed(2) + (currency === 'CUP' ? ' CUP' : '')}</span>
       </div>
       <% if(business.whatsapp){ %>
       <button id="sendOrderBtn" class="btn btn-secondary" style="width:100%;padding:.75rem;font-size:.875rem">
@@ -809,9 +814,15 @@ function renderCart() {
       
       let msg = '🛒 *Nuevo Pedido*\n\n';
       cart.forEach(item => {
-        msg += `• ${item.name} x${item.qty} - ${item.currency === 'CUP' ? '$' : '$'}${(item.price * item.qty).toFixed(2)}${item.currency === 'CUP' ? ' CUP' : ''}\n`;
+        const priceText = item.show_price !== 0 ? (item.currency === 'CUP' ? '$' : '$') + (item.price * item.qty).toFixed(2) + (item.currency === 'CUP' ? ' CUP' : '') : 'Consultar';
+        msg += `• ${item.name} x${item.qty} - ${priceText}\n`;
       });
-      msg += `\n💰 *Total: ${currency === 'CUP' ? '$' : '$'}${total.toFixed(2)} ${currency === 'CUP' ? 'CUP' : ''}*`;
+      
+      if (hasHiddenPrices) {
+        msg += `\n💰 *Total: Consultar*`;
+      } else {
+        msg += `\n💰 *Total: ${currency === 'CUP' ? '$' : '$'}${total.toFixed(2)} ${currency === 'CUP' ? 'CUP' : ''}*`;
+      }
       
       window.open(`https://wa.me/${whatsapp.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
     });

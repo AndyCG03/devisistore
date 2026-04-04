@@ -86,6 +86,7 @@ function initDatabase() {
       category    TEXT,
       status      TEXT    NOT NULL DEFAULT 'available',
       stock_level TEXT    DEFAULT 'normal',
+      show_price  INTEGER NOT NULL DEFAULT 1,
       created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
     );
 
