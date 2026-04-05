@@ -54,6 +54,10 @@ app.use(express.json());
 // ── Archivos estáticos ─────────────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ── Imágenes subidas (carpeta externa segura) ──────────────────────────────
+const uploadsDir = process.env.UPLOAD_PATH || path.join(__dirname, 'public/uploads');
+app.use('/uploads', express.static(uploadsDir));
+
 // ── Asegurar carpeta de sesiones ───────────────────────────────────────────
 const fs = require('fs');
 const sessionsDir = path.join(__dirname, 'sessions');

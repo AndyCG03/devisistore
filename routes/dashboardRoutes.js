@@ -8,9 +8,11 @@ const dash     = require('../controllers/dashboardController');
 const { isAuth } = require('../middlewares/authMiddleware');
 
 // ── Multer – almacenamiento de imágenes ────────────────────────────────────
+const UPLOAD_DIR = process.env.UPLOAD_PATH || path.join(__dirname, '../public/uploads');
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../public/uploads'));
+    cb(null, UPLOAD_DIR);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
