@@ -1,6 +1,6 @@
 # DevisiStore 🛒
 
-> Plataforma multi-usuario de catálogos digitales. Cada negocio tiene su propia página pública con productos, imágenes, precios y contacto directo por WhatsApp.
+> Plataforma multi-usuario de catálogos digitales. Cada negocio tiene su propia página pública con productos, imágenes, precios, alta personalización y contacto directo por WhatsApp.
 
 ---
 
