@@ -255,6 +255,7 @@ exports.generateQR = async (req, res) => {
     const { url, color } = req.query;
     if (!url) return res.status(400).json({ error: 'URL requerida' });
 
+    const QRCode = require('qrcode');
     const qrColor = color || '#2E5FA8';
     const qrImage = await QRCode.toDataURL(url, {
       width: 400,

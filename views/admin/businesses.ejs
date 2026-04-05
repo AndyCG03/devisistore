@@ -11,55 +11,98 @@
       <p class="section-sub"><%=businesses.length%> negocio(s) registrados</p>
     </div>
     <%- include('../partials/flash') %>
-    <div class="card" style="overflow:hidden">
-      <div style="overflow-x:auto">
-        <table class="ds-table">
-          <thead><tr>
-            <th>Negocio</th>
-            <th class="col-hide-sm">Propietario</th>
-            <th class="col-hide-sm">URL</th>
-            <th>Estado</th>
-            <th style="text-align:right">Acciones</th>
-          </tr></thead>
-          <tbody>
-            <% if(!businesses.length){ %>
-            <tr><td colspan="5" style="text-align:center;padding:3rem;color:var(--gray)">No hay negocios registrados.</td></tr>
-            <% } %>
-            <% businesses.forEach(b=>{ %>
-            <tr>
-              <td>
-                <div style="display:flex;align-items:center;gap:.75rem">
-                  <% if(b.logo){ %>
-                    <img src="<%=b.logo%>" alt="" style="width:2.5rem;height:2.5rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
-                  <% } else { %>
-                    <div style="width:2.5rem;height:2.5rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
-                    </div>
-                  <% } %>
-                  <span style="font-weight:700;color:var(--dark)"><%=b.name%></span>
-                </div>
-              </td>
-              <td class="col-hide-sm" style="color:var(--gray);font-size:.8rem"><%=b.owner_email%></td>
-              <td class="col-hide-sm">
-                <a href="/shop/<%=b.slug%>" target="_blank" class="biz-url-link" style="font-family:monospace;font-size:.78rem;color:var(--blue);text-decoration:none">/shop/<%=b.slug%></a>
-              </td>
-              <td><span class="badge <%=b.active?'badge-green':'badge-red'%>"><%=b.active?'Activo':'Inactivo'%></span></td>
-              <td style="text-align:right">
-                <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem;flex-wrap:wrap">
-                  <form action="/admin/businesses/<%=b.id%>/toggle" method="POST" style="margin:0">
-                    <button class="btn <%=b.active?'btn-warn':'btn-secondary'%> btn-sm"><%=b.active?'Desactivar':'Activar'%></button>
-                  </form>
-                  <form action="/admin/businesses/<%=b.id%>/delete" method="POST" class="deleteBizForm" style="margin:0">
-                    <button class="btn btn-danger btn-sm">Eliminar</button>
-                  </form>
-                </div>
-              </td>
-            </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
+
+    <!-- Desktop Table -->
+    <div class="desktop-table" class="card" style="overflow:hidden">
+      <table class="ds-table">
+        <thead><tr>
+          <th>Negocio</th>
+          <th class="col-hide-sm">Propietario</th>
+          <th class="col-hide-sm">URL</th>
+          <th>Estado</th>
+          <th style="text-align:right">Acciones</th>
+        </tr></thead>
+        <tbody>
+          <% if(!businesses.length){ %>
+          <tr><td colspan="5" style="text-align:center;padding:3rem;color:var(--gray)">No hay negocios registrados.</td></tr>
+          <% } %>
+          <% businesses.forEach(b=>{ %>
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:.75rem">
+                <% if(b.logo){ %>
+                  <img src="<%=b.logo%>" alt="" style="width:2.5rem;height:2.5rem;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0" />
+                <% } else { %>
+                  <div style="width:2.5rem;height:2.5rem;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
+                  </div>
+                <% } %>
+                <span style="font-weight:700;color:var(--dark)"><%=b.name%></span>
+              </div>
+            </td>
+            <td class="col-hide-sm" style="color:var(--gray);font-size:.8rem"><%=b.owner_email%></td>
+            <td class="col-hide-sm">
+              <a href="/shop/<%=b.slug%>" target="_blank" class="biz-url-link" style="font-family:monospace;font-size:.78rem;color:var(--blue);text-decoration:none">/shop/<%=b.slug%></a>
+            </td>
+            <td><span class="badge <%=b.active?'badge-green':'badge-red'%>"><%=b.active?'Activo':'Inactivo'%></span></td>
+            <td style="text-align:right">
+              <div style="display:flex;align-items:center;justify-content:flex-end;gap:.5rem;flex-wrap:wrap">
+                <form action="/admin/businesses/<%=b.id%>/toggle" method="POST" style="margin:0">
+                  <button class="btn <%=b.active?'btn-warn':'btn-secondary'%> btn-sm"><%=b.active?'Desactivar':'Activar'%></button>
+                </form>
+                <form action="/admin/businesses/<%=b.id%>/delete" method="POST" class="deleteBizForm" style="margin:0">
+                  <button class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
     </div>
+
+    <!-- Mobile Cards -->
+    <div class="mobile-cards" style="display:flex;flex-direction:column;gap:.75rem">
+      <% if(!businesses.length){ %>
+      <div class="card" style="padding:2rem;text-align:center">
+        <p style="color:var(--gray)">No hay negocios registrados.</p>
+      </div>
+      <% } %>
+      <% businesses.forEach(b=>{ %>
+      <div class="card" style="padding:1rem">
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <% if(b.logo){ %>
+            <img src="<%=b.logo%>" alt="" style="width:3rem;height:3rem;object-fit:cover;border-radius:10px;border:1px solid var(--border);flex-shrink:0" />
+          <% } else { %>
+            <div style="width:3rem;height:3rem;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
+            </div>
+          <% } %>
+          <div style="flex:1;min-width:0">
+            <p style="font-weight:700;color:var(--dark);font-size:.9375rem"><%=b.name%></p>
+            <p style="font-size:.75rem;color:var(--gray)"><%=b.owner_email%></p>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-top:.375rem;flex-wrap:wrap">
+              <span class="badge <%=b.active?'badge-green':'badge-red'%>"><%=b.active?'Activo':'Inactivo'%></span>
+              <a href="/shop/<%=b.slug%>" target="_blank" style="font-size:.75rem;color:var(--blue);text-decoration:none;font-family:monospace">/shop/<%=b.slug%></a>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.875rem;padding-top:.75rem;border-top:1px solid var(--border)">
+          <form action="/admin/businesses/<%=b.id%>/toggle" method="POST" style="margin:0;flex:1">
+            <button class="btn <%=b.active?'btn-warn':'btn-secondary'%> btn-sm" style="width:100%;justify-content:center"><%=b.active?'Desactivar':'Activar'%></button>
+          </form>
+          <form action="/admin/businesses/<%=b.id%>/delete" method="POST" class="deleteBizForm" style="margin:0;flex:1">
+            <button class="btn btn-danger btn-sm" style="width:100%;justify-content:center">Eliminar</button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <style>
+      @media(min-width:768px){.mobile-cards{display:none!important}.desktop-table{display:block!important}}
+      @media(max-width:767px){.mobile-cards{display:flex!important}.desktop-table{display:none!important}}
+    </style>
   </div>
 </div>
 

@@ -95,8 +95,11 @@
               <input id="b-phone" type="text" name="phone" value="<%=business?business.phone:''%>" class="input" />
             </div>
             <div>
-              <label class="label" for="b-wa">WhatsApp <span style="color:var(--gray);font-weight:400">(con código de país)</span></label>
-              <input id="b-wa" type="text" name="whatsapp" value="<%=business?business.whatsapp:''%>" placeholder="5215512345678" class="input" />
+              <label class="label" for="b-wa">Teléfono <span style="color:var(--gray);font-weight:400">(con código de país)</span></label>
+              <input id="b-wa" type="text" name="whatsapp" value="<%=business?business.whatsapp:''%>" placeholder="5355847601" class="input" />
+              <p style="font-size:.7rem;color:var(--gray);margin-top:.375rem;line-height:1.5">
+                <strong>Ejemplo para Cuba:</strong> <code style="background:var(--bg);padding:.125rem .375rem;border-radius:4px">53</code> + <code style="background:var(--bg);padding:.125rem .375rem;border-radius:4px">número</code> (ej: 5355847601). Sin espacios, sin +, ni guiones.
+              </p>
             </div>
             <div>
               <label class="label" for="b-email">Email de contacto</label>

@@ -3,6 +3,41 @@ const Product  = require('../models/Product');
 const PDFDocument = require('pdfkit');
 const path = require('path');
 
+// Función para sanitizar texto para PDF (sin emojis ni caracteres especiales problemáticos)
+function sanitizeForPDF(text) {
+  if (!text) return '';
+  return String(text)
+    // Reemplazar emojis comunes con texto equivalente
+    .replace(/🛒/g, '[Pedido]')
+    .replace(/✅/g, '[OK]')
+    .replace(/❌/g, '[X]')
+    .replace(/🔥/g, '[!]')
+    .replace(/💰/g, '[$]')
+    .replace(/📞/g, '[Tel]')
+    .replace(/💬/g, '[WA]')
+    .replace(/✉️/g, '[Mail]')
+    .replace(/📍/g, '[Dir]')
+    .replace(/🕐/g, '[Hora]')
+    .replace(/⭐/g, '[*]')
+    .replace(/❤️/g, '<3')
+    .replace(/📱/g, '[Tel]')
+    // Eliminar emojis restantes (rango Unicode de emojis)
+    .replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '')
+    // Limpiar caracteres de control no imprimibles
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    // Reemplazar caracteres latinos extendidos con equivalentes ASCII
+    .replace(/[áàâãäå]/g, 'a').replace(/[ÁÀÂÃÄÅ]/g, 'A')
+    .replace(/[éèêë]/g, 'e').replace(/[ÉÈÊË]/g, 'E')
+    .replace(/[íìîï]/g, 'i').replace(/[ÍÌÎÏ]/g, 'I')
+    .replace(/[óòôõö]/g, 'o').replace(/[ÓÒÔÕÖ]/g, 'O')
+    .replace(/[úùûü]/g, 'u').replace(/[ÚÙÛÜ]/g, 'U')
+    .replace(/[ñ]/g, 'n').replace(/[Ñ]/g, 'N')
+    .replace(/[ç]/g, 'c').replace(/[Ç]/g, 'C')
+    // Normalizar espacios múltiples
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // ── GET /shop/:slug ────────────────────────────────────────────────────────
 exports.getCatalog = (req, res) => {
   const business = Business.findBySlug(req.params.slug);
@@ -62,84 +97,78 @@ exports.downloadCatalogPDF = (req, res) => {
   // ═══════════════════════════════════════════════════════════════════════
   // PORTADA
   // ═══════════════════════════════════════════════════════════════════════
-  
+
   // Nombre del negocio
   doc.fontSize(28)
      .font('Helvetica-Bold')
      .fillColor('#2E5FA8')
-     .text(business.name, { align: 'left' });
-  
+     .text(sanitizeForPDF(business.name), { align: 'left' });
+
   doc.moveDown(0.5);
-  
+
   // Descripción
   if (business.description) {
     doc.fontSize(11)
        .font('Helvetica')
        .fillColor('#6B7280')
-       .text(business.description, { align: 'left', width: 450 });
+       .text(sanitizeForPDF(business.description), { align: 'left', width: 450 });
   }
-  
+
   doc.moveDown(1);
-  
+
   // Línea separadora
   doc.moveTo(50, doc.y)
      .lineTo(550, doc.y)
      .stroke('#E5E7EB');
-  
+
   doc.moveDown(1);
-  
+
   // Información de contacto (solo si existe)
   const hasContact = business.phone || business.whatsapp || business.email || business.address || business.schedule;
-  
+
   if (hasContact) {
     doc.fontSize(10)
        .font('Helvetica-Bold')
        .fillColor('#1F2933')
        .text('Información de Contacto', { underline: true });
     doc.moveDown(0.3);
-    
+
     if (business.phone) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`Telefono: ${business.phone}`);
-    }
-    if (business.whatsapp) {
-      doc.fontSize(10)
-         .font('Helvetica')
-         .fillColor('#4B5563')
-         .text(`WhatsApp: ${business.whatsapp}`);
+         .text(`Telefono: ${sanitizeForPDF(business.phone)}`);
     }
     if (business.email) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`Email: ${business.email}`);
+         .text(`Email: ${sanitizeForPDF(business.email)}`);
     }
     if (business.address) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`Direccion: ${business.address}`);
+         .text(`Direccion: ${sanitizeForPDF(business.address)}`);
     }
     if (business.schedule) {
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor('#4B5563')
-         .text(`Horario: ${business.schedule}`);
+         .text(`Horario: ${sanitizeForPDF(business.schedule)}`);
     }
   }
-  
+
   doc.moveDown(1.5);
-  
+
   // ═══════════════════════════════════════════════════════════════════════
   // PRODUCTOS
   // ═══════════════════════════════════════════════════════════════════════
-  
+
   doc.fontSize(16)
      .font('Helvetica-Bold')
      .fillColor('#1F2933')
-     .text('Catálogo de Productos', { underline: true });
+     .text('Catalogo de Productos', { underline: true });
   doc.moveDown(1);
 
   if (rows.length === 0) {
@@ -153,14 +182,14 @@ exports.downloadCatalogPDF = (req, res) => {
       doc.fontSize(13)
          .font('Helvetica-Bold')
          .fillColor('#1F2933')
-         .text(`${index + 1}. ${p.name}`);
-      
+         .text(`${index + 1}. ${sanitizeForPDF(p.name)}`);
+
       // Descripción (si existe)
       if (p.description && p.description.trim()) {
         doc.fontSize(10)
            .font('Helvetica')
            .fillColor('#4B5563')
-           .text(p.description, { width: 450, align: 'left' });
+           .text(sanitizeForPDF(p.description), { width: 450, align: 'left' });
       }
       
       // Categoría, precio y estado
@@ -173,39 +202,33 @@ exports.downloadCatalogPDF = (req, res) => {
          .font('Helvetica-Bold')
          .fillColor('#2E5FA8')
          .text(price, { continued: true });
-      
+
       // Estado con color
       doc.fontSize(10)
          .font('Helvetica')
          .fillColor(statusColor)
-         .text(` • ${status}`, { continued: true });
-      
+         .text(` - ${status}`, { continued: true });
+
       // Stock level
       if (p.stock_level === 'low' && p.status !== 'unavailable') {
         doc.fontSize(10)
            .font('Helvetica')
            .fillColor('#D97706')
-           .text(` * Pocas`, { continued: true });
+           .text(` [Pocas unidades]`, { continued: true });
       }
-      
+
       // Categoría (si existe)
       if (p.category && p.category.trim()) {
         doc.fontSize(10)
            .font('Helvetica')
            .fillColor('#6B7280')
-           .text(`• ${p.category}`);
+           .text(` - ${sanitizeForPDF(p.category)}`);
       } else {
         doc.text('');
       }
-      
-      // Separador entre productos (solo si hay más productos)
-      if (index < rows.length - 1) {
-        doc.moveDown(0.5);
-        doc.moveTo(50, doc.y)
-           .lineTo(550, doc.y)
-           .stroke('#F3F4F6');
-      }
-      doc.moveDown(0.75);
+
+      // Espacio entre productos (sin líneas separadoras)
+      doc.moveDown(1);
     });
   }
   

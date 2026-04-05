@@ -43,8 +43,8 @@
     </div>
     <% } else { %>
 
-    <!-- Table -->
-    <div class="card" style="overflow:hidden">
+    <!-- Desktop Table -->
+    <div class="card desktop-table" style="overflow:hidden">
       <div style="overflow-x:auto">
         <table class="ds-table">
           <thead>
@@ -77,7 +77,7 @@
               <td class="col-hide-sm">
                 <span class="badge badge-blue"><%=p.category||'—'%></span>
               </td>
-              <td style="font-weight:700;color:var(--dark)">$<%=parseFloat(p.price).toFixed(2)%></td>
+              <td style="font-weight:700;color:var(--dark)"><%=p.currency==='CUP'?'$':''%>$<%=parseFloat(p.price).toFixed(2)%><%=p.currency==='CUP'?' <small>CUP</small>':''%></td>
               <td>
                 <% if(p.status==='available'){ %>
                   <span class="badge badge-green">Disponible</span>
@@ -99,6 +99,53 @@
         </table>
       </div>
     </div>
+
+    <!-- Mobile Cards -->
+    <div class="mobile-cards" style="display:flex;flex-direction:column;gap:.75rem">
+      <% products.forEach(p=>{ %>
+      <div class="card" style="padding:1rem">
+        <div style="display:flex;gap:.875rem;align-items:flex-start">
+          <% if(p.image){ %>
+            <img src="<%=p.image%>" alt="<%=p.name%>" style="width:3.5rem;height:3.5rem;object-fit:cover;border-radius:10px;border:1px solid var(--border);flex-shrink:0" />
+          <% } else { %>
+            <div style="width:3.5rem;height:3.5rem;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.75"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+          <% } %>
+          <div style="flex:1;min-width:0">
+            <p style="font-weight:700;color:var(--dark);font-size:.9375rem"><%=p.name%></p>
+            <% if(p.description){ %>
+              <p style="font-size:.75rem;color:var(--gray);margin-top:.25rem"><%=p.description.slice(0,60)+'...'%></p>
+            <% } %>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+              <span style="font-weight:800;color:var(--dark);font-size:1rem">$<%=parseFloat(p.price).toFixed(2)%><%=p.currency==='CUP'?' <small style="font-weight:600;color:var(--gray)">CUP</small>':''%></span>
+              <span class="badge <%=p.status==='available'?'badge-green':'badge-red'%>"><%=p.status==='available'?'Disponible':'Agotado'%></span>
+              <% if(p.category){ %>
+                <span class="badge badge-blue"><%=p.category%></span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.875rem;padding-top:.75rem;border-top:1px solid var(--border)">
+          <a href="/dashboard/products/<%=p.id%>/edit" class="btn btn-ghost btn-sm" style="flex:1;text-align:center;justify-content:center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Editar
+          </a>
+          <form action="/dashboard/products/<%=p.id%>/delete" method="POST" class="deleteProductForm" style="margin:0;flex:1">
+            <button class="btn btn-danger btn-sm" style="width:100%;justify-content:center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              Eliminar
+            </button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+
+    <style>
+      @media(min-width:768px){.mobile-cards{display:none!important}.desktop-table{display:block!important}}
+      @media(max-width:767px){.mobile-cards{display:flex!important}.desktop-table{display:none!important}}
+    </style>
 
     <!-- Pagination -->
     <% if(pages>1){ %>

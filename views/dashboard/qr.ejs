@@ -18,14 +18,17 @@
 
       <div class="card" style="padding:2rem;text-align:center">
         <!-- QR Image with logo overlay -->
-        <div style="background:#fff;display:inline-block;padding:1.5rem;border-radius:16px;border:2px solid var(--border);margin-bottom:1.5rem;position:relative">
-          <img id="qrImage" src="<%=qrImage%>" alt="QR Code" style="width:300px;height:300px;display:block" />
+        <div id="qrContainer" style="background:#fff;display:inline-block;padding:1.5rem;border-radius:16px;border:2px solid var(--border);margin-bottom:1.5rem;position:relative">
+          <img id="qrImage" src="<%=qrImage%>" alt="QR Code" style="width:300px;height:300px;display:block" crossorigin="anonymous" />
           <% if(business.logo){ %>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15);border:2px solid var(--border)">
-            <img src="<%=business.logo%>" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px" />
+          <div id="logoOverlay" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15);border:2px solid var(--border)">
+            <img id="logoInQr" src="<%=business.logo%>" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px" crossorigin="anonymous" />
           </div>
           <% } %>
         </div>
+
+        <!-- Hidden canvas for export -->
+        <canvas id="qrCanvas" style="display:none"></canvas>
 
         <!-- Color picker -->
         <div style="margin-bottom:1.5rem">
@@ -45,12 +48,12 @@
 
         <!-- Actions -->
         <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
-          <a id="downloadQrBtn" href="<%=qrImage%>" download="<%=business.slug%>-qr.png" class="btn btn-primary">
+          <button id="downloadQrBtn" class="btn btn-primary">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
             </svg>
-            Descargar QR
-          </a>
+            Descargar QR con logo
+          </button>
           <button id="copyUrlBtn" class="btn btn-ghost">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:.375rem">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
@@ -118,25 +121,105 @@ document.addEventListener('DOMContentLoaded', function() {
   if (regenerateQr) {
     regenerateQr.addEventListener('click', async function() {
       const color = qrColorPicker.value;
-      const catalogUrl = document.getElementById('catalogUrl').textContent.trim();
+      const url = document.getElementById('catalogUrl').textContent.trim();
       
       this.textContent = 'Generando...';
       this.disabled = true;
       
       try {
-        const response = await fetch(`/dashboard/api/generate-qr?url=${encodeURIComponent(catalogUrl)}&color=${encodeURIComponent(color)}`);
+        const response = await fetch(`/dashboard/api/generate-qr?url=${encodeURIComponent(url)}&color=${encodeURIComponent(color)}`);
         const data = await response.json();
         
         if (data.qrImage) {
           qrImage.src = data.qrImage;
-          document.getElementById('downloadQrBtn').href = data.qrImage;
         }
       } catch (err) {
         console.error('Error al regenerar QR:', err);
       }
       
-      this.innerHTML = 'Regenerar';
+      this.textContent = 'Regenerar';
       this.disabled = false;
+    });
+  }
+
+  // Download QR with logo embedded using canvas
+  const downloadQrBtn = document.getElementById('downloadQrBtn');
+  const logoInQr = document.getElementById('logoInQr');
+  const canvas = document.getElementById('qrCanvas');
+
+  if (downloadQrBtn) {
+    downloadQrBtn.addEventListener('click', function() {
+      const qrImg = document.getElementById('qrImage');
+      const size = 400; // QR size
+      const logoSize = 80; // Logo size in QR
+      const padding = 40;
+      const totalSize = size + padding * 2;
+      
+      canvas.width = totalSize;
+      canvas.height = totalSize;
+      const ctx = canvas.getContext('2d');
+
+      // Fondo blanco
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, totalSize, totalSize);
+
+      // Dibujar QR
+      const drawQr = () => {
+        ctx.drawImage(qrImg, padding, padding, size, size);
+
+        // Dibujar logo si existe
+        if (logoInQr) {
+          const logoX = (totalSize - logoSize) / 2;
+          const logoY = (totalSize - logoSize) / 2;
+          const radius = 16;
+
+          // Fondo blanco redondeado para logo
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath();
+          ctx.roundRect(logoX - 4, logoY - 4, logoSize + 8, logoSize + 8, radius + 4);
+          ctx.fill();
+
+          // Sombra
+          ctx.shadowColor = 'rgba(0,0,0,0.15)';
+          ctx.shadowBlur = 8;
+          ctx.shadowOffsetY = 2;
+          ctx.beginPath();
+          ctx.roundRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4, radius + 2);
+          ctx.fill();
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetY = 0;
+
+          // Borde
+          ctx.strokeStyle = '#E5E7EB';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(logoX - 2, logoY - 2, logoSize + 4, logoSize + 4, radius + 2);
+          ctx.stroke();
+
+          // Logo redondeado
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(logoX, logoY, logoSize, logoSize, radius);
+          ctx.clip();
+          ctx.drawImage(logoInQr, logoX, logoY, logoSize, logoSize);
+          ctx.restore();
+        }
+
+        // Descargar
+        const link = document.createElement('a');
+        link.download = '<%=business.slug%>-qr.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+
+      // Asegurar que las imágenes estén cargadas
+      if (qrImg.complete && (!logoInQr || logoInQr.complete)) {
+        drawQr();
+      } else {
+        qrImg.onload = () => drawQr();
+        if (logoInQr) logoInQr.onload = () => drawQr();
+      }
     });
   }
 });

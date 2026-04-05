@@ -63,12 +63,12 @@
   <div id="businessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">
     <% businesses.forEach(b=>{ %>
     <a href="/shop/<%=b.slug%>" class="card card-hover" style="text-decoration:none;display:flex;flex-direction:column;overflow:hidden">
-      <!-- Logo/Business image -->
-      <div style="height:140px;overflow:hidden;background:linear-gradient(135deg,var(--blue-light) 0%,var(--green-light) 100%);display:flex;align-items:center;justify-content:center;position:relative">
+      <!-- Logo/Business image with header_color background -->
+      <div style="height:140px;overflow:hidden;background:linear-gradient(135deg,<%=b.header_color||'#2E5FA8'%> 0%,<%=b.header_color||'#2E5FA8'%>dd 100%);display:flex;align-items:center;justify-content:center;position:relative">
         <% if(b.logo){ %>
           <img src="<%=b.logo%>" alt="<%=b.name%>" style="width:5rem;height:5rem;border-radius:12px;object-fit:cover;border:3px solid rgba(255,255,255,.8);box-shadow:0 4px 12px rgba(0,0,0,.15);position:absolute" />
         <% } else { %>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(46,95,168,.3)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
         <% } %>
       </div>
 

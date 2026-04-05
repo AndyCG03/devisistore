@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <% if(business.phone){ %>
       <span style="display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);color:#fff;font-size:.85rem;font-weight:600;padding:.5rem 1rem;border-radius:99px;border:1px solid rgba(255,255,255,.18)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        <%=business.phone%>
+        <%=business.phone.replace(/^53/,'')%>
       </span>
       <% } %>
 
@@ -242,22 +242,21 @@ document.addEventListener('DOMContentLoaded', function() {
 <main style="padding:2.5rem 1.5rem;max-width:1280px;margin:0 auto;flex:1">
 
   <!-- Filters -->
-  <div style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;align-items:center">
-    <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;flex:1">
-      <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px;max-width:360px" />
-      <select name="category" class="input" style="width:auto;padding:.65rem 2.5rem .65rem 1rem;min-width:200px;max-width:280px">
-        <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
-        <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
-      </select>
-      <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
-    </form>
-    <button id="downloadPdf" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:.5rem">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;align-items:center">
+    <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px;max-width:360px" />
+    <select name="category" class="input" style="width:auto;padding:.65rem 2.5rem .65rem 1rem;min-width:200px;max-width:280px">
+      <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
+      <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+    <button type="button" id="downloadPdf" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:.5rem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
       </svg>
-      Descargar PDF
+      PDF
     </button>
-  </div>
+    <a href="/shop/<%=business.slug%>" class="btn btn-ghost btn-sm">Ver todo</a>
+  </form>
 
   <!-- Empty state -->
   <% if(products.length===0){ %>
@@ -290,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
          data-whatsapp="<%=business.whatsapp || ''%>">
       <!-- Botón Pedir (siempre visible arriba) -->
       <% if(p.status !== 'unavailable'){ %>
-      <a href="<%=business.whatsapp ? 'https://wa.me/'+business.whatsapp.replace(/\D/g,'')+'?text='+encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':'')) : 'javascript:void(0)'%>"
+      <a href="<%=business.whatsapp ? 'https://wa.me/'+business.whatsapp.replace(/\D/g,'')+'?text='+encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+' '+(p.currency||'USD')+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':'')) : 'javascript:void(0)'%>"
          target="<%=business.whatsapp ? '_blank' : ''%>"
          class="whatsapp-btn-fixed"
          data-whatsapp="<%=business.whatsapp || ''%>"
@@ -312,46 +311,51 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         <% } %>
       </div>
-      <div style="padding:1rem">
-        <% if(p.category){ %><span class="badge badge-blue" style="margin-bottom:.5rem"><%=p.category%></span><% } %>
-        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;line-height:1.4;min-height:2.8rem;display:flex;align-items:center"><%=p.name%></h3>
+      <div style="padding:1rem;display:flex;flex-direction:column">
+        <% if(p.category){ %><span class="badge badge-blue" style="margin-bottom:.5rem;width:fit-content"><%=p.category%></span><% } %>
+        <h3 style="font-size:.9375rem;font-weight:700;color:var(--dark);margin-top:.375rem;line-height:1.4;min-height:2.8rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden"><%=p.name%></h3>
         <% if(p.description && p.description.trim()){ %>
-          <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-top:.25rem"><%=p.description.length>70?p.description.slice(0,70)+'...':p.description%></p>
+          <p style="font-size:.78rem;color:var(--gray);line-height:1.55;margin-top:.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden"><%=p.description%></p>
         <% } %>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:.875rem;flex-wrap:wrap;gap:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.875rem">
           <% if(p.show_price !== 0){ %>
           <span style="font-size:1.125rem;font-weight:800;color:var(--dark)">
-            <%=p.currency==='CUP'?'$':'$'%><%=parseFloat(p.price).toFixed(2)%>
-            <% if(p.currency==='CUP'){ %><span style="font-size:.625rem;font-weight:600;color:var(--gray);margin-left:.25rem">CUP</span><% } %>
+            $<%=parseFloat(p.price).toFixed(2)%>
+            <span style="font-size:.625rem;font-weight:600;color:var(--gray);margin-left:.25rem"><%=p.currency==='CUP'?'CUP':'USD'%></span>
           </span>
           <% } else { %>
           <span style="font-size:.8125rem;font-weight:600;color:var(--blue);font-style:italic">Consultar precio</span>
           <% } %>
-          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;justify-content:flex-end">
-            <% if(business.whatsapp && p.status !== 'unavailable'){ %>
-            <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':''))%>"
-               target="_blank"
-               class="whatsapp-btn"
-               style="display:inline-flex;align-items:center;gap:.25rem;background:#25D366;color:#fff;font-size:.6875rem;font-weight:700;padding:.3rem .5rem;border-radius:6px;text-decoration:none;transition:var(--tr)">
-              <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
-              Pedir
-            </a>
-            <% } %>
-            <% if(business.enable_cart && p.status !== 'unavailable'){ %>
-            <button data-product-id="<%=p.id%>" data-product='<%- JSON.stringify(p).replace(/'/g, "&#39;") %>' class="add-cart-btn" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:.35rem .625rem;font-size:.75rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.25rem;transition:var(--tr)">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-              <span class="cart-btn-text">Agregar</span>
-            </button>
-            <% } %>
-            <% if(p.status==='unavailable'){ %>
-              <span class="badge badge-red">Agotado</span>
-            <% } else if(p.stock_level==='low'){ %>
-              <span class="badge badge-yellow" style="display:inline-flex;align-items:center;gap:.25rem">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                Pocas
-              </span>
-            <% } %>
-          </div>
+        </div>
+        
+        <!-- Stock indicator -->
+        <div style="margin-top:.5rem">
+          <% if(p.status==='unavailable'){ %>
+            <span class="badge badge-red">Agotado</span>
+          <% } else if(p.stock_level==='low'){ %>
+            <span class="badge badge-yellow" style="display:inline-flex;align-items:center;gap:.25rem">
+              Agotándose
+            </span>
+          <% } %>
+        </div>
+        
+        <!-- Buttons at bottom -->
+        <div class="product-actions" style="display:flex;flex-direction:column;gap:.375rem;margin-top:auto;padding-top:.75rem;border-top:1px solid var(--border)">
+          <% if(business.whatsapp && p.status !== 'unavailable'){ %>
+          <a href="https://wa.me/<%=business.whatsapp.replace(/\D/g,'')%>?text=<%=encodeURIComponent('Hola! Me interesa: '+p.name+' ($'+parseFloat(p.price).toFixed(2)+' '+(p.currency||'USD')+')'+(p.stock_level==='low'?' - Pocas unidades disponibles':''))%>"
+             target="_blank"
+             class="whatsapp-btn"
+             style="display:flex;align-items:center;justify-content:center;gap:.375rem;background:#25D366;color:#fff;font-size:.75rem;font-weight:700;padding:.5rem .75rem;border-radius:7px;text-decoration:none;transition:var(--tr)">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>
+            Pedir
+          </a>
+          <% } %>
+          <% if(business.enable_cart && p.status !== 'unavailable'){ %>
+          <button data-product-id="<%=p.id%>" data-product='<%- JSON.stringify(p).replace(/'/g, "&#39;") %>' class="add-cart-btn" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:.5rem .75rem;font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.375rem;transition:var(--tr);width:100%">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Carrito
+          </button>
+          <% } %>
         </div>
       </div>
     </div>
@@ -597,7 +601,7 @@ function openProductModal(product, whatsapp) {
   }
 
   const whatsappMsg = whatsapp
-    ? encodeURIComponent('Hola! Me interesa: ' + product.name + ' ($' + parseFloat(product.price).toFixed(2) + ')')
+    ? encodeURIComponent('Hola! Me interesa: ' + product.name + ' ($' + parseFloat(product.price).toFixed(2) + ' ' + (product.currency || 'USD') + ')')
     : '';
   const whatsappLink = whatsapp ? 'https://wa.me/' + whatsapp.replace(/\D/g,'') + '?text=' + whatsappMsg : '#';
 
@@ -739,8 +743,8 @@ function renderCart() {
     return;
   }
   
-  const total = cart.reduce((sum, item) => sum + (item.show_price !== 0 ? item.price * item.qty : 0), 0);
-  const currency = cart[0].currency || 'USD';
+  const totalUSD = cart.reduce((sum, item) => sum + ((item.show_price !== 0 && item.currency !== 'CUP') ? item.price * item.qty : 0), 0);
+  const totalCUP = cart.reduce((sum, item) => sum + ((item.show_price !== 0 && item.currency === 'CUP') ? item.price * item.qty : 0), 0);
   const hasHiddenPrices = cart.some(item => item.show_price === 0);
   
   let html = '<div style="max-height:50vh;overflow-y:auto">';
@@ -749,7 +753,7 @@ function renderCart() {
       <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--border)">
         <div style="flex:1;min-width:0">
           <p style="font-weight:700;color:var(--dark);font-size:.875rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</p>
-          <p style="font-size:.75rem;color:var(--gray)">${item.show_price !== 0 ? (item.currency === 'CUP' ? '$' : '$') + item.price.toFixed(2) + (item.currency === 'CUP' ? ' CUP' : '') : 'Consultar precio'}</p>
+          <p style="font-size:.75rem;color:var(--gray)">${item.show_price !== 0 ? '$' + item.price.toFixed(2) + ' ' + (item.currency === 'CUP' ? 'CUP' : 'USD') : 'Consultar precio'}</p>
         </div>
         <div style="display:flex;align-items:center;gap:.375rem;flex-shrink:0">
           <button data-qty-change="${item.id}" data-delta="-1" style="width:1.5rem;height:1.5rem;border-radius:50%;border:1px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.875rem;color:var(--gray)">−</button>
@@ -766,9 +770,15 @@ function renderCart() {
   
   html += `
     <div style="padding:1rem 0 0;border-top:2px solid var(--border);margin-top:.75rem">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-        <span style="font-weight:700;color:var(--dark);font-size:.9375rem">Total:</span>
-        <span style="font-size:1.125rem;font-weight:800;color:var(--blue)">${hasHiddenPrices ? 'Consultar' : (currency === 'CUP' ? '$' : '$') + total.toFixed(2) + (currency === 'CUP' ? ' CUP' : '')}</span>
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700;color:var(--dark);font-size:.9375rem">Total USD:</span>
+          <span style="font-size:1.125rem;font-weight:800;color:var(--blue)">${hasHiddenPrices ? 'Consultar' : '$' + totalUSD.toFixed(2) + ' USD'}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700;color:var(--dark);font-size:.9375rem">Total CUP:</span>
+          <span style="font-size:1.125rem;font-weight:800;color:var(--green)">${hasHiddenPrices ? 'Consultar' : '$' + totalCUP.toFixed(2) + ' CUP'}</span>
+        </div>
       </div>
       <% if(business.whatsapp){ %>
       <button id="sendOrderBtn" class="btn btn-secondary" style="width:100%;padding:.75rem;font-size:.875rem">
@@ -814,15 +824,14 @@ function renderCart() {
       
       let msg = '🛒 *Nuevo Pedido*\n\n';
       cart.forEach(item => {
-        const priceText = item.show_price !== 0 ? (item.currency === 'CUP' ? '$' : '$') + (item.price * item.qty).toFixed(2) + (item.currency === 'CUP' ? ' CUP' : '') : 'Consultar';
+        const priceText = item.show_price !== 0 ? '$' + (item.price * item.qty).toFixed(2) + ' ' + (item.currency === 'CUP' ? 'CUP' : 'USD') : 'Consultar';
         msg += `• ${item.name} x${item.qty} - ${priceText}\n`;
       });
       
-      if (hasHiddenPrices) {
-        msg += `\n💰 *Total: Consultar*`;
-      } else {
-        msg += `\n💰 *Total: ${currency === 'CUP' ? '$' : '$'}${total.toFixed(2)} ${currency === 'CUP' ? 'CUP' : ''}*`;
-      }
+      msg += `\n💰 *Resumen:*`;
+      if (totalUSD > 0) msg += `\n  • USD: $${totalUSD.toFixed(2)} USD`;
+      if (totalCUP > 0) msg += `\n  • CUP: $${totalCUP.toFixed(2)} CUP`;
+      if (hasHiddenPrices) msg += `\n  • Algunos precios: Consultar`;
       
       window.open(`https://wa.me/${whatsapp.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
     });
