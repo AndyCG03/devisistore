@@ -242,21 +242,31 @@ document.addEventListener('DOMContentLoaded', function() {
 <main style="padding:2.5rem 1.5rem;max-width:1280px;margin:0 auto;flex:1">
 
   <!-- Filters -->
-  <form method="GET" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;align-items:center">
+  <form method="GET" class="filter-bar" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:2rem;align-items:center">
     <input type="text" name="search" value="<%=search%>" placeholder="Buscar productos..." class="input" style="flex:1;min-width:180px;max-width:360px" />
     <select name="category" class="input" style="width:auto;padding:.65rem 2.5rem .65rem 1rem;min-width:200px;max-width:280px">
       <option value="all" <%=category==='all'?'selected':''%>>Todas las categorías</option>
-      <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category===c?'selected':''%>><%=c%></option><% }) %>
+      <% categories.forEach(c=>{ %><option value="<%=c%>" <%=category.toLowerCase()===c.toLowerCase()?'selected':''%>><%=c%></option><% }) %>
     </select>
-    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
-    <button type="button" id="downloadPdf" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:.5rem">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-      </svg>
-      PDF
-    </button>
-    <a href="/shop/<%=business.slug%>" class="btn btn-ghost btn-sm">Ver todo</a>
+    <div class="filter-actions" style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+      <button type="button" id="downloadPdf" class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:.5rem">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        PDF
+      </button>
+      <a href="/shop/<%=business.slug%>" class="btn btn-ghost btn-sm">Ver todo</a>
+    </div>
   </form>
+  <style>
+    @media(max-width:640px){
+      .filter-bar{flex-direction:column;align-items:stretch}
+      .filter-bar input,.filter-bar select{width:100%!important;max-width:100%!important}
+      .filter-actions{display:flex;width:100%}
+      .filter-actions>*{flex:1;justify-content:center;font-size:.8125rem;padding:.5rem}
+    }
+  </style>
 
   <!-- Empty state -->
   <% if(products.length===0){ %>
@@ -281,6 +291,12 @@ document.addEventListener('DOMContentLoaded', function() {
         #cartModal > div{max-width:100%!important;width:100%!important;height:100%!important;max-height:100%!important;border-radius:0!important;margin:0!important}
         #cartModal{padding:0!important}
       }
+      
+      /* Estilos de paginación */
+      .page-link{display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;background:var(--white);color:var(--gray);border:1.5px solid var(--border);transition:var(--tr)}
+      .page-link.active{background:var(--blue);color:#fff;border:none}
+      .page-link.disabled{opacity:0.5;cursor:not-allowed;background:var(--bg)}
+      @media(hover:hover){.page-link:not(.active):not(.disabled):hover{border-color:var(--blue);color:var(--blue)}}
     </style>
     <% products.forEach(p=>{ %>
     <div class="card card-hover product-card"
@@ -364,12 +380,74 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <!-- Pagination -->
   <% if(pages>1){ %>
-  <div style="display:flex;justify-content:center;gap:.5rem;margin-top:2.5rem">
-    <% for(let i=1;i<=pages;i++){ %>
-      <a href="?page=<%=i%>&category=<%=category%>&search=<%=search%>"
-         style="width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;font-family:'Exo 2',sans-serif;transition:var(--tr);<%=i===currentPage?'background:var(--blue);color:#fff':'background:var(--white);color:var(--gray);border:1.5px solid var(--border)'%>"><%=i%></a>
+  <nav style="display:flex;justify-content:center;align-items:center;gap:.375rem;margin-top:2.5rem;flex-wrap:wrap">
+    <%
+      // Lógica de paginación responsive
+      const cp = currentPage;
+      const tp = pages;
+      const qs = `category=${category}&search=${search}`;
+      let pageLinks = [];
+
+      if (tp <= 7) {
+        // Si hay 7 o menos páginas, mostrar todas
+        for (let i = 1; i <= tp; i++) pageLinks.push(i);
+      } else {
+        // Siempre mostrar primera y última
+        pageLinks.push(1);
+        
+        // Rango alrededor de la página actual
+        let start = Math.max(2, cp - 1);
+        let end = Math.min(tp - 1, cp + 1);
+        
+        // Ajustar si estamos cerca del inicio o final
+        if (cp <= 3) { end = 5; }
+        if (cp >= tp - 2) { start = tp - 4; }
+        
+        // Ellipsis después de la primera página
+        if (start > 2) pageLinks.push('...');
+        
+        // Páginas del medio
+        for (let i = start; i <= end; i++) pageLinks.push(i);
+        
+        // Ellipsis antes de la última página
+        if (end < tp - 1) pageLinks.push('...');
+        
+        // Última página
+        pageLinks.push(tp);
+      }
+    %>
+
+    <!-- Botón Anterior -->
+    <% if(cp > 1){ %>
+    <a href="?page=<%=cp-1%>&<%=qs%>" class="page-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </a>
+    <% } else { %>
+    <span class="page-link disabled">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </span>
     <% } %>
-  </div>
+
+    <!-- Números de página -->
+    <% pageLinks.forEach(p=>{ %>
+      <% if(p === '...'){ %>
+        <span class="page-link disabled">…</span>
+      <% } else { %>
+        <a href="?page=<%=p%>&<%=qs%>" class="page-link <%=p===cp?'active':''%>"><%=p%></a>
+      <% } %>
+    <% }) %>
+
+    <!-- Botón Siguiente -->
+    <% if(cp < tp){ %>
+    <a href="?page=<%=cp+1%>&<%=qs%>" class="page-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+    <% } else { %>
+    <span class="page-link disabled">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </span>
+    <% } %>
+  </nav>
   <% } %>
   <% } %>
 

@@ -21,14 +21,14 @@
 
 <!-- Header -->
 <header style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);padding:3rem 1.5rem">
-  <div style="max-width:1100px;margin:0 auto;text-align:center">
-    <h1 style="font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;color:#fff;margin-bottom:.75rem">Negocios en DevisiStore</h1>
-    <p style="color:rgba(255,255,255,.85);font-size:1rem;max-width:600px;margin:0 auto">Explora todos los negocios disponibles y descubre productos increíbles</p>
+  <div style="max-width:1100px;margin:0 auto;text-align:center;width:100%;box-sizing:border-box">
+    <h1 style="font-size:clamp(1.75rem,4vw,2.5rem);font-weight:800;color:#fff;margin-bottom:.75rem;word-wrap:break-word;overflow-wrap:break-word">Negocios en DevisiStore</h1>
+    <p style="color:rgba(255,255,255,.85);font-size:1rem;max-width:600px;margin:0 auto;line-height:1.6">Explora todos los negocios disponibles y descubre productos increíbles</p>
   </div>
 </header>
 
 <!-- Business list -->
-<main style="padding:3rem 1.5rem;max-width:1280px;margin:0 auto;flex:1">
+<main style="padding:3rem 1.5rem;max-width:1280px;margin:0 auto;flex:1;width:100%;box-sizing:border-box">
 
   <% if(businesses.length===0){ %>
     <div style="text-align:center;padding:5rem 1rem">
@@ -47,20 +47,26 @@
       <p style="font-size:1.75rem;font-weight:800;color:var(--blue)"><%=businesses.length%></p>
       <p style="font-size:.8rem;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.05em">Negocios</p>
     </div>
-    
+
     <!-- Buscador -->
-    <div style="flex:1;max-width:400px;min-width:250px">
-      <input 
-        id="searchBusiness" 
-        type="text" 
-        placeholder="🔍 Buscar negocios..." 
-        style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-size:.9375rem;font-family:'Exo 2',sans-serif;outline:none;transition:var(--tr)"
+    <div style="flex:1;max-width:400px;min-width:250px;position:relative">
+      <svg style="position:absolute;left:.875rem;top:50%;transform:translateY(-50%);pointer-events:none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <input
+        id="searchBusiness"
+        type="text"
+        placeholder="Buscar negocios..."
+        style="width:100%;padding:.75rem 1rem .75rem 2.75rem;border:1.5px solid var(--border);border-radius:10px;font-size:.9375rem;font-family:'Exo 2',sans-serif;outline:none;transition:var(--tr);box-sizing:border-box"
       />
     </div>
   </div>
 
   <!-- Grid -->
-  <div id="businessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem">
+  <div id="businessGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.5rem">
+    <style>
+      @media(max-width:600px){#businessGrid{grid-template-columns:1fr!important}}
+    </style>
     <% businesses.forEach(b=>{ %>
     <a href="/shop/<%=b.slug%>" class="card card-hover" style="text-decoration:none;display:flex;flex-direction:column;overflow:hidden">
       <!-- Logo/Business image with header_color background -->
@@ -73,8 +79,8 @@
       </div>
 
       <!-- Content -->
-      <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column">
-        <h3 style="font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:.5rem;line-height:1.4"><%=b.name%></h3>
+      <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;min-width:0">
+        <h3 style="font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:.5rem;line-height:1.4;word-wrap:break-word;overflow-wrap:break-word"><%=b.name%></h3>
         
         <% if(b.description){ %>
           <p style="font-size:.8125rem;color:var(--gray);line-height:1.6;margin-bottom:1rem;flex:1"><%=b.description.length>100?b.description.slice(0,100)+'...':b.description%></p>
@@ -116,12 +122,99 @@
 </main>
 
 <script>
-// Buscador de negocios en tiempo real
 document.addEventListener('DOMContentLoaded', function() {
   const searchInput = document.getElementById('searchBusiness');
-  const businessGrid = document.getElementById('businessGrid');
+  const grid = document.getElementById('businessGrid');
   
-  // Focus/blur effects for search input
+  // Sentinel para infinite scroll
+  const sentinel = document.createElement('div');
+  sentinel.id = 'load-more-sentinel';
+  sentinel.style.cssText = 'height:1px;';
+  grid.parentNode.insertBefore(sentinel, grid.nextSibling);
+
+  let currentPage = <%= (typeof nextPage !== 'undefined' && nextPage) ? nextPage : 2 %>;
+  let loading = false;
+  let hasMore = <%= typeof hasMore !== 'undefined' && hasMore ? 'true' : 'false' %>;
+
+  // Intersection Observer
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && hasMore && !loading) {
+      loadMore();
+    }
+  }, { rootMargin: '200px' });
+
+  if (hasMore) {
+    observer.observe(sentinel);
+  }
+
+  async function loadMore() {
+    loading = true;
+    sentinel.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray)">Cargando más negocios...</div>';
+    
+    try {
+      const res = await fetch(`/businesses?page=${currentPage}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      const data = await res.json();
+
+      if (data.businesses && data.businesses.length > 0) {
+        data.businesses.forEach(b => {
+          grid.insertAdjacentHTML('beforeend', createCardHTML(b));
+        });
+        currentPage++;
+        hasMore = data.hasMore;
+      } else {
+        hasMore = false;
+      }
+
+      if (!hasMore) {
+        sentinel.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray)">No hay más negocios</div>';
+        observer.disconnect();
+      } else {
+        sentinel.innerHTML = '';
+      }
+    } catch (err) {
+      console.error('Error cargando negocios:', err);
+      sentinel.innerHTML = '';
+    } finally {
+      loading = false;
+    }
+  }
+
+  // Función para generar HTML de la card
+  function createCardHTML(b) {
+    const headerColor = b.header_color || '#2E5FA8';
+    const logoHTML = b.logo 
+      ? `<img src="${b.logo}" alt="${b.name}" style="width:5rem;height:5rem;border-radius:12px;object-fit:cover;border:3px solid rgba(255,255,255,.8);box-shadow:0 4px 12px rgba(0,0,0,.15);position:absolute" />`
+      : `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>`;
+    
+    const desc = b.description ? (b.description.length > 100 ? b.description.slice(0,100)+'...' : b.description) : '';
+    
+    let badges = '';
+    if(b.whatsapp) badges += `<span class="badge badge-green" style="font-size:.7rem;padding:.25rem .625rem"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="margin-right:.25rem"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.858L0 24l6.335-1.524A11.935 11.935 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.8 9.8 0 01-5.012-1.375l-.36-.214-3.732.897.934-3.63-.236-.374A9.755 9.755 0 012.182 12c0-5.413 4.405-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818 0 5.413-4.405 9.818-9.818 9.818z"/></svg>WhatsApp</span>`;
+    if(b.phone) badges += `<span class="badge badge-blue" style="font-size:.7rem;padding:.25rem .625rem"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:.25rem"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Teléfono</span>`;
+
+    return `
+      <a href="/shop/${b.slug}" class="card card-hover" style="text-decoration:none;display:flex;flex-direction:column;overflow:hidden">
+        <div style="height:140px;overflow:hidden;background:linear-gradient(135deg,${headerColor} 0%,${headerColor}dd 100%);display:flex;align-items:center;justify-content:center;position:relative">
+          ${logoHTML}
+        </div>
+        <div style="padding:1.25rem;flex:1;display:flex;flex-direction:column;min-width:0">
+          <h3 style="font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:.5rem;line-height:1.4;word-wrap:break-word;overflow-wrap:break-word">${b.name}</h3>
+          ${desc ? `<p style="font-size:.8125rem;color:var(--gray);line-height:1.6;margin-bottom:1rem;flex:1">${desc}</p>` : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:auto">
+            ${badges}
+          </div>
+          <div style="margin-top:1rem;display:flex;align-items:center;gap:.5rem;color:var(--blue);font-size:.8125rem;font-weight:600">
+            Ver catálogo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  // Búsqueda local
   if (searchInput) {
     searchInput.addEventListener('focus', function() {
       this.style.borderColor = 'var(--blue)';
@@ -131,52 +224,19 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.borderColor = 'var(--border)';
       this.style.boxShadow = 'none';
     });
-  }
-  
-  if (searchInput && businessGrid) {
+
     searchInput.addEventListener('input', function(e) {
-      const searchTerm = e.target.value.toLowerCase().trim();
-      const businessCards = businessGrid.querySelectorAll('a.card');
-      let visibleCount = 0;
-      
-      businessCards.forEach(function(card) {
-        const name = card.querySelector('h3').textContent.toLowerCase();
-        const description = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
-        
-        // Buscar en nombre y descripción
-        if (name.includes(searchTerm) || description.includes(searchTerm)) {
-          card.style.display = 'flex';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
-        }
+      const term = e.target.value.toLowerCase().trim();
+      // Filtrar solo las cards cargadas
+      document.querySelectorAll('#businessGrid > a.card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(term) ? 'flex' : 'none';
       });
-      
-      // Mostrar mensaje si no hay resultados
-      let noResultsMsg = document.getElementById('noResultsMsg');
-      if (visibleCount === 0 && searchTerm) {
-        if (!noResultsMsg) {
-          noResultsMsg = document.createElement('div');
-          noResultsMsg.id = 'noResultsMsg';
-          noResultsMsg.style.cssText = 'text-align:center;padding:3rem 1rem;grid-column:1/-1';
-          noResultsMsg.innerHTML = `
-            <div style="width:4rem;height:4rem;background:var(--bg);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gray)" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-              </svg>
-            </div>
-            <p style="font-weight:700;color:var(--dark);font-size:1.05rem">No se encontraron negocios</p>
-            <p style="color:var(--gray);font-size:.875rem;margin-top:.375rem">Intenta con otro término de búsqueda</p>
-          `;
-          businessGrid.parentNode.insertBefore(noResultsMsg, businessGrid.nextSibling);
-        }
-      } else if (noResultsMsg) {
-        noResultsMsg.remove();
-      }
     });
   }
 });
 </script>
+
 
 <footer style="background:var(--white);border-top:1px solid var(--border);padding:1.25rem 1.5rem;text-align:center">
   <p style="font-size:.78rem;color:var(--gray)">Catálogo creado con <a href="/" style="color:var(--blue);font-weight:700;text-decoration:none">DevisiStore</a></p>

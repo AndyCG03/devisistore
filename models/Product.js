@@ -6,11 +6,11 @@ const Product = {
     const args = [businessId];
 
     if (category && category !== 'all') {
-      query += ' AND category = ?';
+      query += ' AND LOWER(TRIM(category)) = LOWER(TRIM(?))';
       args.push(category);
     }
     if (search) {
-      query += ' AND (name LIKE ? OR description LIKE ?)';
+      query += ' AND (LOWER(name) LIKE LOWER(?) OR LOWER(description) LIKE LOWER(?))';
       args.push(`%${search}%`, `%${search}%`);
     }
 
@@ -59,9 +59,21 @@ const Product = {
   },
 
   getCategories(businessId) {
-    return db.prepare(
-      'SELECT DISTINCT category FROM products WHERE business_id = ? AND category IS NOT NULL AND category != ? ORDER BY category'
-    ).all(businessId, '').map(r => r.category).filter(c => c && c.trim());
+    const raw = db.prepare(
+      'SELECT DISTINCT category FROM products WHERE business_id = ? AND category IS NOT NULL AND TRIM(category) != ?'
+    ).all(businessId, '').map(r => r.category.trim()).filter(c => c);
+
+    // Eliminar duplicados ignorando mayúsculas/minúsculas
+    const unique = [];
+    const seen = new Set();
+    raw.forEach(c => {
+      const key = c.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(c);
+      }
+    });
+    return unique.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
   },
 
   countByBusiness(businessId) {
